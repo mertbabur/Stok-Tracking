@@ -1,5 +1,7 @@
 package com.example.stoktakip.Utils;
 
+import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -15,6 +17,16 @@ public class StockUtils {
      */
     public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder){
 
+        activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+
+    }
+
+
+    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder, String bundleKey, String bundleString){
+
+        Bundle bundle = new Bundle();
+        bundle.putString(bundleKey, bundleString);
+        whichFragment.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
 
     }

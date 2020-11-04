@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,12 +14,19 @@ import androidx.fragment.app.Fragment;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginFragment extends Fragment {
 
     private Button fragmentLogin_sign, button_fragmentLogin_login;
     private TextInputEditText fragmentLogin_email, fragmentLogin_password;
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+
+    private String WHICH_BUTTON;
 
     @Nullable
     @Override
@@ -28,6 +36,7 @@ public class LoginFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        isCameFromSignFragmentControl();
 
 
         return rootView;
@@ -43,6 +52,11 @@ public class LoginFragment extends Fragment {
         button_fragmentLogin_login = rootView.findViewById(R.id.button_fragmentLogin_login);
         fragmentLogin_email = rootView.findViewById(R.id.fragmentLogin_email);
         fragmentLogin_password = rootView.findViewById(R.id.fragmentLogin_password);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        WHICH_BUTTON = getArguments().getString("whichButton", "null button");
 
     }
 
@@ -70,6 +84,20 @@ public class LoginFragment extends Fragment {
 
             }
         });
+
+    }
+
+
+    /**
+     * Sign fragment indan mi gelindigini kontrol eder .
+     */
+    public void isCameFromSignFragmentControl(){
+
+        if (WHICH_BUTTON.equals("signButton")){
+
+            Toast.makeText(getActivity(), "Kaydınız başarıyla gerçekleşti ve Email adresinize bir doğrulama linki gönderildi .", Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 

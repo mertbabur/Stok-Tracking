@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1045887350074",
+    "firebase_url": "https://stok-takip-6c428.firebaseio.com",
+    "project_id": "stok-takip-6c428",
+    "storage_bucket": "stok-takip-6c428.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045887350074:android:ec06f63a4a7646c18a8c03",
+        "android_client_info": {
+          "package_name": "com.example.stoktakip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045887350074-3f4hk0d8g3eb0gumvvm0tu6gahd5maoi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN5XZ2z4gK0ZaLwqprlfCJh-0DcEPgkNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045887350074-3f4hk0d8g3eb0gumvvm0tu6gahd5maoi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 
 import com.example.stoktakip.Fragments.LoginFragment;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivity_fragmentHolder = findViewById(R.id.mainActivity_fragmentHolder);
         LoginFragment loginFragment = new LoginFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.mainActivity_fragmentHolder, loginFragment).commit();
+        StockUtils.gotoFragment(MainActivity.this, loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "noButton");
 
     }
 }
