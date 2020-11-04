@@ -28,7 +28,7 @@
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/imageView_fragmentSign_userPP"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="28dp"
@@ -49,7 +49,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_image">
+                app:layout_constraintTop_toBottomOf="@+id/imageView_fragmentSign_userPP">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fragmentLogin_email"

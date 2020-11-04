@@ -1,5 +1,7 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,15 +25,19 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 public class SignFragment extends Fragment {
 
-    private TextInputEditText fragmentSign_name, fragmentSign_userName, fragmentSign_email, fragmentSign_password;
-    private ImageView imageView_fragmentSign_back;
+    private TextInputEditText fragmentSign_name, fragmentSign_companyName, fragmentSign_email, fragmentSign_password;
+    private ImageView imageView_fragmentSign_back, imageView_fragmentSign_userPP;
     private Button button_fragmentSign_sign;
+    private TextView textView_fragmentSign_addPP;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+
+    private Uri getPhotoFromGalleryURI;
 
     @Nullable
     @Override
@@ -51,11 +59,13 @@ public class SignFragment extends Fragment {
     public void defineAttributes(View rootView){
 
         fragmentSign_name = rootView.findViewById(R.id.fragmentSign_name);
-        fragmentSign_userName = rootView.findViewById(R.id.fragmentSign_userName);
+        fragmentSign_companyName = rootView.findViewById(R.id.fragmentSign_companyName);
         fragmentSign_email = rootView.findViewById(R.id.fragmentSign_email);
         fragmentSign_password = rootView.findViewById(R.id.fragmentSign_password);
         imageView_fragmentSign_back = rootView.findViewById(R.id.imageView_fragmentSign_back);
         button_fragmentSign_sign = rootView.findViewById(R.id.button_fragmentSign_sign);
+        imageView_fragmentSign_userPP = rootView.findViewById(R.id.imageView_fragmentSign_userPP);
+        textView_fragmentSign_addPP = rootView.findViewById(R.id.textView_fragmentSign_addPP);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -96,8 +106,41 @@ public class SignFragment extends Fragment {
             }
         });
 
+        // resim ekleme kismi ...
+        textView_fragmentSign_addPP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+
+            }
+        });
+
     }
 
+
+    /**
+     * Galeriden seçilen fotoyu yakalar .
+     * Sadece galeriden seçim olacagi icin request koda gore herhangi bir yakalama yapmadik .
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        getPhotoFromGalleryURI = data.getData();
+
+        if(getPhotoFromGalleryURI != null){
+            Toast.makeText(getActivity(), "Fotoğraf seçildi .", Toast.LENGTH_SHORT).show();
+            Picasso.get().load(getPhotoFromGalleryURI).into(imageView_fragmentSign_userPP);
+        }
+
+
+    }
 
     /**
      * Maile dogrulama kodu gonderir .
@@ -124,18 +167,25 @@ public class SignFragment extends Fragment {
 
 
     /**
-     * kullaniciyi kayit eder .
+     * kullaniciyi kayit eder .(auth a kayit) .
+     * kulaniciyi db ye kaydini yapar .
      */
     public void createAccountWitEmail(){
 
-        String email = fragmentSign_email.getText().toString().trim();
+        final String email = fragmentSign_email.getText().toString().trim();
         String password = fragmentSign_password.getText().toString().trim();
+        final String name = fragmentSign_name.getText().toString().trim();
+        final String companyName = fragmentSign_companyName.getText().toString().toString();
 
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if (task.isSuccessful()){
+
+                    FirebaseUtils.saveUserFirebaseDB(auth, email, companyName, name, "null");
+                    if (getPhotoFromGalleryURI != null)
+                        FirebaseUtils.saveUserPhotoFirebaseStorage(auth, getPhotoFromGalleryURI);
 
                     sendEmailVerification();
 
@@ -159,11 +209,11 @@ public class SignFragment extends Fragment {
     public boolean isFilledControl(){
 
         String name = fragmentSign_name.getText().toString().trim();
-        String userName = fragmentSign_userName.getText().toString().trim();
+        String companyName = fragmentSign_companyName.getText().toString().trim();
         String email = fragmentSign_email.getText().toString().trim();
         String password = fragmentSign_password.getText().toString().trim();
 
-        if (!name.equals("") && !userName.equals("") && !email.equals("") && !password.equals("")){
+        if (!name.equals("") && !companyName.equals("") && !email.equals("") && !password.equals("")){
             return true;
         }
 
