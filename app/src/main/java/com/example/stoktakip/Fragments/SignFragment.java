@@ -84,7 +84,7 @@ public class SignFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (registerControl()){
+                if (isFilledControl()){
 
                     createAccountWitEmail();
 
@@ -156,7 +156,7 @@ public class SignFragment extends Fragment {
     /**
      * Gerekli alanların eksiksiz bir sekilde dolduruldugunu kontrol eder .
      */
-    public boolean registerControl(){
+    public boolean isFilledControl(){
 
         String name = fragmentSign_name.getText().toString().trim();
         String userName = fragmentSign_userName.getText().toString().trim();
