@@ -9,17 +9,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.CustomerListAdapter;
+import com.example.stoktakip.Models.Customer;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomersFragment extends Fragment {
 
     private RecyclerView recyclerView_fragmentCustomers;
     private FloatingActionButton floatingActionButton_fragmentCustomers_add;
     private Toolbar toolbar_fragmentCustomers;
+
+    private List<Customer> customerList;
+
+    private CustomerListAdapter adapter;
 
     @Nullable
     @Override
@@ -44,6 +54,8 @@ public class CustomersFragment extends Fragment {
         floatingActionButton_fragmentCustomers_add = rootView.findViewById(R.id.floatingActionButton_fragmentCustomers_add);
         toolbar_fragmentCustomers = rootView.findViewById(R.id.toolbar_fragmentCustomers);
 
+        customerList = new ArrayList<>();
+
 
     }
 
@@ -64,5 +76,20 @@ public class CustomersFragment extends Fragment {
         });
 
     }
+
+
+    /**
+     * RecyclerView i tanimlar .
+     */
+    public void defineRecyclerView(){
+
+        recyclerView_fragmentCustomers.setHasFixedSize(true);
+        recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new CustomerListAdapter(getActivity(), customerList);
+        recyclerView_fragmentCustomers.setAdapter(adapter);
+
+    }
+
 
 }
