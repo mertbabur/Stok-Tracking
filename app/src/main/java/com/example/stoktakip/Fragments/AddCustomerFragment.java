@@ -1,5 +1,7 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
+import com.squareup.picasso.Picasso;
 
 public class AddCustomerFragment extends Fragment {
 
@@ -25,6 +30,8 @@ public class AddCustomerFragment extends Fragment {
                      , editTextText_fragmentAddCustomer_companyName, editTextText_fragmentAddCustomer_customerNum
                      , editText_fragmentAddCustomer_customerAddress;
     private Button button_fragmentAddCustomer_save;
+
+    private Uri getPhotoFromGalleryURI;
 
 
 
@@ -70,6 +77,10 @@ public class AddCustomerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+
             }
         });
 
@@ -77,6 +88,11 @@ public class AddCustomerFragment extends Fragment {
         button_fragmentAddCustomer_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (isFilled())
+                    saveCustomerDB();
+                else
+                    Toast.makeText(getActivity(), "Lütfen bilgileri eksiksiz bir şekilde doldurunuz .", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -91,6 +107,75 @@ public class AddCustomerFragment extends Fragment {
 
             }
         });
+
+    }
+
+
+    /**
+     * Galeriden seçilen fotoyu yakalar .
+     * Sadece galeriden seçim olacagi icin request koda gore herhangi bir yakalama yapmadik .
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        getPhotoFromGalleryURI = data.getData();
+
+        if(getPhotoFromGalleryURI != null){
+            Toast.makeText(getActivity(), "Fotoğraf seçildi .", Toast.LENGTH_SHORT).show();
+            Picasso.get().load(getPhotoFromGalleryURI).into(imageView_fragmentAddCustomer_customerPP);
+        }
+
+
+    }
+
+
+    /**
+     * Gorsel nesnelerden bilgileri alir  ve DB ye kaydeder .
+     * Secilen photo null degilse icerideki metod fotoyu da storage a kaydeder .
+     */
+    public void saveCustomerDB(){
+
+        String name = editText_fragmentAddCustomer__customerName.getText().toString().trim();
+        String surname = editText_fragmentAddCustomer_customerSurname.getText().toString().trim();
+        String companyName = editTextText_fragmentAddCustomer_companyName.getText().toString().trim();
+        String num = editTextText_fragmentAddCustomer_customerNum.getText().toString().trim();
+        String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
+
+        FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
+
+        editText_fragmentAddCustomer__customerName.setText("");
+        editText_fragmentAddCustomer_customerSurname.setText("");
+        editTextText_fragmentAddCustomer_companyName.setText("");
+        editTextText_fragmentAddCustomer_customerNum.setText("");
+        editText_fragmentAddCustomer_customerAddress.setText("");
+
+        getPhotoFromGalleryURI = null;
+
+        imageView_fragmentAddCustomer_customerPP.setImageDrawable(getResources().getDrawable(R.drawable.default_pp_icon));
+
+    }
+
+
+    /**
+     * Gerekli bilgiler eksiksiz bir sekilde dolduruldu mu .
+     * @return --> Eger dolu ise (true) , bos ise (false)
+     */
+    public boolean isFilled(){
+
+        String name = editText_fragmentAddCustomer__customerName.getText().toString().trim();
+        String surname = editText_fragmentAddCustomer_customerSurname.getText().toString().trim();
+        String companyName = editTextText_fragmentAddCustomer_companyName.getText().toString().trim();
+        String num = editTextText_fragmentAddCustomer_customerNum.getText().toString().trim();
+        String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
+
+        if (!name.equals("") && !surname.equals("") && !companyName.equals("") && !num.equals("") && !address.equals(""))
+            return true;
+
+        return false;
 
     }
 

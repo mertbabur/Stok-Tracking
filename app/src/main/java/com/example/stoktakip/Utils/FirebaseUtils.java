@@ -7,10 +7,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.stoktakip.Models.Customer;
 import com.example.stoktakip.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,6 +29,8 @@ public class FirebaseUtils {
     private static FirebaseStorage storage;
     private static StorageReference stRef;
 
+    private static FirebaseAuth mAuth;
+    private static FirebaseUser user;
 
     /**
      * FirebaseDatabase i tanimlar .
@@ -38,6 +42,7 @@ public class FirebaseUtils {
 
     }
 
+
     /**
      * FirebaseStorage i tanimlar .
      */
@@ -48,6 +53,16 @@ public class FirebaseUtils {
 
     }
 
+
+    /**
+     * FirebaseAuth i tanimlar .
+     */
+    public static void defineFirebaseAuth(){
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+    }
 
     /**
      * Sifre resetleme linki gonderir .
@@ -111,6 +126,72 @@ public class FirebaseUtils {
 
                 if (task.isSuccessful()){
                     myRef.child("Users").child(userUID).child("photo").setValue(randomKey);
+                }
+                else{
+                    Log.e("savePhotoFirebaseStr : ", task.getException()+"");
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Customer bilgilerini db ye kaydeder.
+     * saveCustomerPhotoToFirebaseStorage metodunu cagirir .
+     * @param customerName
+     * @param customerSurname
+     * @param companyName
+     * @param customerNum
+     * @param customerAddress
+     */
+    public static void addCustomerToDB(String customerName, String customerSurname, String companyName, String customerNum, String customerAddress, final Uri photoUri){
+
+        defineFirebaseAuth();
+        defineFirebaseDatabase();
+
+        String userUID = mAuth.getUid();
+
+        final String customerKey = UUID.randomUUID().toString();
+        Customer customer = new Customer(customerKey, customerName, customerSurname, companyName, customerNum, customerAddress, "null");
+
+        myRef.child("Customers").child(userUID).child(customerKey).setValue(customer).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    if (photoUri != null)
+                    saveCustomerPhotoToFirebaseStorage(photoUri,customerKey);
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Customer fotosunu storage a kaydeder .
+     * @param photoUri
+     * @param customerKey
+     */
+    public static void saveCustomerPhotoToFirebaseStorage(Uri photoUri, final String customerKey){
+
+        defineFirebaseAuth();
+        defineFirebaseDatabase();
+        defineFirebaseStorage();
+
+
+        final String userUID = mAuth.getUid();
+        final String randomKey = UUID.randomUUID().toString();
+
+        defineFirebaseStorage();
+        defineFirebaseDatabase();
+
+        final StorageReference ref = stRef.child("CustomersPictures").child(userUID).child(randomKey);
+        ref.putFile(photoUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                if (task.isSuccessful()){
+                    myRef.child("Customers").child(userUID).child(customerKey).child("customerPhoto").setValue(randomKey);
                 }
                 else{
                     Log.e("savePhotoFirebaseStr : ", task.getException()+"");
