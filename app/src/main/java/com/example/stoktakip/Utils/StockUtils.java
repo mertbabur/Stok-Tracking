@@ -17,26 +17,38 @@ public class StockUtils {
      * @param activity --> getActivity .
      * @param whichHolder --> hangi frameLayout un tutacagini belirler .
      */
-    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder){
+    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder, int val){
 
-        activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
-
-    }
-
-
-    public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder){
-
-        ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+        if (val == 0) // backstack e atilmayacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+        else // backstack e atilacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).addToBackStack(null).commit();
 
     }
 
 
-    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder, String bundleKey, String bundleString){
+    public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder, int val){
+
+        if (val == 0) // backstack e atilmayacak ...
+            ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+        else // backstack e atilacak ...
+            ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).addToBackStack(null).commit();
+
+
+
+    }
+
+
+    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder, String bundleKey, String bundleString, int val){
 
         Bundle bundle = new Bundle();
         bundle.putString(bundleKey, bundleString);
         whichFragment.setArguments(bundle);
-        activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+
+        if (val == 0) // backstack e atilmayacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+        else // backstack e atilacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).addToBackStack(null).commit();
 
     }
 

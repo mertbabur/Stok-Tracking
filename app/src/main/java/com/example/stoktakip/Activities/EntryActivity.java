@@ -21,7 +21,7 @@ public class EntryActivity extends AppCompatActivity {
         frameLayoutEntryActivity_holder = findViewById(R.id.frameLayoutEntryActivity_holder);
 
         MainMenuFragment mainMenuFragment = new MainMenuFragment();
-        StockUtils.gotoFragment(EntryActivity.this, mainMenuFragment, R.id.frameLayoutEntryActivity_holder);
+        StockUtils.gotoFragment(EntryActivity.this, mainMenuFragment, R.id.frameLayoutEntryActivity_holder, 0);
 
     }
 }

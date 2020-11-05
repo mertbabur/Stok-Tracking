@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuFragment extends Fragment {
@@ -25,6 +26,7 @@ public class MainMenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main_menu_design, container, false);
 
         defineAttributes(rootView);
+        actionAttributes();
         Toast.makeText(getActivity(), FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
         return rootView;
 
@@ -37,6 +39,25 @@ public class MainMenuFragment extends Fragment {
     public void defineAttributes(View rootView){
 
         cardView_fragmentMainMenu_customerClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_customerClick);
+
+    }
+
+
+    /**
+     * Gorsel nesnelerin action lari tetiklenir .
+     */
+    public void actionAttributes(){
+
+        // Musterilerin oldugu kismi acma ...
+        cardView_fragmentMainMenu_customerClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CustomersFragment customersFragment = new CustomersFragment();
+                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, 1);
+
+            }
+        });
 
     }
 

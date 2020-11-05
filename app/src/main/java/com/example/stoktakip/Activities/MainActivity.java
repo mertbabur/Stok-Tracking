@@ -26,11 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (isLoginUser()){
             startActivity(new Intent(MainActivity.this, EntryActivity.class));
+            finish();
         }
         else {
             mainActivity_fragmentHolder = findViewById(R.id.mainActivity_fragmentHolder);
             LoginFragment loginFragment = new LoginFragment();
-            StockUtils.gotoFragment(MainActivity.this, loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "noButton");
+            StockUtils.gotoFragment(MainActivity.this, loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "noButton", 0);
         }
 
 

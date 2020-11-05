@@ -96,7 +96,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
 
                 SignFragment signFragment = new SignFragment();
-                StockUtils.gotoFragment(getActivity(), signFragment, R.id.mainActivity_fragmentHolder);
+                StockUtils.gotoFragment(getActivity(), signFragment, R.id.mainActivity_fragmentHolder, 1);
 
             }
         });
@@ -108,7 +108,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
 
             ForgotPasswordFragment forgotPasswordFragment = new ForgotPasswordFragment();
-            StockUtils.gotoFragment(getActivity(), forgotPasswordFragment, R.id.mainActivity_fragmentHolder);
+            StockUtils.gotoFragment(getActivity(), forgotPasswordFragment, R.id.mainActivity_fragmentHolder, 1);
 
             }
         });

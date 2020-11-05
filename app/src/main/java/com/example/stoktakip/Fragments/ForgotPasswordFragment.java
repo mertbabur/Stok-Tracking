@@ -68,7 +68,7 @@ public class ForgotPasswordFragment extends Fragment {
                     FirebaseUtils.sendResetPasswordMail(auth, textInputEditText_fragmentForgotPassword_email.getText().toString().trim(), getActivity());
 
                     LoginFragment loginFragment = new LoginFragment();
-                    StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichFragment", "sendButton");
+                    StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichFragment", "sendButton", 1);
 
                 }
                 else {
@@ -84,7 +84,7 @@ public class ForgotPasswordFragment extends Fragment {
             public void onClick(View v) {
 
                 LoginFragment loginFragment = new LoginFragment();
-                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "forgotPasswordBackButton");
+                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "forgotPasswordBackButton", 1);
 
             }
         });

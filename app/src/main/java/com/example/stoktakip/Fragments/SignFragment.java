@@ -84,7 +84,7 @@ public class SignFragment extends Fragment {
             public void onClick(View v) {
 
                 LoginFragment loginFragment = new LoginFragment();
-                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "backButton");
+                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "backButton", 1);
 
             }
         });
@@ -155,7 +155,7 @@ public class SignFragment extends Fragment {
                     Log.e("emailVerify", "dogrulama linki gonderildi .");
 
                     LoginFragment loginFragment = new LoginFragment();
-                    StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "signButton");
+                    StockUtils.gotoFragment(getActivity(), loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "signButton", 1);
 
                 }
                 else{
