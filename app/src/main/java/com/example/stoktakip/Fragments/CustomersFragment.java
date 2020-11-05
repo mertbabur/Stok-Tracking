@@ -1,6 +1,7 @@
 package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,11 @@ import com.example.stoktakip.Models.Customer;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,8 @@ public class CustomersFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        getCustomerFromDBandDefineRecyclerView();
+        defineRecyclerView();
 
 
         return rootView;
@@ -90,6 +98,56 @@ public class CustomersFragment extends Fragment {
         recyclerView_fragmentCustomers.setAdapter(adapter);
 
     }
+
+
+
+    public void getCustomerFromDBandDefineRecyclerView(){
+
+        String userUID = FirebaseAuth.getInstance().getUid();
+
+        FirebaseDatabase.getInstance().getReference().child("Customers").child(userUID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Customer customer = snapshot.getValue(Customer.class);
+                Log.e("error", customer.getCompanyName());
+                customerList.add(customer);
+                adapter.notifyDataSetChanged();
+
+                recyclerView_fragmentCustomers.setHasFixedSize(true);
+                recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+                adapter = new CustomerListAdapter(getActivity(), customerList);
+                recyclerView_fragmentCustomers.setAdapter(adapter);
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 
 
 }
