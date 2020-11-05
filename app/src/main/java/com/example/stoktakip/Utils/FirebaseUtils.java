@@ -50,7 +50,7 @@ public class FirebaseUtils {
 
 
     /**
-     *
+     * Sifre resetleme linki gonderir .
      * @param auth
      * @param email
      */
@@ -119,6 +119,8 @@ public class FirebaseUtils {
         });
 
     }
+
+
 
 
 }

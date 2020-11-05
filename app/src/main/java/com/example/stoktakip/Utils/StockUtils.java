@@ -1,7 +1,9 @@
 package com.example.stoktakip.Utils;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -18,6 +20,13 @@ public class StockUtils {
     public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder){
 
         activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+
+    }
+
+
+    public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder){
+
+        ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
 
     }
 

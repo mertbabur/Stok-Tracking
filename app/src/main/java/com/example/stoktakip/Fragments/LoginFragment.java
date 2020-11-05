@@ -1,5 +1,6 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Activities.EntryActivity;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -165,7 +167,8 @@ public class LoginFragment extends Fragment {
 
                     if (auth.getCurrentUser().isEmailVerified()) {
                         Log.e("loginApp", "giris yapildi .");
-                        // giris yap ...
+                        startActivity(new Intent(getActivity(), EntryActivity.class));
+                        getActivity().finish();
                     }
                     else {
                         Toast.makeText(getActivity(), "Email hesabınız henüz doğrulanmadı . ", Toast.LENGTH_SHORT).show();
