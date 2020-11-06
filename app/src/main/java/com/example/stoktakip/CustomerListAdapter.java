@@ -9,10 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Fragments.DetailCustomerFragment;
 import com.example.stoktakip.Models.Customer;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,7 +37,8 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
 
     public class CardHolder extends RecyclerView.ViewHolder{
 
-        ImageView imageView_cardViewCustomer_customerPP, imageView_cardViewCustomer_phoneCall, imageView_cardViewCustomer_sendMessage;
+        ImageView imageView_cardViewCustomer_customerPP, imageView_cardViewCustomer_phoneCall, imageView_cardViewCustomer_sendMessage
+                  , imageView_cardViewCustomer_deleteCustomer;
         TextView textView_cardViewCustomer_customerName, textView_cardViewCustomer_companyName;
         CardView cardView_cardViewCustomer;
 
@@ -47,6 +51,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             textView_cardViewCustomer_customerName = itemView.findViewById(R.id.textView_cardViewCustomer_customerName);
             cardView_cardViewCustomer = itemView.findViewById(R.id.cardView_cardViewCustomer);
             textView_cardViewCustomer_companyName = itemView.findViewById(R.id.textView_cardViewCustomer_companyName);
+            imageView_cardViewCustomer_deleteCustomer = itemView.findViewById(R.id.imageView_cardViewCustomer_deleteCustomer);
 
         }
     }
@@ -66,6 +71,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         Customer customer = customerList.get(position);
 
         setCustomerInfo(holder, customer);
+        actionHolder(holder, customer);
 
 
 
@@ -75,6 +81,52 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     @Override
     public int getItemCount() {
         return customerList.size();
+    }
+
+
+    /**
+     * Holder in action u tetiklenir .
+     * @param holder
+     * @param customer
+     */
+    public void actionHolder(CardHolder holder, final Customer customer){
+
+        // Customer ayrintilari sayfasini acar ...
+        holder.cardView_cardViewCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DetailCustomerFragment detailCustomerFragment = new DetailCustomerFragment();
+                StockUtils.gotoFragment(mContex, detailCustomerFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customer.getCustomerKey(), 1);
+
+            }
+        });
+
+        // arama yapma kismi ...
+        holder.imageView_cardViewCustomer_phoneCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // mesaj gonderme kismi ...
+        holder.imageView_cardViewCustomer_sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        // customer silme kismi ...
+        holder.imageView_cardViewCustomer_deleteCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
     }
 
 

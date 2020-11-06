@@ -40,39 +40,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView_cardViewCustomer_phoneCall"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/phone_icon"
-                app:civ_border_color="#FF000000"
-                app:civ_circle_background_color="@color/backgroundcolor"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView_cardViewCustomer_sendMessage"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView_cardViewCustomer_sendMessage"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/message_icon"
-                app:civ_border_color="#FF000000"
-                app:civ_circle_background_color="@color/backgroundcolor"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/textView_cardViewCustomer_customerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="as"
                 android:textColor="@color/backgroundcolor"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -85,12 +58,44 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:text="compan"
                 android:textColor="@color/backgroundcolor"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/textView_cardViewCustomer_customerName"
                 app:layout_constraintStart_toEndOf="@+id/imageView_cardViewCustomer_customerPP"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView_cardViewCustomer_phoneCall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_cardViewCustomer_sendMessage"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/phone_call_icon" />
+
+            <ImageView
+                android:id="@+id/imageView_cardViewCustomer_sendMessage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_cardViewCustomer_deleteCustomer"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/send_message_icon" />
+
+            <ImageView
+                android:id="@+id/imageView_cardViewCustomer_deleteCustomer"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/delete_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
