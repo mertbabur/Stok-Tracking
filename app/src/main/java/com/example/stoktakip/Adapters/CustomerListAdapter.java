@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,9 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             @Override
             public void onClick(View v) {
 
+                sendSMS(customer.getCustomerNum());
+
+
             }
         });
 
@@ -183,6 +187,15 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             ActivityCompat.requestPermissions(((AppCompatActivity)mContex), new String[] {Manifest.permission.CALL_PHONE}, 101 );
         else
             mContex.startActivity(callIntent);
+
+    }
+
+
+    public void sendSMS(String phone){
+
+        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+        smsIntent.setData(Uri.parse("smsto:" + phone));
+        mContex.startActivity(smsIntent);
 
     }
 
