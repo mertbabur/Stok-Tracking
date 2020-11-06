@@ -28,12 +28,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.CardHolder>{
+public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<CustomerOrSupplierListAdapter.CardHolder>{
 
     private Context mContex;
     private List<CustomerOrSupplier> customerOrSupplierList;
 
-    public CustomerListAdapter(Context mContex, List<CustomerOrSupplier> customerOrSupplierList) {
+    public CustomerOrSupplierListAdapter(Context mContex, List<CustomerOrSupplier> customerOrSupplierList) {
         this.mContex = mContex;
         this.customerOrSupplierList = customerOrSupplierList;
     }

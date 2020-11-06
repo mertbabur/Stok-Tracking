@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.Adapters.CustomerListAdapter;
+import com.example.stoktakip.Adapters.CustomerOrSupplierListAdapter;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomersFragment extends Fragment {
+public class CustomersOrSuppliersFragment extends Fragment {
 
     private RecyclerView recyclerView_fragmentCustomers;
     private FloatingActionButton floatingActionButton_fragmentCustomers_add;
@@ -34,7 +34,7 @@ public class CustomersFragment extends Fragment {
 
     private List<CustomerOrSupplier> customerList;
 
-    private CustomerListAdapter adapter;
+    private CustomerOrSupplierListAdapter adapter;
 
     private String WHICH_BUTTON;
 
@@ -144,7 +144,7 @@ public class CustomersFragment extends Fragment {
 
         recyclerView_fragmentCustomers.setHasFixedSize(true);
         recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new CustomerListAdapter(getActivity(), customerList);
+        adapter = new CustomerOrSupplierListAdapter(getActivity(), customerList);
         recyclerView_fragmentCustomers.setAdapter(adapter);
 
     }

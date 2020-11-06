@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.R;
@@ -106,11 +105,11 @@ public class AddCustomerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                CustomersFragment customersFragment = new CustomersFragment();
+                CustomersOrSuppliersFragment customersOrSuppliersFragment = new CustomersOrSuppliersFragment();
                 if (WHICH_BUTTON.equals("customerButton"))
-                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
+                    StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
                 else
-                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
+                    StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
 
             }
         });
