@@ -120,7 +120,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             @Override
             public void onClick(View v) {
 
-                sendSMS(customer.getCustomerNum());
+                openSMS(customer.getCustomerNum());
 
 
             }
@@ -191,7 +191,11 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     }
 
 
-    public void sendSMS(String phone){
+    /**
+     * Sms ekranini acar .
+     * @param phone
+     */
+    public void openSMS(String phone){
 
         Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
         smsIntent.setData(Uri.parse("smsto:" + phone));

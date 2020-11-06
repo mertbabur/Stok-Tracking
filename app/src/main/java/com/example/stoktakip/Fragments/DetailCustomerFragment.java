@@ -88,7 +88,7 @@ public class DetailCustomerFragment extends Fragment {
         imageView_fragmentDetailCustomer_sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openSMS(textView_fragmentDetailCustomer_customerNum.getText().toString());
             }
         });
 
@@ -171,6 +171,19 @@ public class DetailCustomerFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CALL_PHONE}, 101 );
         else
             startActivity(callIntent);
+
+    }
+
+
+    /**
+     * Sms ekranini acar .
+     * @param phone
+     */
+    public void openSMS(String phone){
+
+        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+        smsIntent.setData(Uri.parse("smsto:" + phone));
+        getActivity().startActivity(smsIntent);
 
     }
 
