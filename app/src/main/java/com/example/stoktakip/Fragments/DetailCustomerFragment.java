@@ -1,5 +1,8 @@
 package com.example.stoktakip.Fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.Models.Customer;
@@ -42,6 +46,7 @@ public class DetailCustomerFragment extends Fragment {
 
         defineAttributes(rootView);
         setCustomerInfo();
+        actionAttributes();
 
         return rootView;
     }
@@ -75,7 +80,7 @@ public class DetailCustomerFragment extends Fragment {
         imageView_fragmentDetailCustomer_customerCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                callPhone();
             }
         });
 
@@ -96,7 +101,7 @@ public class DetailCustomerFragment extends Fragment {
         });
 
     }
-
+    
 
     /**
      * customerKey ile db den bilgileri getirir .
@@ -151,5 +156,22 @@ public class DetailCustomerFragment extends Fragment {
 
     }
 
+
+    /**
+     * Customer i arar ...
+     */
+    public void callPhone(){
+
+        String customerNum = "tel:" + textView_fragmentDetailCustomer_customerNum.getText().toString().trim();
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(customerNum));
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CALL_PHONE}, 101 );
+        else
+            startActivity(callIntent);
+
+    }
 
 }

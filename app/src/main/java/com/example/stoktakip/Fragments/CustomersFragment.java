@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.CustomerListAdapter;
+import com.example.stoktakip.Adapters.CustomerListAdapter;
 import com.example.stoktakip.Models.Customer;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
