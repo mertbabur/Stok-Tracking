@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.DetailCustomerFragment;
-import com.example.stoktakip.Models.Customer;
+import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,12 +31,11 @@ import java.util.List;
 public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.CardHolder>{
 
     private Context mContex;
-    private List<Customer> customerList;
+    private List<CustomerOrSupplier> customerOrSupplierList;
 
-
-    public CustomerListAdapter(Context mContex, List<Customer> customerList) {
+    public CustomerListAdapter(Context mContex, List<CustomerOrSupplier> customerOrSupplierList) {
         this.mContex = mContex;
-        this.customerList = customerList;
+        this.customerOrSupplierList = customerOrSupplierList;
     }
 
     public class CardHolder extends RecyclerView.ViewHolder{
@@ -73,10 +71,10 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
-        Customer customer = customerList.get(position);
+        CustomerOrSupplier customerOrSupplier = customerOrSupplierList.get(position);
 
-        setCustomerInfo(holder, customer);
-        actionHolder(holder, customer);
+        setCustomerInfo(holder, customerOrSupplier);
+        actionHolder(holder, customerOrSupplier);
 
 
 
@@ -85,16 +83,16 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
 
     @Override
     public int getItemCount() {
-        return customerList.size();
+        return customerOrSupplierList.size();
     }
 
 
     /**
      * Holder in action u tetiklenir .
      * @param holder
-     * @param customer
+     * @param customerOrSupplier
      */
-    public void actionHolder(final CardHolder holder, final Customer customer){
+    public void actionHolder(final CardHolder holder, final CustomerOrSupplier customerOrSupplier){
 
         // Customer ayrintilari sayfasini acar ...
         holder.cardView_cardViewCustomer.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +100,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             public void onClick(View v) {
 
                 DetailCustomerFragment detailCustomerFragment = new DetailCustomerFragment();
-                StockUtils.gotoFragment(mContex, detailCustomerFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customer.getCustomerKey(), 1);
+                StockUtils.gotoFragment(mContex, detailCustomerFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customerOrSupplier.getKey(), 1);
 
             }
         });
@@ -111,7 +109,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         holder.imageView_cardViewCustomer_phoneCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callPhone(customer.getCustomerNum());
+                callPhone(customerOrSupplier.getNum());
             }
         });
 
@@ -120,7 +118,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             @Override
             public void onClick(View v) {
 
-                openSMS(customer.getCustomerNum());
+                openSMS(customerOrSupplier.getNum());
 
 
             }
@@ -142,13 +140,13 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
      * Gorsel nesnelere customer bilgilerini yerlestirir .
      * @param holder
      */
-    public void setCustomerInfo(CardHolder holder, Customer customer){
+    public void setCustomerInfo(CardHolder holder, CustomerOrSupplier customerOrSupplier){
 
-        holder.textView_cardViewCustomer_companyName.setText(customer.getCompanyName());
-        holder.textView_cardViewCustomer_customerName.setText(customer.getCustomerName() + " " + customer.getCustomerSurname());
+        holder.textView_cardViewCustomer_companyName.setText(customerOrSupplier.getCompanyName());
+        holder.textView_cardViewCustomer_customerName.setText(customerOrSupplier.getName() + " " + customerOrSupplier.getSurname());
 
-        if(!customer.getCustomerPhoto().equals("null"))
-            setCustomerPP(holder, customer.getCustomerPhoto());
+        if(!customerOrSupplier.getPhoto().equals("null"))
+            setCustomerPP(holder, customerOrSupplier.getPhoto());
 
     }
 

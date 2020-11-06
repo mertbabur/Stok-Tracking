@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.stoktakip.Models.Customer;
+import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class DetailCustomerFragment extends Fragment {
 
@@ -115,16 +114,16 @@ public class DetailCustomerFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                Customer customer = snapshot.getValue(Customer.class);
+                CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
 
-                textView_fragmentDetailCustomer_companyName.setText(customer.getCompanyName());
-                textView_fragmentDetailCustomer_customerName.setText(customer.getCustomerName());
-                textView_fragmentDetailCustomer_customerSurname.setText(customer.getCustomerSurname());
-                textView_fragmentDetailCustomer_customerNum.setText(customer.getCustomerNum());
-                textView_fragmentDetailCustomer_customerAddress.setText(customer.getCustomerAddress());
+                textView_fragmentDetailCustomer_companyName.setText(customerOrSupplier.getCompanyName());
+                textView_fragmentDetailCustomer_customerName.setText(customerOrSupplier.getName());
+                textView_fragmentDetailCustomer_customerSurname.setText(customerOrSupplier.getSurname());
+                textView_fragmentDetailCustomer_customerNum.setText(customerOrSupplier.getNum());
+                textView_fragmentDetailCustomer_customerAddress.setText(customerOrSupplier.getAddress());
 
 
-                String photoKey = customer.getCustomerPhoto();
+                String photoKey = customerOrSupplier.getPhoto();
                 if (photoKey != "null")
                     setCustomerPP(photoKey, userUID);
 
@@ -144,7 +143,7 @@ public class DetailCustomerFragment extends Fragment {
      * @param photoKey
      */
     public void setCustomerPP(String photoKey, String userUID){
-
+        Log.e("keyyy", photoKey);
         FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(userUID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

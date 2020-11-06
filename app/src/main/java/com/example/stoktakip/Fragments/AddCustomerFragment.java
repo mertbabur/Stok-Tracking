@@ -155,6 +155,7 @@ public class AddCustomerFragment extends Fragment {
         if (WHICH_FRAGMENT.equals("customerFragment"))
             FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
         else
+            FirebaseUtils.addSupplierToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
 
 
         editText_fragmentAddCustomer__customerName.setText("");

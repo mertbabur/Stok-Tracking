@@ -1,7 +1,6 @@
 package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Adapters.CustomerListAdapter;
-import com.example.stoktakip.Models.Customer;
+import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,7 +32,7 @@ public class CustomersFragment extends Fragment {
     private FloatingActionButton floatingActionButton_fragmentCustomers_add;
     private Toolbar toolbar_fragmentCustomers;
 
-    private List<Customer> customerList;
+    private List<CustomerOrSupplier> customerList;
 
     private CustomerListAdapter adapter;
 
@@ -48,10 +47,11 @@ public class CustomersFragment extends Fragment {
         defineAttributes(rootView);
         actionAttributes();
 
-        if (WHICH_FRAGMENT.equals("customerFragment")) {
-            getCustomerFromDBandDefineRecyclerView();
-            defineRecyclerView_customer();
-        }
+        if (WHICH_FRAGMENT.equals("customerFragment"))
+            getCustomerOrSupplierFromDBandDefineRecyclerView("Customers");
+        else
+            getCustomerOrSupplierFromDBandDefineRecyclerView("Suppliers");
+
 
         return rootView;
     }
@@ -94,39 +94,23 @@ public class CustomersFragment extends Fragment {
 
     }
 
-    public void defineRecyclerView_customer(){
-
-        recyclerView_fragmentCustomers.setHasFixedSize(true);
-        recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        adapter = new CustomerListAdapter(getActivity(), customerList);
-        recyclerView_fragmentCustomers.setAdapter(adapter);
-
-    }
-
 
     /**
      * musterileri dbden alir ve recylerview tanimlar .
      */
-    public void getCustomerFromDBandDefineRecyclerView(){
+    public void getCustomerOrSupplierFromDBandDefineRecyclerView(final String whichDB){
 
         String userUID = FirebaseAuth.getInstance().getUid();
 
-        FirebaseDatabase.getInstance().getReference().child("Customers").child(userUID).addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                Customer customer = snapshot.getValue(Customer.class);
-                Log.e("error", customer.getCompanyName());
+                CustomerOrSupplier customer = snapshot.getValue(CustomerOrSupplier.class);
                 customerList.add(customer);
+                defineRecyclerView();
+
                 //adapter.notifyDataSetChanged();
-
-                recyclerView_fragmentCustomers.setHasFixedSize(true);
-                recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                adapter = new CustomerListAdapter(getActivity(), customerList);
-                recyclerView_fragmentCustomers.setAdapter(adapter);
-
             }
 
             @Override
@@ -151,6 +135,20 @@ public class CustomersFragment extends Fragment {
         });
 
     }
+
+
+    /**
+     * Customer icin recyclerView tanimlar .
+     */
+    public void defineRecyclerView(){
+
+        recyclerView_fragmentCustomers.setHasFixedSize(true);
+        recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new CustomerListAdapter(getActivity(), customerList);
+        recyclerView_fragmentCustomers.setAdapter(adapter);
+
+    }
+
 
 
 

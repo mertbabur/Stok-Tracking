@@ -5,19 +5,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.stoktakip.Models.Customer;
-import com.example.stoktakip.Models.Supplier;
+import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -69,6 +64,7 @@ public class FirebaseUtils {
 
     }
 
+
     /**
      * Sifre resetleme linki gonderir .
      * @param auth
@@ -90,6 +86,7 @@ public class FirebaseUtils {
             }
         });
     }
+
 
     /**
      * database e user kaydini yapar .
@@ -140,6 +137,7 @@ public class FirebaseUtils {
 
     }
 
+
     /**
      * Customer bilgilerini db ye kaydeder.
      * saveCustomerPhotoToFirebaseStorage metodunu cagirir .
@@ -157,19 +155,20 @@ public class FirebaseUtils {
         String userUID = mAuth.getUid();
 
         final String customerKey = UUID.randomUUID().toString();
-        Customer customer = new Customer(customerKey, customerName, customerSurname, companyName, customerNum, customerAddress, "null");
+        CustomerOrSupplier customer = new CustomerOrSupplier(customerKey, customerName, customerSurname, companyName, customerNum, customerAddress, "null");
 
         myRef.child("Customers").child(userUID).child(customerKey).setValue(customer).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
                     if (photoUri != null)
-                    savePhotoToFirebaseStorage(photoUri,customerKey, "CustomersPictures", "Customers", "customerPhoto");
+                    savePhotoToFirebaseStorage(photoUri,customerKey, "CustomersPictures", "Customers", "photo");
 
             }
         });
 
     }
+
 
     /**
      * Supplier bilgilerini db ye kaydeder.
@@ -188,15 +187,15 @@ public class FirebaseUtils {
 
         String userUID = mAuth.getUid();
 
-        final String customerKey = UUID.randomUUID().toString();
-        Supplier supplier = new Supplier(customerKey, supplierName, supplierSurname, companyName, supplierNum, supplierAddress, "null");
+        final String supplierKey = UUID.randomUUID().toString();
+        CustomerOrSupplier supplier = new CustomerOrSupplier(supplierKey, supplierName, supplierSurname, companyName, supplierNum, supplierAddress, "null");
 
-        myRef.child("Suppliers").child(userUID).child(customerKey).setValue(supplier).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("Suppliers").child(userUID).child(supplierKey).setValue(supplier).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful())
                     if (photoUri != null)
-                        savePhotoToFirebaseStorage(photoUri,customerKey, "SuppliersPictures", "Suppliers", "supplierPhoto");
+                        savePhotoToFirebaseStorage(photoUri,supplierKey, "SuppliersPictures", "Suppliers", "photo");
 
             }
         });
