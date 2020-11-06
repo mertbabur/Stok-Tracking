@@ -53,10 +53,11 @@ public class StockUtils {
     }
 
 
-    public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder, String bundleKey, String bundleString, int val){
+    public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder, String bundleKey1, String bundleString1, String bundleKey2, String bundleString2, int val){
 
         Bundle bundle = new Bundle();
-        bundle.putString(bundleKey, bundleString);
+        bundle.putString(bundleKey1, bundleString1);
+        bundle.putString(bundleKey2, bundleString2);
         whichFragment.setArguments(bundle);
 
         if (val == 0) // backstack e atilmayacak ...

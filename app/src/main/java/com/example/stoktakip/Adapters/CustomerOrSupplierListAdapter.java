@@ -17,7 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.Fragments.DetailCustomerFragment;
+import com.example.stoktakip.Fragments.DetailCustomerOrSupplierFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -32,10 +32,12 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
 
     private Context mContex;
     private List<CustomerOrSupplier> customerOrSupplierList;
+    private String WHICH_BUTTON;
 
-    public CustomerOrSupplierListAdapter(Context mContex, List<CustomerOrSupplier> customerOrSupplierList) {
+    public CustomerOrSupplierListAdapter(Context mContex, List<CustomerOrSupplier> customerOrSupplierList, String WHICH_BUTTON) {
         this.mContex = mContex;
         this.customerOrSupplierList = customerOrSupplierList;
+        this.WHICH_BUTTON = WHICH_BUTTON;
     }
 
     public class CardHolder extends RecyclerView.ViewHolder{
@@ -99,8 +101,8 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             @Override
             public void onClick(View v) {
 
-                DetailCustomerFragment detailCustomerFragment = new DetailCustomerFragment();
-                StockUtils.gotoFragment(mContex, detailCustomerFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customerOrSupplier.getKey(), 1);
+                DetailCustomerOrSupplierFragment detailCustomerOrSupplierFragment = new DetailCustomerOrSupplierFragment();
+                StockUtils.gotoFragment(mContex, detailCustomerOrSupplierFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customerOrSupplier.getKey(), "whichButton", WHICH_BUTTON, 1);
 
             }
         });
@@ -145,8 +147,12 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
         holder.textView_cardViewCustomer_companyName.setText(customerOrSupplier.getCompanyName());
         holder.textView_cardViewCustomer_customerName.setText(customerOrSupplier.getName() + " " + customerOrSupplier.getSurname());
 
-        if(!customerOrSupplier.getPhoto().equals("null"))
-            setCustomerPP(holder, customerOrSupplier.getPhoto());
+        if(!customerOrSupplier.getPhoto().equals("null")) {
+            if(WHICH_BUTTON.equals("customerButton"))
+                setCustomerPP(holder, customerOrSupplier.getPhoto(), "CustomersPictures");
+            else
+                setCustomerPP(holder, customerOrSupplier.getPhoto(), "SuppliersPictures");
+        }
 
     }
 
@@ -156,11 +162,11 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
      * @param holder
      * @param photoKey
      */
-    public void setCustomerPP(final CardHolder holder, String photoKey){
+    public void setCustomerPP(final CardHolder holder, String photoKey, String whichStorage){
 
         String userUID = FirebaseAuth.getInstance().getUid();
 
-        FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(userUID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        FirebaseStorage.getInstance().getReference().child(whichStorage).child(userUID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
 

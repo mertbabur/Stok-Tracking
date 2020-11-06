@@ -28,15 +28,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
-public class DetailCustomerFragment extends Fragment {
+public class DetailCustomerOrSupplierFragment extends Fragment {
 
     private ImageView imageView_fragmentDetailCustomer_customerCall, imageView_fragmentDetailCustomer_sendMessage, imageView_fragmentDetailCustomer_customerPP
                       , imageView_fragmentDetailCustomer_deleteCustomer;
     private TextView textView_fragmentDetailCustomer_companyName, textView_fragmentDetailCustomer_customerName, textView_fragmentDetailCustomer_customerSurname
                      , textView_fragmentDetailCustomer_customerNum, textView_fragmentDetailCustomer_customerAddress;
 
-    private String CUSTOMER_KEY;
-
+    private String CUSTOMER_OR_SUPPLIER_KEY;
+    private String WHICH_BUTTON;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,7 +44,12 @@ public class DetailCustomerFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail_customer_design, container, false);
 
         defineAttributes(rootView);
-        setCustomerInfo();
+
+        if (WHICH_BUTTON.equals("customerButton"))
+            setCustomerInfo("Customers");
+        else
+            setCustomerInfo("Suppliers");
+
         actionAttributes();
 
         return rootView;
@@ -65,7 +70,8 @@ public class DetailCustomerFragment extends Fragment {
         textView_fragmentDetailCustomer_customerAddress = rootView.findViewById(R.id.textView_fragmentDetailCustomer_customerAddress);
         imageView_fragmentDetailCustomer_deleteCustomer = rootView.findViewById(R.id.imageView_fragmentDetailCustomer_deleteCustomer);
 
-        CUSTOMER_KEY = getArguments().getString("customerKey", "bos customer key");
+        CUSTOMER_OR_SUPPLIER_KEY = getArguments().getString("customerKey", "bos customer or supplier key");
+        WHICH_BUTTON = getArguments().getString("whichButton", "bos button ");
 
     }
 
@@ -106,11 +112,11 @@ public class DetailCustomerFragment extends Fragment {
      * customerKey ile db den bilgileri getirir .
      * Customer bilgilerini gerekli gorsel nesnelere yerlestirir ...
      */
-    public void setCustomerInfo(){
+    public void setCustomerInfo(String whichDB){
 
         final String userUID = FirebaseAuth.getInstance().getUid();
 
-        FirebaseDatabase.getInstance().getReference().child("Customers").child(userUID).child(CUSTOMER_KEY).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).child(CUSTOMER_OR_SUPPLIER_KEY).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -124,9 +130,12 @@ public class DetailCustomerFragment extends Fragment {
 
 
                 String photoKey = customerOrSupplier.getPhoto();
-                if (photoKey != "null")
-                    setCustomerPP(photoKey, userUID);
-
+                if (photoKey != "null") {
+                    if (WHICH_BUTTON.equals("customerButton"))
+                        setCustomerPP(photoKey, userUID, "CustomersPictures");
+                    else
+                        setCustomerPP(photoKey, userUID, "SuppliersPictures");
+                }
             }
 
             @Override
@@ -142,9 +151,9 @@ public class DetailCustomerFragment extends Fragment {
      * FirebaseStorage dan fotoyu gorsel nesneye yerlestirir .
      * @param photoKey
      */
-    public void setCustomerPP(String photoKey, String userUID){
+    public void setCustomerPP(String photoKey, String userUID, String whichStorage){
         Log.e("keyyy", photoKey);
-        FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(userUID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        FirebaseStorage.getInstance().getReference().child(whichStorage).child(userUID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
 

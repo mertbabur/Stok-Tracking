@@ -144,7 +144,12 @@ public class CustomersOrSuppliersFragment extends Fragment {
 
         recyclerView_fragmentCustomers.setHasFixedSize(true);
         recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new CustomerOrSupplierListAdapter(getActivity(), customerList);
+
+        if (WHICH_BUTTON.equals("customerButton"))
+            adapter = new CustomerOrSupplierListAdapter(getActivity(), customerList, "customerButton");
+        else
+            adapter = new CustomerOrSupplierListAdapter(getActivity(), customerList, "supplierButton");
+
         recyclerView_fragmentCustomers.setAdapter(adapter);
 
     }
