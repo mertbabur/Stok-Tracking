@@ -33,6 +33,8 @@ public class AddCustomerFragment extends Fragment {
 
     private Uri getPhotoFromGalleryURI;
 
+    private String WHICH_FRAGMENT;
+
 
 
     @Nullable
@@ -63,6 +65,8 @@ public class AddCustomerFragment extends Fragment {
         button_fragmentAddCustomer_save = rootView.findViewById(R.id.button_fragmentAddCustomer_save);
         imageView_fragmentAddCustomer_back = rootView.findViewById(R.id.imageView_fragmentAddCustomer_back);
 
+        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+
     }
 
 
@@ -90,7 +94,7 @@ public class AddCustomerFragment extends Fragment {
             public void onClick(View v) {
 
                 if (isFilled())
-                    saveCustomerDB();
+                        saveDB();
                 else
                     Toast.makeText(getActivity(), "Lütfen bilgileri eksiksiz bir şekilde doldurunuz .", Toast.LENGTH_SHORT).show();
 
@@ -103,7 +107,10 @@ public class AddCustomerFragment extends Fragment {
             public void onClick(View v) {
 
                 CustomersFragment customersFragment = new CustomersFragment();
-                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, 1);
+                if (WHICH_FRAGMENT.equals("customerFragment"))
+                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
+                else
+                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
 
             }
         });
@@ -137,7 +144,7 @@ public class AddCustomerFragment extends Fragment {
      * Gorsel nesnelerden bilgileri alir  ve DB ye kaydeder .
      * Secilen photo null degilse icerideki metod fotoyu da storage a kaydeder .
      */
-    public void saveCustomerDB(){
+    public void saveDB(){
 
         String name = editText_fragmentAddCustomer__customerName.getText().toString().trim();
         String surname = editText_fragmentAddCustomer_customerSurname.getText().toString().trim();
@@ -145,7 +152,8 @@ public class AddCustomerFragment extends Fragment {
         String num = editTextText_fragmentAddCustomer_customerNum.getText().toString().trim();
         String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
 
-        FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
+        if (WHICH_FRAGMENT.equals("customerFragment"))
+            FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
 
         editText_fragmentAddCustomer__customerName.setText("");
         editText_fragmentAddCustomer_customerSurname.setText("");

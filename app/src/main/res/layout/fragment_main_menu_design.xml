@@ -54,6 +54,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_fragmentMainMenu_supplier"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
@@ -85,7 +86,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="TextView"
+                android:text="Tedarikçiler"
+                android:textColor="@color/backgroundcolor"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

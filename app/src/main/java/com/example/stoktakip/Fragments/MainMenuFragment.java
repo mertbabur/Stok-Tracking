@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuFragment extends Fragment {
 
-    private CardView cardView_fragmentMainMenu_customerClick;
+    private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier;
 
     @Nullable
     @Override
@@ -39,6 +39,7 @@ public class MainMenuFragment extends Fragment {
     public void defineAttributes(View rootView){
 
         cardView_fragmentMainMenu_customerClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_customerClick);
+        cardView_fragmentMainMenu_supplier = rootView.findViewById(R.id.cardView_fragmentMainMenu_supplier);
 
     }
 
@@ -54,8 +55,18 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View v) {
 
                 CustomersFragment customersFragment = new CustomersFragment();
-                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, 1);
+                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
 
+            }
+        });
+
+
+        // tedarikcilerin oldugu kismi acma ...
+        cardView_fragmentMainMenu_supplier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomersFragment customersFragment = new CustomersFragment();
+                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
             }
         });
 

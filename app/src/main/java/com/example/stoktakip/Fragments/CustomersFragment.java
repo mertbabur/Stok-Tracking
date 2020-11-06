@@ -37,6 +37,8 @@ public class CustomersFragment extends Fragment {
 
     private CustomerListAdapter adapter;
 
+    private String WHICH_FRAGMENT;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,9 +47,11 @@ public class CustomersFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
-        getCustomerFromDBandDefineRecyclerView();
-        defineRecyclerView();
 
+        if (WHICH_FRAGMENT.equals("customerFragment")) {
+            getCustomerFromDBandDefineRecyclerView();
+            defineRecyclerView_customer();
+        }
 
         return rootView;
     }
@@ -64,6 +68,8 @@ public class CustomersFragment extends Fragment {
 
         customerList = new ArrayList<>();
 
+        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+
 
     }
 
@@ -78,18 +84,17 @@ public class CustomersFragment extends Fragment {
             public void onClick(View v) {
 
                 AddCustomerFragment addCustomerFragment = new AddCustomerFragment();
-                StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, 1);
+                if (WHICH_FRAGMENT.equals("customerFragment"))
+                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
+                else
+                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
 
             }
         });
 
     }
 
-
-    /**
-     * RecyclerView i tanimlar .
-     */
-    public void defineRecyclerView(){
+    public void defineRecyclerView_customer(){
 
         recyclerView_fragmentCustomers.setHasFixedSize(true);
         recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -100,7 +105,9 @@ public class CustomersFragment extends Fragment {
     }
 
 
-
+    /**
+     * musterileri dbden alir ve recylerview tanimlar .
+     */
     public void getCustomerFromDBandDefineRecyclerView(){
 
         String userUID = FirebaseAuth.getInstance().getUid();
@@ -112,15 +119,13 @@ public class CustomersFragment extends Fragment {
                 Customer customer = snapshot.getValue(Customer.class);
                 Log.e("error", customer.getCompanyName());
                 customerList.add(customer);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
 
                 recyclerView_fragmentCustomers.setHasFixedSize(true);
                 recyclerView_fragmentCustomers.setLayoutManager(new LinearLayoutManager(getActivity()));
 
                 adapter = new CustomerListAdapter(getActivity(), customerList);
                 recyclerView_fragmentCustomers.setAdapter(adapter);
-
-
 
             }
 
