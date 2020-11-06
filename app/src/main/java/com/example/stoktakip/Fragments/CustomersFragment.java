@@ -36,7 +36,7 @@ public class CustomersFragment extends Fragment {
 
     private CustomerListAdapter adapter;
 
-    private String WHICH_FRAGMENT;
+    private String WHICH_BUTTON;
 
     @Nullable
     @Override
@@ -47,7 +47,7 @@ public class CustomersFragment extends Fragment {
         defineAttributes(rootView);
         actionAttributes();
 
-        if (WHICH_FRAGMENT.equals("customerFragment"))
+        if (WHICH_BUTTON.equals("customerButton"))
             getCustomerOrSupplierFromDBandDefineRecyclerView("Customers");
         else
             getCustomerOrSupplierFromDBandDefineRecyclerView("Suppliers");
@@ -68,7 +68,7 @@ public class CustomersFragment extends Fragment {
 
         customerList = new ArrayList<>();
 
-        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+        WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
 
 
     }
@@ -84,10 +84,10 @@ public class CustomersFragment extends Fragment {
             public void onClick(View v) {
 
                 AddCustomerFragment addCustomerFragment = new AddCustomerFragment();
-                if (WHICH_FRAGMENT.equals("customerFragment"))
-                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
+                if (WHICH_BUTTON.equals("customerButton"))
+                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
                 else
-                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
+                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
 
             }
         });

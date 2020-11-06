@@ -33,7 +33,7 @@ public class AddCustomerFragment extends Fragment {
 
     private Uri getPhotoFromGalleryURI;
 
-    private String WHICH_FRAGMENT;
+    private String WHICH_BUTTON;
 
 
 
@@ -65,7 +65,7 @@ public class AddCustomerFragment extends Fragment {
         button_fragmentAddCustomer_save = rootView.findViewById(R.id.button_fragmentAddCustomer_save);
         imageView_fragmentAddCustomer_back = rootView.findViewById(R.id.imageView_fragmentAddCustomer_back);
 
-        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+        WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
 
     }
 
@@ -107,10 +107,10 @@ public class AddCustomerFragment extends Fragment {
             public void onClick(View v) {
 
                 CustomersFragment customersFragment = new CustomersFragment();
-                if (WHICH_FRAGMENT.equals("customerFragment"))
-                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
+                if (WHICH_BUTTON.equals("customerButton"))
+                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
                 else
-                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
+                    StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
 
             }
         });
@@ -152,7 +152,7 @@ public class AddCustomerFragment extends Fragment {
         String num = editTextText_fragmentAddCustomer_customerNum.getText().toString().trim();
         String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
 
-        if (WHICH_FRAGMENT.equals("customerFragment"))
+        if (WHICH_BUTTON.equals("customerButton"))
             FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
         else
             FirebaseUtils.addSupplierToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);

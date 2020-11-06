@@ -55,7 +55,7 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View v) {
 
                 CustomersFragment customersFragment = new CustomersFragment();
-                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "customerFragment", 1);
+                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
 
             }
         });
@@ -66,7 +66,7 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CustomersFragment customersFragment = new CustomersFragment();
-                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichFragment", "supplierFragment", 1);
+                StockUtils.gotoFragment(getActivity(), customersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
             }
         });
 
