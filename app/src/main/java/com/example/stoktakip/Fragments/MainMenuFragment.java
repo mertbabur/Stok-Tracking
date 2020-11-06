@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuFragment extends Fragment {
 
-    private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier;
+    private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct;
 
     @Nullable
     @Override
@@ -40,6 +40,7 @@ public class MainMenuFragment extends Fragment {
 
         cardView_fragmentMainMenu_customerClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_customerClick);
         cardView_fragmentMainMenu_supplier = rootView.findViewById(R.id.cardView_fragmentMainMenu_supplier);
+        cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
 
     }
 
@@ -67,6 +68,16 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View v) {
                 CustomersOrSuppliersFragment customersOrSuppliersFragment = new CustomersOrSuppliersFragment();
                 StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
+            }
+        });
+
+        // product ekleme kismini acar ...
+        cardView_fragmentMainMenu_addProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ProductsFragments productsFragments = new ProductsFragments();
+                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, 1);
             }
         });
 
