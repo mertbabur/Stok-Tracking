@@ -101,7 +101,7 @@ public class DetailCustomerFragment extends Fragment {
         });
 
     }
-    
+
 
     /**
      * customerKey ile db den bilgileri getirir .

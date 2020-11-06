@@ -1,6 +1,9 @@
 package com.example.stoktakip.Adapters;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.DetailCustomerFragment;
@@ -88,7 +93,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
      * @param holder
      * @param customer
      */
-    public void actionHolder(CardHolder holder, final Customer customer){
+    public void actionHolder(final CardHolder holder, final Customer customer){
 
         // Customer ayrintilari sayfasini acar ...
         holder.cardView_cardViewCustomer.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +110,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         holder.imageView_cardViewCustomer_phoneCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                callPhone(customer.getCustomerNum());
             }
         });
 
@@ -161,6 +166,23 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
 
             }
         });
+
+    }
+
+
+    /**
+     * Customer i arar ...
+     */
+    public void callPhone(String phone){
+
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + phone));
+
+        if (ActivityCompat.checkSelfPermission(mContex, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(((AppCompatActivity)mContex), new String[] {Manifest.permission.CALL_PHONE}, 101 );
+        else
+            mContex.startActivity(callIntent);
 
     }
 
