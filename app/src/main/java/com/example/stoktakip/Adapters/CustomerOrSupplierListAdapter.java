@@ -102,7 +102,7 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             public void onClick(View v) {
 
                 DetailCustomerOrSupplierFragment detailCustomerOrSupplierFragment = new DetailCustomerOrSupplierFragment();
-                StockUtils.gotoFragment(mContex, detailCustomerOrSupplierFragment, R.id.frameLayoutEntryActivity_holder, "customerKey", customerOrSupplier.getKey(), "whichButton", WHICH_BUTTON, 1);
+                StockUtils.gotoFragment(mContex, detailCustomerOrSupplierFragment, R.id.frameLayoutEntryActivity_holder, "customerOrSupplierKey", customerOrSupplier.getKey(), "whichButton", WHICH_BUTTON, 1);
 
             }
         });

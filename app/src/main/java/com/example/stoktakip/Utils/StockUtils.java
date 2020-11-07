@@ -53,6 +53,21 @@ public class StockUtils {
     }
 
 
+    public static void gotoFragment(FragmentActivity activity, Fragment whichFragment, int whichHolder, String bundleKey1, String bundleString1, String bundleKey2, String bundleString2, int val){
+
+        Bundle bundle = new Bundle();
+        bundle.putString(bundleKey1, bundleString1);
+        bundle.putString(bundleKey2, bundleString2);
+        whichFragment.setArguments(bundle);
+
+        if (val == 0) // backstack e atilmayacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).commit();
+        else // backstack e atilacak ...
+            activity.getSupportFragmentManager().beginTransaction().replace(whichHolder, whichFragment).addToBackStack(null).commit();
+
+    }
+
+
     public static void gotoFragment(Context mContext, Fragment whichFragment, int whichHolder, String bundleKey1, String bundleString1, String bundleKey2, String bundleString2, int val){
 
         Bundle bundle = new Bundle();

@@ -83,11 +83,11 @@ public class CustomersOrSuppliersFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                AddCustomerFragment addCustomerFragment = new AddCustomerFragment();
+                AddCustomerOrSupplierFragment addCustomerOrSupplierFragment = new AddCustomerOrSupplierFragment();
                 if (WHICH_BUTTON.equals("customerButton"))
-                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
+                    StockUtils.gotoFragment(getActivity(), addCustomerOrSupplierFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
                 else
-                    StockUtils.gotoFragment(getActivity(), addCustomerFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
+                    StockUtils.gotoFragment(getActivity(), addCustomerOrSupplierFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
 
             }
         });

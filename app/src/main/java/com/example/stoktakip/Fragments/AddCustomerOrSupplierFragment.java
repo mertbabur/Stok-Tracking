@@ -3,6 +3,7 @@ package com.example.stoktakip.Fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
-public class AddCustomerFragment extends Fragment {
+import java.util.HashMap;
+import java.util.Map;
 
-    private ImageView imageView_fragmentAddCustomer_customerPP, imageView_fragmentAddCustomer_back;
+public class AddCustomerOrSupplierFragment extends Fragment {
+
+    private ImageView imageView_fragmentAddCustomer_customerPP;
     private TextView textView_fragmentAddCustomer_addCustomerPP;
     private EditText editText_fragmentAddCustomer__customerName, editText_fragmentAddCustomer_customerSurname
                      , editTextText_fragmentAddCustomer_companyName, editTextText_fragmentAddCustomer_customerNum
@@ -33,7 +45,11 @@ public class AddCustomerFragment extends Fragment {
     private Uri getPhotoFromGalleryURI;
 
     private String WHICH_BUTTON;
+    private String CUSTOMER_OR_SUPPLIER_KEY;
 
+    private String USER_UID;
+
+    private String PHOTO_KEY;
 
 
     @Nullable
@@ -44,6 +60,12 @@ public class AddCustomerFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+
+        if (WHICH_BUTTON.equals("editCustomerButton"))
+            setInfoCustomerOrSupplier("Customers");
+        else if (WHICH_BUTTON.equals("editSupplierButton"))
+            setInfoCustomerOrSupplier("Suppliers");
+
         return rootView;
 
     }
@@ -62,9 +84,11 @@ public class AddCustomerFragment extends Fragment {
         editTextText_fragmentAddCustomer_customerNum = rootView.findViewById(R.id.editTextText_fragmentAddCustomer_customerNum);
         editText_fragmentAddCustomer_customerAddress = rootView.findViewById(R.id.editText_fragmentAddCustomer_customerAddress);
         button_fragmentAddCustomer_save = rootView.findViewById(R.id.button_fragmentAddCustomer_save);
-        imageView_fragmentAddCustomer_back = rootView.findViewById(R.id.imageView_fragmentAddCustomer_back);
 
+        CUSTOMER_OR_SUPPLIER_KEY = getArguments().getString("customerOrSupplierKey", "bos customer or supplier key");
         WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
+
+        USER_UID = FirebaseAuth.getInstance().getUid();
 
     }
 
@@ -92,15 +116,19 @@ public class AddCustomerFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (isFilled())
+                if (isFilled()) {
+                    if (WHICH_BUTTON.equals("customerButton") || WHICH_BUTTON.equals("supplierButton"))
                         saveDB();
+                    else // edit customer veya supplier
+                        updateDB();
+                }
                 else
                     Toast.makeText(getActivity(), "Lütfen bilgileri eksiksiz bir şekilde doldurunuz .", Toast.LENGTH_SHORT).show();
 
             }
         });
 
-        // Customer Fragment a geri donme kismi ...
+        /*// Customer Fragment a geri donme kismi ...
         imageView_fragmentAddCustomer_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,11 +136,13 @@ public class AddCustomerFragment extends Fragment {
                 CustomersOrSuppliersFragment customersOrSuppliersFragment = new CustomersOrSuppliersFragment();
                 if (WHICH_BUTTON.equals("customerButton"))
                     StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "customerButton", 1);
-                else
+                else if(WHICH_BUTTON.equals("supplierButton"))
                     StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "supplierButton", 1);
+                else
+                    StockUtils.gotoFragment(getActivity(), customersOrSuppliersFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "editButton", 0);
 
             }
-        });
+        });*/
 
     }
 
@@ -153,7 +183,7 @@ public class AddCustomerFragment extends Fragment {
 
         if (WHICH_BUTTON.equals("customerButton"))
             FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
-        else
+        else if (WHICH_BUTTON.equals("supplierButton"))
             FirebaseUtils.addSupplierToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
 
 
@@ -186,6 +216,100 @@ public class AddCustomerFragment extends Fragment {
             return true;
 
         return false;
+
+    }
+
+
+    /**
+     * Düzenleme kismi icin bilgileri gerekli gorsel nesnelere yerlestirir .
+     * @param whichDB
+     */
+    public void setInfoCustomerOrSupplier(String whichDB){
+
+        FirebaseDatabase.getInstance().getReference().child(whichDB).child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
+
+                editText_fragmentAddCustomer__customerName.setText(customerOrSupplier.getName());
+                editText_fragmentAddCustomer_customerSurname.setText(customerOrSupplier.getSurname());
+                editTextText_fragmentAddCustomer_companyName.setText(customerOrSupplier.getCompanyName());
+                editTextText_fragmentAddCustomer_customerNum.setText(customerOrSupplier.getNum());
+                editText_fragmentAddCustomer_customerAddress.setText(customerOrSupplier.getAddress());
+
+                PHOTO_KEY = customerOrSupplier.getPhoto();
+                if (PHOTO_KEY != null){
+                    if (WHICH_BUTTON.equals("editCustomerButton"))
+                        setCustomerOrSupplierPP("CustomersPictures", PHOTO_KEY);
+                    else
+                        setCustomerOrSupplierPP("SuppliersPictures", PHOTO_KEY);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Duzenleme kismi icin fotoyu storage dan alip gerekli gorsel nesneye yerlestirir .
+     * @param whichStorage
+     * @param photoKey
+     */
+    public void setCustomerOrSupplierPP(String whichStorage, String photoKey){
+
+        FirebaseStorage.getInstance().getReference().child(whichStorage).child(USER_UID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(imageView_fragmentAddCustomer_customerPP);
+            }
+        });
+
+    }
+
+
+    public void updateDB(){
+
+        String name = editText_fragmentAddCustomer__customerName.getText().toString().trim();
+        String surname = editText_fragmentAddCustomer_customerSurname.getText().toString().trim();
+        String companyName = editTextText_fragmentAddCustomer_companyName.getText().toString().trim();
+        String num = editTextText_fragmentAddCustomer_customerNum.getText().toString().trim();
+        String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
+
+        Map map = new HashMap();
+        map.put("name", name);
+        map.put("surname", surname);
+        map.put("companyName", companyName);
+        map.put("num", num);
+        map.put("address", address);
+
+
+
+        if (WHICH_BUTTON.equals("editCustomerButton"))
+            FirebaseDatabase.getInstance().getReference().child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).updateChildren(map);
+        else if(WHICH_BUTTON.equals("editSupplierButton"))
+            FirebaseDatabase.getInstance().getReference().child("Suppliers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).updateChildren(map);
+
+        if (getPhotoFromGalleryURI != null){
+            if (WHICH_BUTTON.equals("editCustomerButton")) {
+                FirebaseUtils.deletePhotoFromFirebaseStorage("CustomersPictures", PHOTO_KEY);
+                FirebaseUtils.savePhotoToFirebaseStorage(getPhotoFromGalleryURI, CUSTOMER_OR_SUPPLIER_KEY, "CustomersPictures", "Customers", "photo");
+            }
+            else if(WHICH_BUTTON.equals("editSupplierButton")) {
+                FirebaseUtils.deletePhotoFromFirebaseStorage("SuppliersPictures", PHOTO_KEY);
+                FirebaseUtils.savePhotoToFirebaseStorage(getPhotoFromGalleryURI, CUSTOMER_OR_SUPPLIER_KEY, "SuppliersPictures", "Suppliers", "photo");
+            }
+        }
+
+
+
 
     }
 
