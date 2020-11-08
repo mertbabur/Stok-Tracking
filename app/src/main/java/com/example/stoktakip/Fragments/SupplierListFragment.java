@@ -38,6 +38,13 @@ public class SupplierListFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
+    private String name;
+    private String purchasePrice;
+    private String sellingPrice;
+    private String howManyUnit;
+    private String productCode;
+    private String productType;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +72,13 @@ public class SupplierListFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
 
+        name = getArguments().getString("name", "bos");
+        purchasePrice = getArguments().getString("purchasePrice", "bos");;
+        sellingPrice = getArguments().getString("sellingPrice", "bos");;
+        howManyUnit = getArguments().getString("howManyUnit", "bos");;
+        productCode = getArguments().getString("productCode", "bos");;
+        productType = getArguments().getString("productType", "bos");;
+
 
 
     }
@@ -76,10 +90,7 @@ public class SupplierListFragment extends Fragment {
 
         recyclerView_fragmentSupplierList.setHasFixedSize(true);
         recyclerView_fragmentSupplierList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        adapter = new SupplierListAdapter(getActivity(), supplierList);
-
-
+        adapter = new SupplierListAdapter(getActivity(), supplierList, name, purchasePrice, sellingPrice, howManyUnit, productCode, productType);
         recyclerView_fragmentSupplierList.setAdapter(adapter);
 
     }

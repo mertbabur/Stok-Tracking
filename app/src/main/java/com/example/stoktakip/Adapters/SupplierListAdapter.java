@@ -2,6 +2,7 @@ package com.example.stoktakip.Adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Fragments.AddProductFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,9 +30,22 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
     private Context mContext;
     private List<CustomerOrSupplier> supplierList;
 
-    public SupplierListAdapter(Context mContext, List<CustomerOrSupplier> supplierList) {
+    private String name;
+    private String purchasePrice;
+    private String sellingPrice;
+    private String howManyUnit;
+    private String productCode;
+    private String productType;
+
+    public SupplierListAdapter(Context mContext, List<CustomerOrSupplier> supplierList, String name, String purchasePrice, String sellingPrice, String howManyUnit, String productCode, String productType) {
         this.mContext = mContext;
         this.supplierList = supplierList;
+        this.name = name;
+        this.purchasePrice = purchasePrice;
+        this.sellingPrice = sellingPrice;
+        this.howManyUnit = howManyUnit;
+        this.productCode = productCode;
+        this.productType = productType;
     }
 
     public class CardHolder extends RecyclerView.ViewHolder{
@@ -60,9 +76,33 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
-        CustomerOrSupplier supplier = supplierList.get(position);
+        final CustomerOrSupplier supplier = supplierList.get(position);
         Log.e("asssdf", "girdi "+supplier.getName());
         setInfoSupplier(holder, supplier);
+
+        holder.cardView_supplierList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AddProductFragment addProductFragment = new AddProductFragment();
+                Bundle bundle = new Bundle();
+
+                bundle.putString("supplierKeyFromAdapter", supplier.getKey());
+                bundle.putString("companyNameFromAdapter", supplier.getCompanyName());
+
+                bundle.putString("name", name);
+                bundle.putString("purchasePrice", purchasePrice);
+                bundle.putString("sellingPrice", sellingPrice);
+                bundle.putString("howManyUnit", howManyUnit);
+                bundle.putString("productCode", productCode);
+                bundle.putString("productType", productType);
+
+                addProductFragment.setArguments(bundle);
+                ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutEntryActivity_holder, addProductFragment).commit();
+
+
+            }
+        });
 
     }
 
