@@ -385,7 +385,7 @@ public class AddProductFragment extends Fragment {
 
         Product product = new Product(name, productCode, purchasePrice, sellingPrice, howManyUnit, productType, from, fromKey);
 
-        myRef.child("Products").child(productKey).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("Products").child(USER_UID).child(productKey).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
