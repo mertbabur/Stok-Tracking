@@ -19,10 +19,10 @@ import androidx.fragment.app.Fragment;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.CaptureAct;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +53,7 @@ public class AddProductFragment extends Fragment {
     private DatabaseReference myRef;
 
     private FirebaseAuth mAuth;
+
 
 
 
@@ -107,6 +108,10 @@ public class AddProductFragment extends Fragment {
         button_fragmentAddProduct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SupplierListFragment supplierListFragment = new SupplierListFragment();
+                StockUtils.gotoFragment(getActivity(), supplierListFragment, R.id.frameLayoutEntryActivity_holder, 1);
+
 
                 setSelected_typeProduct();
                 setSelected_who();
@@ -309,6 +314,9 @@ public class AddProductFragment extends Fragment {
         }
 
     }
+
+
+
 
 
 }
