@@ -383,13 +383,13 @@ public class AddProductFragment extends Fragment {
 
         final String productKey = UUID.randomUUID().toString();
 
-        Product product = new Product(name, productCode, purchasePrice, sellingPrice, howManyUnit, productType, from, fromKey);
+        final Product product = new Product(productKey, name, productCode, purchasePrice, sellingPrice, howManyUnit, productType, from, fromKey);
 
         myRef.child("Products").child(USER_UID).child(productKey).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    saveProductKeyDB(productKey);
+                    saveProductKeyDB(product);
                 }
             }
         });
@@ -399,15 +399,15 @@ public class AddProductFragment extends Fragment {
 
     /**
      * product i kullanici ekledi ise productKey i; kendine , tedarikciden ekledi ise tedarikci db ye ekler .
-     * @param productKey
+     * @param product
      */
-    public void saveProductKeyDB(String productKey){
+    public void saveProductKeyDB(Product product){
 
         if (isSelectedWho.equals("Kendim Ekle")){ // eger kendi eklerse ...
-            myRef.child("Users").child(USER_UID).child("ProductsKey").child(productKey).setValue(productKey);
+            myRef.child("Users").child(USER_UID).child("ProductsKey").child(product.getProductKey()).setValue(product);
         }
         else{ // eger tedarikciden eklerse ...
-            myRef.child("Suppliers").child(USER_UID).child(SUPPLIER_KEY).child("ProductsKey").child(productKey).setValue(productKey);
+            myRef.child("Suppliers").child(USER_UID).child(SUPPLIER_KEY).child("ProductsKey").child(product.getProductKey()).setValue(product);
         }
 
     }

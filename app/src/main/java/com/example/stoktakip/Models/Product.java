@@ -2,12 +2,13 @@ package com.example.stoktakip.Models;
 
 public class Product {
 
-    String productName, productCode, purchasePrice, sellingPrice, howManyUnit, typeProduct, from, fromKey;
+    String productKey, productName, productCode, purchasePrice, sellingPrice, howManyUnit, typeProduct, from, fromKey;
 
     public Product() {
     }
 
-    public Product(String productName, String productCode, String purchasePrice, String sellingPrice, String howManyUnit, String typeProduct, String from, String fromKey) {
+    public Product(String productKey, String productName, String productCode, String purchasePrice, String sellingPrice, String howManyUnit, String typeProduct, String from, String fromKey) {
+        this.productKey = productKey;
         this.productName = productName;
         this.productCode = productCode;
         this.purchasePrice = purchasePrice;
@@ -16,6 +17,14 @@ public class Product {
         this.typeProduct = typeProduct;
         this.from = from;
         this.fromKey = fromKey;
+    }
+
+    public String getProductKey() {
+        return productKey;
+    }
+
+    public void setProductKey(String productKey) {
+        this.productKey = productKey;
     }
 
     public String getProductName() {
