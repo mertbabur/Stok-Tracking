@@ -57,10 +57,6 @@ public class AddProductFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
-
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -104,8 +100,6 @@ public class AddProductFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         USER_UID = mAuth.getUid();
 
-
-
     }
 
 
@@ -127,7 +121,6 @@ public class AddProductFragment extends Fragment {
 
             }
         });
-
 
         // Barkod okutma kismi ...
         imageView_fragmentAddProduct_barcodeButton.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +146,6 @@ public class AddProductFragment extends Fragment {
             }
         });
 
-
         // Attribute leri temizleme kismi ...
         textView_fragmentAddProduct_clearAttributes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +159,11 @@ public class AddProductFragment extends Fragment {
     }
 
 
+    /**
+     * Eger supplier secme fragment indan geldiysek try a girer .
+     * Product eklemeden supplier secmeye gecerken saklanan bundle geri burada yakalanir .
+     * Bunun amaci --> Supllier secerken doldurdugumuz bilgiler kaybolmasin diye .
+     */
     public void setSupplierIfCameSupplierListFragment(){
 
         // Eger supplierListFragment tan geldi ise bu argument ile gelecek.
@@ -189,6 +186,7 @@ public class AddProductFragment extends Fragment {
             editText_fragmentAddProduct_howManyUnit.setText(howManyUnit);
             editText_fragmentAddProduct_productCode.setText(productCode);
 
+            //Hangi birim secili ise ...
             if (productType.equals("Adet"))
                 radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typeProduct_unit);
             else if(productType.equals("Ağırlık"))
@@ -198,12 +196,9 @@ public class AddProductFragment extends Fragment {
 
             radioGroup_who.check(R.id.radioButton_who_supplier);
 
-
-
         }catch (Exception e){
             Log.e("supplierKey", e.getMessage());
         }
-
 
     }
 
@@ -305,6 +300,7 @@ public class AddProductFragment extends Fragment {
 
     }
 
+
     /**
      * Tedarikci radioButton u secili ise kayitli tedarikci var mi? .
      * Varsa --> tedarikci sec , Yoksa --> kullaniciya uyari gonder .
@@ -338,6 +334,11 @@ public class AddProductFragment extends Fragment {
 
     }
 
+
+    /**
+     * Supplier secmek icin supplier listesini acar .
+     * Bu listeyi acarken daha once doldurdugumuz alanlari bundle da saklar ve gecilen fragment a ulastirir .
+     */
     public void openSupplierListFragment(){
 
         String name = editText_fragmentAddProduct_productName.getText().toString().trim();
@@ -413,6 +414,9 @@ public class AddProductFragment extends Fragment {
     }
 
 
+    /**
+     * Dolu olan gorsel nesnleri icini temizler .
+     */
     public void clearAttributes(){
 
         editText_fragmentAddProduct_productName.setText("");

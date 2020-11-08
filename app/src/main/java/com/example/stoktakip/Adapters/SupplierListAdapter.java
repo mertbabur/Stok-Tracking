@@ -80,6 +80,7 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
         Log.e("asssdf", "girdi "+supplier.getName());
         setInfoSupplier(holder, supplier);
 
+        // supllier secme kismi ... --> product ekleme fragmentindan gelen bundle geri burada gonderilir .
         holder.cardView_supplierList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +101,6 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
                 addProductFragment.setArguments(bundle);
                 ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutEntryActivity_holder, addProductFragment).commit();
 
-
             }
         });
 
@@ -112,6 +112,11 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
     }
 
 
+    /**
+     * Supplier bilgileri gerekli gorsel nesnelere eklenir .
+     * @param holder
+     * @param supplier
+     */
     public void setInfoSupplier(final CardHolder holder, CustomerOrSupplier supplier){
 
         holder.textView_cardView_supplierList_nameSurname.setText(supplier.getName() + " " + supplier.getSurname());
