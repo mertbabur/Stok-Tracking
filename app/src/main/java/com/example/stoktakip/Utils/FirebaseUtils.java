@@ -242,7 +242,7 @@ public class FirebaseUtils {
 
         defineFirebaseAuth();
         defineFirebaseStorage();
-        
+
         String userUID = mAuth.getUid();
 
         stRef.child(whichStorage).child(userUID).child(photoKey).delete();

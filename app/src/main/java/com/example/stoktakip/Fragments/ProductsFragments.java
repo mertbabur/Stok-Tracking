@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ProductsFragments extends Fragment {
@@ -27,6 +28,7 @@ public class ProductsFragments extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_products_design, container, false);
 
         defineAttributes(rootView);
+        actionAttributes();
 
         return rootView;
 
@@ -54,6 +56,9 @@ public class ProductsFragments extends Fragment {
         floatingActionButton_fragmentProducts_addProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                AddProductFragment addProductFragment = new AddProductFragment();
+                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, 1);
 
             }
         });
