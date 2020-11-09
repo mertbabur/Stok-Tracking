@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.FirebaseUtils;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +26,8 @@ public class ProductDetailFragment extends Fragment {
 
     private TextView textView_detailProductFragment_name, textView_detailProductFragment_code, textView_detailProductFragment_purchase
                     ,textView_detailProductFragment_selling, textView_detailProductFragment_quantity, textView_detailProductFragment_supplier;
+
+    private ImageView imageView_detailProductFragment_delete ,imageView_detailProductFragment_modify;
 
     private String PRODUCT_KEY;
     private String USER_UID;
@@ -40,6 +45,7 @@ public class ProductDetailFragment extends Fragment {
 
         defineAttributes(rootView);
         getProductsFromDB();
+        actionAttributes();
 
         return rootView;
     }
@@ -56,6 +62,8 @@ public class ProductDetailFragment extends Fragment {
         textView_detailProductFragment_selling = rootView.findViewById(R.id.textView_detailProductFragment_selling);
         textView_detailProductFragment_quantity = rootView.findViewById(R.id.textView_detailProductFragment_quantity);
         textView_detailProductFragment_supplier = rootView.findViewById(R.id.textView_detailProductFragment_supplier);
+        imageView_detailProductFragment_delete = rootView.findViewById(R.id.imageView_detailProductFragment_delete);
+        imageView_detailProductFragment_modify = rootView.findViewById(R.id.imageView_detailProductFragment_modify);
 
         PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
 
@@ -64,6 +72,35 @@ public class ProductDetailFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         USER_UID = mAuth.getUid();
+
+    }
+
+
+    /**
+     * Gorsel nesnlerin action u tetiklenir .
+     */
+    public void actionAttributes(){
+
+        // Product silme kismi ...
+        imageView_detailProductFragment_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        // Product duzenleme kismi ...
+        imageView_detailProductFragment_modify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AddProductFragment addProductFragment = new AddProductFragment();
+                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, 1);
+
+            }
+        });
+
 
     }
 
@@ -93,34 +130,9 @@ public class ProductDetailFragment extends Fragment {
                     textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Litre");
 
                 if (product.getFrom().equals("Tedarikçiden Ekle")) // eger tedarikciden ise .
-                    setCompanyName(product.getFromKey());
+                    FirebaseUtils.setCompanyName(product.getFromKey(), textView_detailProductFragment_supplier);
                 else // user ekledi ise .
                     textView_detailProductFragment_supplier.setText("Kendi Stoğum");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-
-    /**
-     * Supplier key ile supplier bilgilerine ulasir .
-     * Company name i gerkli gorsel nesneye yerlestirir .
-     * @param supplierKey
-     */
-    public void setCompanyName(String supplierKey){
-
-        myRef.child("Suppliers").child(USER_UID).child(supplierKey).child("companyName").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                String companyName = snapshot.getValue().toString();
-                textView_detailProductFragment_supplier.setText(companyName);
-
             }
 
             @Override

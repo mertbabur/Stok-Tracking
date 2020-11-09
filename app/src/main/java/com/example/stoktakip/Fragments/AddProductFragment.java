@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.CaptureAct;
+import com.example.stoktakip.Utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +52,7 @@ public class AddProductFragment extends Fragment {
     private String SUPPLIER_KEY;
     private String USER_UID;
     private String COMPANY_NAME;
+    private String PRODUCT_KEY;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -65,6 +67,7 @@ public class AddProductFragment extends Fragment {
 
         defineAttributes(rootView);
         setSupplierIfCameSupplierListFragment();
+        setSupplierIfCameProdcutDetailFragment();
         actionAttributes();
 
         return rootView;
@@ -155,6 +158,60 @@ public class AddProductFragment extends Fragment {
 
             }
         });
+
+    }
+
+    /**
+     * Eger product design fragment indan geldiysek try a girer .
+     * Product detailden  product duzenlemeye gecerken saklanan bundle geri burada yakalanir .
+     */
+    public void setSupplierIfCameProdcutDetailFragment(){
+
+        // Eger productDetailFragment tan geldi ise bu argument ile gelecek.
+        // Gelmediyse null olup catch e duscek ve program calismaya devam edecek.
+        try {
+            PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
+            Log.e("sdsdf", PRODUCT_KEY + " " + USER_UID);
+            myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    Product product = snapshot.getValue(Product.class);
+
+                    editText_fragmentAddProduct_productName.setText(product.getProductName());
+                    editText_fragmentAddProduct_unitPurchasePriceProduct.setText(product.getPurchasePrice());
+                    editText_fragmentAddProduct_unitSellingPrice.setText(product.getSellingPrice());
+                    editText_fragmentAddProduct_howManyUnit.setText(product.getHowManyUnit());
+                    editText_fragmentAddProduct_productCode.setText(product.getProductCode());
+
+                    //Hangi birim secili ise ...
+                    if (product.getTypeProduct().equals("Adet"))
+                        radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typeProduct_unit);
+                    else if(product.getTypeProduct().equals("Ağırlık"))
+                        radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_weight);
+                    else
+                        radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_volume);
+
+                    if (product.getFrom().equals("Tedarikçiden Ekle")) {
+                        radioGroup_who.check(R.id.radioButton_who_supplier);
+                        FirebaseUtils.setCompanyName(product.getFromKey(), editText_fragmentAddProduct_supplierName);
+                    }
+                    else
+                        radioGroup_who.check(R.id.radioButton_who_me);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+
+        }catch (Exception e){
+            Log.e("supplierKey", e.getMessage());
+        }
 
     }
 
