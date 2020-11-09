@@ -77,7 +77,6 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
         final CustomerOrSupplier supplier = supplierList.get(position);
-        Log.e("asssdf", "girdi "+supplier.getName());
         setInfoSupplier(holder, supplier);
 
         // supllier secme kismi ... --> product ekleme fragmentindan gelen bundle geri burada gonderilir .
@@ -97,9 +96,11 @@ public class SupplierListAdapter extends RecyclerView.Adapter<SupplierListAdapte
                 bundle.putString("howManyUnit", howManyUnit);
                 bundle.putString("productCode", productCode);
                 bundle.putString("productType", productType);
-
+                bundle.putString("whichFragment", "supplierListFragment");
                 addProductFragment.setArguments(bundle);
                 ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutEntryActivity_holder, addProductFragment).commit();
+
+                ((AppCompatActivity)mContext).getSupportFragmentManager().popBackStack();
 
             }
         });

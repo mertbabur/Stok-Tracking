@@ -266,7 +266,6 @@ public class FirebaseUtils {
         defineFirebaseDatabase();
         defineFirebaseAuth();
         String userUID = mAuth.getUid();
-Log.e("ssfds", supplierKey);
 
         myRef.child("Suppliers").child(userUID).child(supplierKey).child("companyName").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

@@ -33,6 +33,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class AddProductFragment extends Fragment {
@@ -53,6 +55,9 @@ public class AddProductFragment extends Fragment {
     private String USER_UID;
     private String COMPANY_NAME;
     private String PRODUCT_KEY;
+    private String SUPPLIER_KEY_FOR_MODIFY_PRODUCT;
+    private String PRODUCT_WHO;
+    private String WHICH_FRAGMENT;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -66,8 +71,12 @@ public class AddProductFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_add_product_design, container, false);
 
         defineAttributes(rootView);
-        setSupplierIfCameSupplierListFragment();
-        setSupplierIfCameProdcutDetailFragment();
+
+        if (WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("supplierListFragment"))
+            setSupplierIfCameSupplierListFragment();
+        else if ((WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("productDetailFragment")))
+            setSupplierIfCameProdcutDetailFragment();
+
         actionAttributes();
 
         return rootView;
@@ -103,6 +112,13 @@ public class AddProductFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         USER_UID = mAuth.getUid();
 
+        try{
+            WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+        }catch (Exception e){
+            Log.e("defineAttr", e.getMessage());
+        }
+
+
     }
 
 
@@ -116,12 +132,19 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                setSelected_typeProduct();
-                setSelected_who();
+                if(PRODUCT_KEY == null) {
 
-                if (!isSelectedTypeProduct.equals("notSelected") && ! isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
-                    saveProductDB();
+                    setSelected_typeProduct();
+                    setSelected_who();
 
+                    if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
+                        saveProductDB();
+
+                }
+                else{
+                    setSelected_typeProduct();
+                    updateProduct();
+                }
             }
         });
 
@@ -167,16 +190,16 @@ public class AddProductFragment extends Fragment {
      */
     public void setSupplierIfCameProdcutDetailFragment(){
 
-        // Eger productDetailFragment tan geldi ise bu argument ile gelecek.
-        // Gelmediyse null olup catch e duscek ve program calismaya devam edecek.
-        try {
             PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
-            Log.e("sdsdf", PRODUCT_KEY + " " + USER_UID);
+
             myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                     Product product = snapshot.getValue(Product.class);
+
+                    SUPPLIER_KEY_FOR_MODIFY_PRODUCT = product.getFromKey();
+                    PRODUCT_WHO = product.getFrom();
 
                     editText_fragmentAddProduct_productName.setText(product.getProductName());
                     editText_fragmentAddProduct_unitPurchasePriceProduct.setText(product.getPurchasePrice());
@@ -192,12 +215,15 @@ public class AddProductFragment extends Fragment {
                     else
                         radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_volume);
 
-                    if (product.getFrom().equals("Tedarikçiden Ekle")) {
+                    if (PRODUCT_WHO.equals("Tedarikçiden Ekle")) {
                         radioGroup_who.check(R.id.radioButton_who_supplier);
                         FirebaseUtils.setCompanyName(product.getFromKey(), editText_fragmentAddProduct_supplierName);
                     }
                     else
-                        radioGroup_who.check(R.id.radioButton_who_me);
+                        editText_fragmentAddProduct_supplierName.setText("Kendi Stoğum");
+
+                    radioGroup_who.setVisibility(View.INVISIBLE);
+                    textView_fragmentAddProduct_selectSupplier.setVisibility(View.INVISIBLE);
 
                 }
 
@@ -206,12 +232,6 @@ public class AddProductFragment extends Fragment {
 
                 }
             });
-
-
-
-        }catch (Exception e){
-            Log.e("supplierKey", e.getMessage());
-        }
 
     }
 
@@ -223,9 +243,6 @@ public class AddProductFragment extends Fragment {
      */
     public void setSupplierIfCameSupplierListFragment(){
 
-        // Eger supplierListFragment tan geldi ise bu argument ile gelecek.
-        // Gelmediyse null olup catch e duscek ve program calismaya devam edecek.
-        try {
             SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
             COMPANY_NAME = getArguments().getString("companyNameFromAdapter", "bos company name");
             editText_fragmentAddProduct_supplierName.setText(COMPANY_NAME);
@@ -252,10 +269,6 @@ public class AddProductFragment extends Fragment {
                 radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_volume);
 
             radioGroup_who.check(R.id.radioButton_who_supplier);
-
-        }catch (Exception e){
-            Log.e("supplierKey", e.getMessage());
-        }
 
     }
 
@@ -481,13 +494,49 @@ public class AddProductFragment extends Fragment {
         editText_fragmentAddProduct_unitPurchasePriceProduct.setText("");
         editText_fragmentAddProduct_howManyUnit.setText("");
         editText_fragmentAddProduct_productCode.setText("");
-        editText_fragmentAddProduct_supplierName.setText("");
+
+        if (PRODUCT_WHO == null)
+            editText_fragmentAddProduct_supplierName.setText("");
 
         radioGroup_fragmentAddProduct_typeProduct.clearCheck();
         radioGroup_who.clearCheck();
 
     }
 
+
+
+    public void updateProduct(){
+
+        String name = editText_fragmentAddProduct_productName.getText().toString().trim();
+        String purchasePrice = editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString().trim();
+        String sellingPrice = editText_fragmentAddProduct_unitSellingPrice.getText().toString().trim();
+        String howManyUnit = editText_fragmentAddProduct_howManyUnit.getText().toString().trim();
+        String productCode = editText_fragmentAddProduct_productCode.getText().toString().trim();
+
+        Map map = new HashMap();
+        map.put("productName", name);
+        map.put("purchasePrice", purchasePrice);
+        map.put("sellingPrice", sellingPrice);
+        map.put("howManyUnit", howManyUnit);
+        map.put("productCode", productCode);
+        map.put("typeProduct", isSelectedTypeProduct);
+
+        myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).updateChildren(map);
+
+        updateProductForSupplierDB(map);
+
+
+    }
+
+
+    public void updateProductForSupplierDB(Map map){
+
+        if (PRODUCT_WHO.equals("Tedarikçiden Ekle"))
+            myRef.child("Suppliers").child(USER_UID).child(SUPPLIER_KEY_FOR_MODIFY_PRODUCT).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
+        else
+            myRef.child("Users").child(USER_UID).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
+
+    }
 
 
 

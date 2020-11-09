@@ -96,7 +96,7 @@ public class ProductDetailFragment extends Fragment {
             public void onClick(View v) {
 
                 AddProductFragment addProductFragment = new AddProductFragment();
-                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, 1);
+                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, "whichFragment", "productDetailFragment", 1);
 
             }
         });
