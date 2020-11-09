@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Fragments.ProductDetailFragment;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 
 import java.util.List;
 
@@ -29,6 +33,8 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         private TextView textView_cardViewProduct_productCode, textView_cardViewProduct_productName, textView_cardViewProduct_purchasePrice
                        , textView_cardViewProduct_sellingPrice, textView_cardViewProduct_howManyUnit, textView_cardViewProduct_whichUnit;
 
+        private CardView cardView_Product;
+
         public CardHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -38,6 +44,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             textView_cardViewProduct_sellingPrice = itemView.findViewById(R.id.textView_cardViewProduct_sellingPrice);
             textView_cardViewProduct_howManyUnit = itemView.findViewById(R.id.textView_cardViewProduct_howManyUnit);
             textView_cardViewProduct_whichUnit = itemView.findViewById(R.id.textView_cardViewProduct_whichUnit);
+            cardView_Product = itemView.findViewById(R.id.cardView_Product);
 
 
 
@@ -56,9 +63,22 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
-        Product product = productList.get(position);
+        final Product product = productList.get(position);
 
         setProductInfo(holder, product);
+
+        // product detayina gecme kismi ...
+        holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String productKey = product.getProductKey();
+
+                ProductDetailFragment productDetailFragment = new ProductDetailFragment();
+                StockUtils.gotoFragment(((AppCompatActivity)mContext), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", productKey, 1);
+
+            }
+        });
 
     }
 
