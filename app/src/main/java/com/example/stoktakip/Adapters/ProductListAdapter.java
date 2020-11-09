@@ -56,6 +56,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
+        Product product = productList.get(position);
+
+        setProductInfo(holder, product);
+
     }
 
     @Override
@@ -63,6 +67,18 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         return productList.size();
     }
 
+
+
+    public void setProductInfo(CardHolder holder, Product product){
+
+        holder.textView_cardViewProduct_productCode.setText("Ürün Kodu : " + product.getProductCode());
+        holder.textView_cardViewProduct_productName.setText(product.getProductName());
+        holder.textView_cardViewProduct_purchasePrice.setText(product.getPurchasePrice());
+        holder.textView_cardViewProduct_sellingPrice.setText(product.getSellingPrice());
+        holder.textView_cardViewProduct_howManyUnit.setText(product.getHowManyUnit());
+        holder.textView_cardViewProduct_whichUnit.setText(product.getTypeProduct());
+
+    }
 
 
 

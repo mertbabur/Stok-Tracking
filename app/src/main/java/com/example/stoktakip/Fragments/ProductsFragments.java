@@ -9,17 +9,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Adapters.ProductListAdapter;
+import com.example.stoktakip.Adapters.SupplierListAdapter;
+import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductsFragments extends Fragment {
 
     private Toolbar toolbar_fragmentProducts;
     private RecyclerView recyclerView_fragmentProducts;
     private FloatingActionButton floatingActionButton_fragmentProducts_addProduct;
+
+    private String USER_UID;
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    private List<Product> productList;
+
+    private ProductListAdapter adapter;
 
     @Nullable
     @Override
@@ -29,6 +51,8 @@ public class ProductsFragments extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+
+        getProductsFromDB();
 
         return rootView;
 
@@ -43,6 +67,13 @@ public class ProductsFragments extends Fragment {
         toolbar_fragmentProducts = rootView.findViewById(R.id.toolbar_fragmentProducts);
         recyclerView_fragmentProducts = rootView.findViewById(R.id.recyclerView_fragmentProducts);
         floatingActionButton_fragmentProducts_addProduct = rootView.findViewById(R.id.floatingActionButton_fragmentProducts_addProduct);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+
+        USER_UID = FirebaseAuth.getInstance().getUid();
+
+        productList = new ArrayList<>();
 
     }
 
@@ -64,5 +95,53 @@ public class ProductsFragments extends Fragment {
         });
 
     }
+
+
+    public void getProductsFromDB(){
+
+        myRef.child("Products").child(USER_UID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Product product = snapshot.getValue(Product.class);
+                productList.add(product);
+
+                defineRecyclerView();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    public void defineRecyclerView(){
+
+        recyclerView_fragmentProducts.setHasFixedSize(true);
+        recyclerView_fragmentProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ProductListAdapter(getActivity(), productList);
+        recyclerView_fragmentProducts.setAdapter(adapter);
+
+    }
+
 
 }
