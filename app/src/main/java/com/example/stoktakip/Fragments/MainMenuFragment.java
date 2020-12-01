@@ -17,7 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuFragment extends Fragment {
 
-    private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct;
+    private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
+                    , cardView_fragmentMainMenu_soldClick;
 
     @Nullable
     @Override
@@ -41,6 +42,7 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_customerClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_customerClick);
         cardView_fragmentMainMenu_supplier = rootView.findViewById(R.id.cardView_fragmentMainMenu_supplier);
         cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
+        cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
 
     }
 
@@ -77,7 +79,17 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View v) {
 
                 ProductsFragments productsFragments = new ProductsFragments();
-                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, 1);
+                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "addProduct", 1);
+            }
+        });
+
+        // satislara bakma kismi ...
+        cardView_fragmentMainMenu_soldClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "tik", Toast.LENGTH_SHORT).show();
+
             }
         });
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +23,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     private Context mContext;
     private List<Product> productList;
+    private String whichButton;
 
-    public ProductListAdapter(Context mContext, List<Product> productList) {
+    public ProductListAdapter(Context mContext, List<Product> productList, String whichButton) {
         this.mContext = mContext;
         this.productList = productList;
+        this.whichButton = whichButton;
     }
 
     public class CardHolder extends RecyclerView.ViewHolder{
@@ -67,19 +70,32 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
         setProductInfo(holder, product);
 
-        // product detayina gecme kismi ...
-        holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                String productKey = product.getProductKey();
+        if(whichButton.equals("addProduct")) { // eger add product butonuna basilarak buraya gelindi ise ...
+            // product detayina gecme kismi ...
+            holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                ProductDetailFragment productDetailFragment = new ProductDetailFragment();
-                StockUtils.gotoFragment(((AppCompatActivity)mContext), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", productKey, 1);
+                    String productKey = product.getProductKey();
 
-            }
-        });
+                    ProductDetailFragment productDetailFragment = new ProductDetailFragment();
+                    StockUtils.gotoFragment(((AppCompatActivity) mContext), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", productKey, 1);
 
+                }
+            });
+        }
+        else{ // eger musteri listesinden sell product butonuna basilarak gelindi ise ...
+
+            holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // urun secmek icin devam ...
+                    Toast.makeText(mContext, "musteri", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
     }
 
     @Override
@@ -88,7 +104,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
 
 
-
+    /**
+     * Gorsel nesnelere bilgiler yerlestirilir ...
+     * @param holder
+     * @param product
+     */
     public void setProductInfo(CardHolder holder, Product product){
 
         holder.textView_cardViewProduct_productCode.setText("Ürün Kodu : " + product.getProductCode());
@@ -99,7 +119,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         holder.textView_cardViewProduct_whichUnit.setText(product.getTypeProduct());
 
     }
-
 
 
 }

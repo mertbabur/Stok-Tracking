@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ public class ProductsFragments extends Fragment {
     private FloatingActionButton floatingActionButton_fragmentProducts_addProduct;
 
     private String USER_UID;
+    private String WHICH_BUTTON;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -50,6 +52,7 @@ public class ProductsFragments extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_products_design, container, false);
 
         defineAttributes(rootView);
+        closeFloatingButton();
         actionAttributes();
 
         getProductsFromDB();
@@ -67,6 +70,8 @@ public class ProductsFragments extends Fragment {
         toolbar_fragmentProducts = rootView.findViewById(R.id.toolbar_fragmentProducts);
         recyclerView_fragmentProducts = rootView.findViewById(R.id.recyclerView_fragmentProducts);
         floatingActionButton_fragmentProducts_addProduct = rootView.findViewById(R.id.floatingActionButton_fragmentProducts_addProduct);
+
+        WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -138,8 +143,18 @@ public class ProductsFragments extends Fragment {
 
         recyclerView_fragmentProducts.setHasFixedSize(true);
         recyclerView_fragmentProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new ProductListAdapter(getActivity(), productList);
+        adapter = new ProductListAdapter(getActivity(), productList, WHICH_BUTTON);
         recyclerView_fragmentProducts.setAdapter(adapter);
+
+    }
+
+
+    /**
+     * Sell product butonuna basilarak gelindi ise butonu gosterme ...
+     */
+    public void closeFloatingButton(){
+
+        floatingActionButton_fragmentProducts_addProduct.setVisibility(View.INVISIBLE);
 
     }
 

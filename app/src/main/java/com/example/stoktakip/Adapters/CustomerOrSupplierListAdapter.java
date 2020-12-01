@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.DetailCustomerOrSupplierFragment;
+import com.example.stoktakip.Fragments.ProductsFragments;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -43,7 +44,7 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
     public class CardHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView_cardViewCustomer_customerPP, imageView_cardViewCustomer_phoneCall, imageView_cardViewCustomer_sendMessage
-                  , imageView_cardViewCustomer_deleteCustomer;
+                  , imageView_cardViewCustomer_deleteCustomer, imageView_cardViewCustomer_sellProduct;
         TextView textView_cardViewCustomer_customerName, textView_cardViewCustomer_companyName;
         CardView cardView_cardViewCustomer;
 
@@ -57,6 +58,7 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             cardView_cardViewCustomer = itemView.findViewById(R.id.cardView_cardViewCustomer);
             textView_cardViewCustomer_companyName = itemView.findViewById(R.id.textView_cardViewCustomer_companyName);
             imageView_cardViewCustomer_deleteCustomer = itemView.findViewById(R.id.imageView_cardViewCustomer_deleteCustomer);
+            imageView_cardViewCustomer_sellProduct = itemView.findViewById(R.id.imageView_cardViewCustomer_sellProduct);
 
         }
     }
@@ -122,7 +124,6 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
 
                 openSMS(customerOrSupplier.getNum());
 
-
             }
         });
 
@@ -134,6 +135,24 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             }
         });
 
+        // Eger Musteri kismindan gelindi ise burasi aktif olacak.
+        // Tedarikci icin aktif icin aktif olmasina gerek yok .
+        if (WHICH_BUTTON.equals("customerButton")) {
+
+            // product satis kismi ...
+            holder.imageView_cardViewCustomer_sellProduct.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ProductsFragments productsFragments = new ProductsFragments();
+                    StockUtils.gotoFragment(((AppCompatActivity) mContex), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "sellProduct", 1);
+
+                }
+            });
+        }
+        else{ // Eger tedarikci kismindan gelindi ise ...
+            holder.imageView_cardViewCustomer_sellProduct.setVisibility(View.INVISIBLE);
+        }
 
     }
 
