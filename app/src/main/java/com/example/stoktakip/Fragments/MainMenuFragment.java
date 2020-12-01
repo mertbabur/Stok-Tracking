@@ -79,7 +79,7 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View v) {
 
                 ProductsFragments productsFragments = new ProductsFragments();
-                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "addProduct", 1);
+                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichFragment", "addProduct", 1);
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.stoktakip.Adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.ProductDetailFragment;
+import com.example.stoktakip.Fragments.SellProductFragment;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -24,11 +26,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     private Context mContext;
     private List<Product> productList;
     private String whichButton;
+    private String customerKey;
 
-    public ProductListAdapter(Context mContext, List<Product> productList, String whichButton) {
+    public ProductListAdapter(Context mContext, List<Product> productList, String whichButton, String customerKey) {
         this.mContext = mContext;
         this.productList = productList;
         this.whichButton = whichButton;
+        this.customerKey = customerKey;
     }
 
     public class CardHolder extends RecyclerView.ViewHolder{
@@ -71,7 +75,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         setProductInfo(holder, product);
 
 
-        if(whichButton.equals("addProduct")) { // eger add product butonuna basilarak buraya gelindi ise ...
+        if(whichButton.equals("addProduct")) { // eger add product fragmentindan  buraya gelindi ise ...
             // product detayina gecme kismi ...
             holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,8 +94,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             holder.cardView_Product.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // urun secmek icin devam ...
-                    Toast.makeText(mContext, "musteri", Toast.LENGTH_SHORT).show();
+                    gotoSellProductFragment(product.getProductKey());
                 }
             });
 
@@ -117,6 +120,22 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         holder.textView_cardViewProduct_sellingPrice.setText(product.getSellingPrice());
         holder.textView_cardViewProduct_howManyUnit.setText(product.getHowManyUnit());
         holder.textView_cardViewProduct_whichUnit.setText(product.getTypeProduct());
+
+    }
+
+
+    /**
+     * sell product fragment a gider .
+     */
+    public void gotoSellProductFragment(String productKey){
+
+        SellProductFragment sellProductFragment = new SellProductFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("whichFragment", whichButton);
+        bundle.putString("customerOrSupplierKey", customerKey);
+        bundle.putString("productKey", productKey);
+        sellProductFragment.setArguments(bundle);
+        ((AppCompatActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.frameLayoutEntryActivity_holder, sellProductFragment).commit();
 
     }
 

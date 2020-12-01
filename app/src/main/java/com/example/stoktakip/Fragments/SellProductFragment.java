@@ -1,5 +1,6 @@
 package com.example.stoktakip.Fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Models.CustomerOrSupplier;
+import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
 
 public class SellProductFragment extends Fragment {
 
@@ -26,6 +40,15 @@ public class SellProductFragment extends Fragment {
             , textView_sellProductFragment_howManyQuantity, textView_sellProductFragment_selectProductClick;
     private Button button_sellProductFragment_sellProduct;
 
+    private String CUSTOMER_KEY;
+    private String WHICH_FRAGMENT; // whichButton ve whichFragment seklinde dusun ... *** !!! --> buraya cok dikkat bi bokluk olabilir ...
+    private String PRODUCT_KEY; // urun secme kismindan geldik ise ...
+    private String USER_UID;
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,7 +56,20 @@ public class SellProductFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_sell_product_design, container, false);
 
         defineAttributes(rootView);
+        actionAttributes();
+        setCustomerInfo();
 
+        // Eger urun sat butonuna basip gelmissek ...
+        if(WHICH_FRAGMENT.equals("customerOrSupplierAdapter")){
+
+            closeCardViews();
+
+        }
+        else { // urun secip buraya geldiysek ...
+
+            setProductInfo();
+
+        }
 
         return rootView;
 
@@ -61,8 +97,131 @@ public class SellProductFragment extends Fragment {
         textView_sellProductFragment_selectProductClick = rootView.findViewById(R.id.textView_sellProductFragment_selectProductClick);
         button_sellProductFragment_sellProduct = rootView.findViewById(R.id.button_sellProductFragment_sellProduct);
 
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+        mAuth = FirebaseAuth.getInstance();
+
+        CUSTOMER_KEY = getArguments().getString("customerOrSupplierKey", "bos customer key");
+        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos fragment");
+        PRODUCT_KEY = getArguments().getString("productKey", "bos productKey");
+        USER_UID = mAuth.getUid();
 
     }
+
+
+    /**
+     * Gorsel nesnelerin actionlari burada tetiklenir .
+     */
+    public void actionAttributes(){
+
+        // urun secme kismi ...
+        textView_sellProductFragment_selectProductClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ProductsFragments productsFragments = new ProductsFragments();
+                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "sellProduct", "customerKey", CUSTOMER_KEY, 0);
+
+            }
+        });
+
+
+
+
+
+    }
+
+
+    /**
+     * Customer bilgilerini gerekli gorsel nesnelere yerlestirir .
+     */
+    public void setCustomerInfo(){
+
+
+        myRef.child("Customers").child(USER_UID).child(CUSTOMER_KEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
+
+                imageView_sellProductFragment_companyName.setText(customerOrSupplier.getCompanyName());
+                imageView_sellProductFragment_customerName.setText(customerOrSupplier.getName() + customerOrSupplier.getSurname());
+
+                String photoKey = customerOrSupplier.getPhoto();
+                if (photoKey != "null"){
+                    setCustomerPP(photoKey);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * photo key e gore storage den customer pp sini getirir .
+     * @param photoKey
+     */
+    public void setCustomerPP(String photoKey){
+
+        FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(USER_UID).child(photoKey).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                Picasso.get().load(uri).into(imageView_sellProductFragment_customerPP);
+
+            }
+        });
+
+    }
+
+
+    /**
+     *  product info ve product quantity belirleme cardView larini kapat .
+     */
+    public void closeCardViews(){
+
+        cardView_sellProductFragment_productInfo.setVisibility(View.INVISIBLE);
+        cardView_sellProductFragment_productQuantitySelect.setVisibility(View.INVISIBLE);
+
+    }
+
+
+    /**
+     * Gerekli bilgileri gorsel nesnelere yerlestirir ...
+     */
+    public void setProductInfo(){
+
+
+        myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Product product = snapshot.getValue(Product.class);
+
+                textView_sellProductFragment_productCode.setText(product.getProductCode());
+                textView_sellProductFragment_productName.setText(product.getProductName());
+                textView_sellProductFragment_purchasePrice.setText(product.getPurchasePrice());
+                textView_sellProductFragment_sellingPrice.setText(product.getSellingPrice());
+                textView_sellProductFragment_howManyQuantity.setText(product.getHowManyUnit());
+                editText_sellProductFragment_productName.setText(product.getProductName());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 
 
 

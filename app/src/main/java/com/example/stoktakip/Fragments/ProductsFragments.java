@@ -36,7 +36,8 @@ public class ProductsFragments extends Fragment {
     private FloatingActionButton floatingActionButton_fragmentProducts_addProduct;
 
     private String USER_UID;
-    private String WHICH_BUTTON;
+    private String WHICH_FRAGMENT;
+    private String CUSTOMER_KEY;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -44,6 +45,7 @@ public class ProductsFragments extends Fragment {
     private List<Product> productList;
 
     private ProductListAdapter adapter;
+
 
     @Nullable
     @Override
@@ -71,7 +73,8 @@ public class ProductsFragments extends Fragment {
         recyclerView_fragmentProducts = rootView.findViewById(R.id.recyclerView_fragmentProducts);
         floatingActionButton_fragmentProducts_addProduct = rootView.findViewById(R.id.floatingActionButton_fragmentProducts_addProduct);
 
-        WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
+        WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos button");
+        CUSTOMER_KEY = getArguments().getString("customerKey", "bos customer key");
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -143,7 +146,7 @@ public class ProductsFragments extends Fragment {
 
         recyclerView_fragmentProducts.setHasFixedSize(true);
         recyclerView_fragmentProducts.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new ProductListAdapter(getActivity(), productList, WHICH_BUTTON);
+        adapter = new ProductListAdapter(getActivity(), productList, WHICH_FRAGMENT, CUSTOMER_KEY);
         recyclerView_fragmentProducts.setAdapter(adapter);
 
     }

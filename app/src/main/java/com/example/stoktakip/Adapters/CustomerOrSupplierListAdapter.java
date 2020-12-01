@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.DetailCustomerOrSupplierFragment;
 import com.example.stoktakip.Fragments.ProductsFragments;
+import com.example.stoktakip.Fragments.SellProductFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -144,8 +145,8 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
                 @Override
                 public void onClick(View v) {
 
-                    ProductsFragments productsFragments = new ProductsFragments();
-                    StockUtils.gotoFragment(((AppCompatActivity) mContex), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "sellProduct", 1);
+                    SellProductFragment sellProductFragment = new SellProductFragment();
+                    StockUtils.gotoFragment(((AppCompatActivity)mContex), sellProductFragment, R.id.frameLayoutEntryActivity_holder, "customerOrSupplierKey", customerOrSupplier.getKey(), "whichFragment", "customerOrSupplierAdapter" ,1);
 
                 }
             });
