@@ -182,9 +182,9 @@ public class AddCustomerOrSupplierFragment extends Fragment {
         String address = editText_fragmentAddCustomer_customerAddress.getText().toString().trim();
 
         if (WHICH_BUTTON.equals("customerButton"))
-            FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
+            FirebaseUtils.addCustomerToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI, 0);
         else if (WHICH_BUTTON.equals("supplierButton"))
-            FirebaseUtils.addSupplierToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI);
+            FirebaseUtils.addSupplierToDB(name, surname, companyName, num, address, getPhotoFromGalleryURI, 0);
 
 
         editText_fragmentAddCustomer__customerName.setText("");

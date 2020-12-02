@@ -2,12 +2,12 @@ package com.example.stoktakip.Models;
 
 public class CustomerOrSupplier {
 
-    private String key, name, surname, companyName, num, address, photo;
+    private String key, name, surname, companyName, num, address, photo, totalDebt;
 
     public CustomerOrSupplier() {
     }
 
-    public CustomerOrSupplier(String key, String name, String surname, String companyName, String num, String address, String photo) {
+    public CustomerOrSupplier(String key, String name, String surname, String companyName, String num, String address, String photo, String totalDebt) {
         this.key = key;
         this.name = name;
         this.surname = surname;
@@ -15,6 +15,7 @@ public class CustomerOrSupplier {
         this.num = num;
         this.address = address;
         this.photo = photo;
+        this.totalDebt = totalDebt;
     }
 
     public String getKey() {
@@ -72,4 +73,13 @@ public class CustomerOrSupplier {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
+
+    public String getTotalDebt() {
+        return totalDebt;
+    }
+
+    public void setTotalDebt(String totalDebt) {
+        this.totalDebt = totalDebt;
+    }
+
 }

@@ -75,7 +75,6 @@ public class ProductsFragments extends Fragment {
 
         WHICH_FRAGMENT = getArguments().getString("whichFragment", "bos button");
         CUSTOMER_KEY = getArguments().getString("customerKey", "bos customer key");
-
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
 
@@ -157,7 +156,8 @@ public class ProductsFragments extends Fragment {
      */
     public void closeFloatingButton(){
 
-        floatingActionButton_fragmentProducts_addProduct.setVisibility(View.INVISIBLE);
+        if(WHICH_FRAGMENT.equals("sellProduct"))
+            floatingActionButton_fragmentProducts_addProduct.setVisibility(View.INVISIBLE);
 
     }
 

@@ -1,7 +1,10 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +16,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.Models.Product;
+import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
+import com.example.stoktakip.Utils.TimeClass;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,11 +37,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class SellProductFragment extends Fragment {
 
     private ImageView imageView_sellProductFragment_customerPP;
     private CardView cardView_sellProductFragment_productInfo, cardView_sellProductFragment_productQuantitySelect;
-    private EditText editText_sellProductFragment_productName, editText_sellProductFragment_productQuantity;
+    private EditText editText_sellProductFragment_productName;
+    private TextInputEditText editText_sellProductFragment_productQuantity;
     private TextView imageView_sellProductFragment_companyName, imageView_sellProductFragment_customerName, textView_sellProductFragment_productCode
             , textView_sellProductFragment_productName, textView_sellProductFragment_purchasePrice, textView_sellProductFragment_sellingPrice
             , textView_sellProductFragment_howManyQuantity, textView_sellProductFragment_selectProductClick;
@@ -120,7 +132,22 @@ public class SellProductFragment extends Fragment {
             public void onClick(View v) {
 
                 ProductsFragments productsFragments = new ProductsFragments();
-                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichButton", "sellProduct", "customerKey", CUSTOMER_KEY, 0);
+                StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichFragment", "sellProduct", "customerKey", CUSTOMER_KEY, 0);
+
+            }
+        });
+
+
+        // urun satma kismi ...
+        button_sellProductFragment_sellProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String productQuantity = editText_sellProductFragment_productQuantity.getText().toString().trim();
+                if (!productQuantity.equals(""))
+                    alertView(productQuantity);
+                else
+                    Toast.makeText(getActivity(), "Lütfen ürün miktarını giriniz .", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -204,8 +231,8 @@ public class SellProductFragment extends Fragment {
 
                 Product product = snapshot.getValue(Product.class);
 
-                textView_sellProductFragment_productCode.setText(product.getProductCode());
-                textView_sellProductFragment_productName.setText(product.getProductName());
+                textView_sellProductFragment_productCode.setText("Ürün Kodu : " + product.getProductCode());
+                textView_sellProductFragment_productName.setText("Ürün Adı : " + product.getProductName());
                 textView_sellProductFragment_purchasePrice.setText(product.getPurchasePrice());
                 textView_sellProductFragment_sellingPrice.setText(product.getSellingPrice());
                 textView_sellProductFragment_howManyQuantity.setText(product.getHowManyUnit());
@@ -221,6 +248,159 @@ public class SellProductFragment extends Fragment {
 
     }
 
+
+    /**
+     *
+     * @param productQuantity
+     */
+    public void alertView(final String productQuantity){
+
+        String productName = textView_sellProductFragment_productName.getText().toString();
+        String companyName = imageView_sellProductFragment_companyName.getText().toString();
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+
+        alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
+        alertDialogbuilder.setMessage("Şirket Adı : " + companyName + "\n" + " " + productName + "\n" + "Ürün Miktarı : " + productQuantity);
+        alertDialogbuilder.setIcon(R.drawable.warning_icon);
+
+        alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                isEnoughQuantityForSellProduct(productQuantity);
+
+            }
+        });
+
+        alertDialogbuilder.setNegativeButton("HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                editText_sellProductFragment_productQuantity.setText("");
+
+            }
+        });
+
+
+        alertDialogbuilder.create().show();
+
+    }
+
+    /**
+     * Depoda yeterli miktarda urun var mi ?
+     * @param productQuantity --> satilmak istenen urun miktari .
+     */
+    public void isEnoughQuantityForSellProduct(final String productQuantity){
+
+        myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Product product = snapshot.getValue(Product.class);
+
+                if(Float.valueOf(productQuantity) <= Float.valueOf(product.getHowManyUnit())){
+
+                    decreaseProduct(product, productQuantity);
+                    sellProduct(product, productQuantity);
+
+                }
+                else{
+
+                    Toast.makeText(getActivity(), "Depoda yeterli miktarda ürün bulunmamaktadır .", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Satilacak urun miktarini stoktan cikarilarak products, supplier ve users da yazan miktarlari duzenler .
+     * @param product --> urun bilgilerini tutar .
+     * @param productQuantity --> satilacak urun miktari .
+     */
+    public void decreaseProduct(Product product, String productQuantity){
+
+        String from = product.getFrom();
+        String fromKey = product.getFromKey(); // userKey or supplierKey
+        String howManyQuantity = product.getHowManyUnit();
+        float lastProductQuantity = Float.valueOf(howManyQuantity) - Float.valueOf(productQuantity);
+
+        myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).child("howManyUnit").setValue(String.valueOf(lastProductQuantity));
+
+        if (from.equals("Kendim Ekle")){ // Eger kullanici kendi stogundan satis yapti ise .
+
+            myRef.child("Users").child(USER_UID).child("ProductsKey").child(PRODUCT_KEY).child("howManyUnit").setValue(String.valueOf(lastProductQuantity));
+
+        }
+        else{ // Eger kullanici supplier stogundan satis yapti ise .
+
+            myRef.child("Suppliers").child(USER_UID).child(fromKey).child("ProductsKey").child(PRODUCT_KEY).child("howManyUnit").setValue(String.valueOf(lastProductQuantity));
+
+        }
+
+    }
+
+
+    /**
+     * Urun soldProducts tablosuna eklenir ve customer a totalDebt eklenir .
+     * updateCustomer metodunu cagirir .
+     * @param product --> urun bilgilerini tutar .
+     * @param productQuantity --> satilacak urun miktari .
+     */
+    public void sellProduct(Product product, String productQuantity){
+
+        String sellingPrice = product.getSellingPrice();
+        String date = TimeClass.getDate();
+        String clock = TimeClass.getClock();
+
+        float totalSoldPrice = Float.valueOf(productQuantity) * Float.valueOf(sellingPrice);
+
+        String sellKey = UUID.randomUUID().toString();
+
+        SoldProduct soldProduct = new SoldProduct(sellKey, CUSTOMER_KEY, PRODUCT_KEY, productQuantity, String.valueOf(totalSoldPrice), "false", date + "-" + clock);
+
+        myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_KEY).child(sellKey).setValue(soldProduct);
+
+        updateCustomer(String.valueOf(totalSoldPrice));
+
+    }
+
+
+    /**
+     * Customer a satilan urunun fiyati totalDebt e yazilarak guncellenir .
+     * @param debt
+     */
+    public void updateCustomer(final String debt){
+
+        final DatabaseReference ref = myRef.child("Customers").child(USER_UID).child(CUSTOMER_KEY).child("totalDebt");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                float totalDebt = Float.valueOf(snapshot.getValue().toString());
+
+                totalDebt += Float.valueOf(debt);
+                ref.setValue(String.valueOf(totalDebt));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 

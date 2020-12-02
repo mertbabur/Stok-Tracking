@@ -151,7 +151,7 @@ public class FirebaseUtils {
      * @param customerNum
      * @param customerAddress
      */
-    public static void addCustomerToDB(String customerName, String customerSurname, String companyName, String customerNum, String customerAddress, final Uri photoUri){
+    public static void addCustomerToDB(String customerName, String customerSurname, String companyName, String customerNum, String customerAddress, final Uri photoUri, int totalDebt){
 
         defineFirebaseAuth();
         defineFirebaseDatabase();
@@ -159,7 +159,7 @@ public class FirebaseUtils {
         String userUID = mAuth.getUid();
 
         final String customerKey = UUID.randomUUID().toString();
-        CustomerOrSupplier customer = new CustomerOrSupplier(customerKey, customerName, customerSurname, companyName, customerNum, customerAddress, "null");
+        CustomerOrSupplier customer = new CustomerOrSupplier(customerKey, customerName, customerSurname, companyName, customerNum, customerAddress, "null", String.valueOf(totalDebt));
 
         myRef.child("Customers").child(userUID).child(customerKey).setValue(customer).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -184,7 +184,7 @@ public class FirebaseUtils {
      * @param supplierAddress
      * @param photoUri
      */
-    public static void addSupplierToDB(String supplierName, String supplierSurname, String companyName, String supplierNum, String supplierAddress, final Uri photoUri){
+    public static void addSupplierToDB(String supplierName, String supplierSurname, String companyName, String supplierNum, String supplierAddress, final Uri photoUri, int totalDebt){
 
         defineFirebaseAuth();
         defineFirebaseDatabase();
@@ -192,7 +192,7 @@ public class FirebaseUtils {
         String userUID = mAuth.getUid();
 
         final String supplierKey = UUID.randomUUID().toString();
-        CustomerOrSupplier supplier = new CustomerOrSupplier(supplierKey, supplierName, supplierSurname, companyName, supplierNum, supplierAddress, "null");
+        CustomerOrSupplier supplier = new CustomerOrSupplier(supplierKey, supplierName, supplierSurname, companyName, supplierNum, supplierAddress, "null", String.valueOf(totalDebt));
 
         myRef.child("Suppliers").child(userUID).child(supplierKey).setValue(supplier).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
