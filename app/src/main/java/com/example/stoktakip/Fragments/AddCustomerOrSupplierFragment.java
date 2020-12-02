@@ -117,10 +117,13 @@ public class AddCustomerOrSupplierFragment extends Fragment {
             public void onClick(View v) {
 
                 if (isFilled()) {
-                    if (WHICH_BUTTON.equals("customerButton") || WHICH_BUTTON.equals("supplierButton"))
+                    if (WHICH_BUTTON.equals("customerButton") || WHICH_BUTTON.equals("supplierButton")) {
                         saveDB();
+                        Toast.makeText(getActivity(), "Ekleme başarılı bir şekilde yapıldı .", Toast.LENGTH_SHORT).show();
+                    }
                     else // edit customer veya supplier
                         updateDB();
+                    Toast.makeText(getActivity(), "Güncelleme başarılı bir şekilde yapıldı .", Toast.LENGTH_SHORT).show();
                 }
                 else
                     Toast.makeText(getActivity(), "Lütfen bilgileri eksiksiz bir şekilde doldurunuz .", Toast.LENGTH_SHORT).show();

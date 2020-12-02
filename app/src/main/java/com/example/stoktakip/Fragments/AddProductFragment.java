@@ -140,10 +140,15 @@ public class AddProductFragment extends Fragment {
                     if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
                         saveProductDB();
 
+                    Toast.makeText(getActivity(), "Ürün başaralı bir şekilde eklendi .", Toast.LENGTH_SHORT).show();
+
                 }
                 else{
                     setSelected_typeProduct();
                     updateProduct();
+
+                    Toast.makeText(getActivity(), "Ürün başaralı bir şekilde güncellendi .", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
