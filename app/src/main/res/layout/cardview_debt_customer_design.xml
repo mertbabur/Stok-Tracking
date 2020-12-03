@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_debtCustomer_customerClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -60,7 +61,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_cardView_debtCustomer_companyName" />
 
             <TextView
-                android:id="@+id/textView_cardView_debtCustomer_padiMoney"
+                android:id="@+id/textView_cardView_debtCustomer_totalDebt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -71,6 +72,17 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_cardView_debtCustomer_customerPP"
                 app:layout_constraintTop_toBottomOf="@+id/textView_cardView_debtCustomer_customerName" />
+
+            <ImageView
+                android:id="@+id/imageView_cardView_debtCustomer_isPaid"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/empty_circle_icon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

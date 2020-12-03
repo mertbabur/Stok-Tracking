@@ -49,7 +49,6 @@ public class SellListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_sell_list_design, container, false);
 
         defineAttributes(rootView);
-        getProductFromDB();
 
         return rootView;
 
@@ -92,42 +91,7 @@ public class SellListFragment extends Fragment {
 
 
 
-    public void getProductFromDB(){
 
-        myRef.child("SoldProducts").child(USER_UID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                SoldProduct soldProduct = snapshot.getValue(SoldProduct.class);
-                productList.add(soldProduct);
-
-                defineRecyclerView();
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
 
 
 }
