@@ -88,7 +88,8 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(), "tik", Toast.LENGTH_SHORT).show();
+                SellListFragment sellListFragment = new SellListFragment();
+                StockUtils.gotoFragment(getActivity(), sellListFragment, R.id.frameLayoutEntryActivity_holder, 1);
 
             }
         });
