@@ -88,8 +88,9 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                SellListFragment sellListFragment = new SellListFragment();
-                StockUtils.gotoFragment(getActivity(), sellListFragment, R.id.frameLayoutEntryActivity_holder, 1);
+                DebtCustomerFragment debtCustomerFragment = new DebtCustomerFragment();
+                StockUtils.gotoFragment(getActivity(),debtCustomerFragment, R.id.frameLayoutEntryActivity_holder, 1);
+
 
             }
         });
