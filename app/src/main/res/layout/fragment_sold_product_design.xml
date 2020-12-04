@@ -7,7 +7,7 @@
     android:background="@color/backgroundcolor">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_sellListFragment"
+        android:id="@+id/toolbar_soldProductFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -31,14 +31,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_sellListFragment">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_soldProductFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_sellListFragment"
+                android:id="@+id/recyclerView_soldProductFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"

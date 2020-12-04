@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Fragments.SoldProductlistFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -85,9 +88,20 @@ public class DebtCustomerAdapter extends RecyclerView.Adapter<DebtCustomerAdapte
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
 
-        String debtCustomerKey = debtCustomerList.get(position);
+        final String debtCustomerKey = debtCustomerList.get(position);
 
         setInfoDebtCustomer(holder, debtCustomerKey);
+
+        // Musteriye satilan urunleri listeleme kismina gitme .
+        holder.cardView_debtCustomer_customerClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SoldProductlistFragment soldProductlistFragment = new SoldProductlistFragment();
+                StockUtils.gotoFragment(((AppCompatActivity)mContext), soldProductlistFragment, R.id.frameLayoutEntryActivity_holder, "debtCustomerKey", debtCustomerKey, 1);
+
+            }
+        });
 
     }
 
