@@ -19,8 +19,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Adapters.ProductListAdapter;
 import com.example.stoktakip.Adapters.SoldProductAdapter;
+import com.example.stoktakip.Adapters.SummaryProductAdapter;
 import com.example.stoktakip.Models.CustomerOrSupplier;
+import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -50,8 +53,10 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
     private String WHICH_BUTTON;
     private String USER_UID;
 
-    private SoldProductAdapter adapter;
+    private SoldProductAdapter soldProductAdapter;
+    private SummaryProductAdapter productAdapter;
     private List<SoldProduct> soldProductList;
+    private List<Product> productList;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -75,6 +80,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         }
         else {
             setCustomerInfo("Suppliers");
+            getProductFromDB();
         }
 
 
@@ -108,6 +114,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         soldProductList = new ArrayList();
+        productList = new ArrayList<>();
 
         USER_UID = mAuth.getUid();
 
@@ -257,10 +264,16 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         recyclerViewfragmentDetailCustomer.setHasFixedSize(true);
         recyclerViewfragmentDetailCustomer.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new SoldProductAdapter(getActivity(), soldProductList, USER_UID);
 
-        recyclerViewfragmentDetailCustomer.setAdapter(adapter);
 
+        if (WHICH_BUTTON.equals("customerButton")) {
+            soldProductAdapter = new SoldProductAdapter(getActivity(), soldProductList, USER_UID);
+            recyclerViewfragmentDetailCustomer.setAdapter(soldProductAdapter);
+        }
+        else {
+            productAdapter = new SummaryProductAdapter(getActivity(), productList, USER_UID);
+            recyclerViewfragmentDetailCustomer.setAdapter(productAdapter);
+        }
     }
 
 
@@ -303,6 +316,44 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
 
     }
+
+    public void getProductFromDB(){
+
+        myRef.child("Suppliers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("ProductsKey").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Product product = snapshot.getValue(Product.class);
+                productList.add(product);
+                defineRecyclerView();
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 
 
 }
