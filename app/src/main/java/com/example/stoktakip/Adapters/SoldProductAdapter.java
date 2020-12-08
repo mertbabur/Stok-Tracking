@@ -43,7 +43,8 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
     public class CardHolder extends RecyclerView.ViewHolder{
 
         TextView textView_cardView_SoldProduct_productName, textView_cardView_SoldProduct_companyName, textView_cardView_SoldProduct_soldQuantity
-                , textView_cardView_SoldProduct_debt, textView_cardView_SoldProduct_isPaid;
+                , textView_cardView_SoldProduct_debt, textView_cardView_SoldProduct_isPaid, textView_cardView_SoldProduct_deleteSoldProductClick
+                , textView_cardView_SoldProduct_productDate;
 
         CardView cardView_SoldProduct_productClick;
 
@@ -55,6 +56,9 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
             textView_cardView_SoldProduct_soldQuantity = itemView.findViewById(R.id.textView_cardView_SoldProduct_soldQuantity);
             textView_cardView_SoldProduct_debt = itemView.findViewById(R.id.textView_cardView_SoldProduct_debt);
             textView_cardView_SoldProduct_isPaid = itemView.findViewById(R.id.textView_cardView_SoldProduct_isPaid);
+            textView_cardView_SoldProduct_productDate = itemView.findViewById(R.id.textView_cardView_SoldProduct_productDate);
+            textView_cardView_SoldProduct_deleteSoldProductClick = itemView.findViewById(R.id.textView_cardView_SoldProduct_deleteSoldProductClick);
+
 
             cardView_SoldProduct_productClick = itemView.findViewById(R.id.cardView_SoldProduct_productClick);
 
@@ -77,6 +81,8 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
         SoldProduct soldProduct = soldProductList.get(position);
 
         setInfoSoldProductName(holder, soldProduct);
+
+        holder.textView_cardView_SoldProduct_productDate.setText("Tarih : " + soldProduct.getSoldDate());
 
         String customerKey = soldProduct.getCustomerKey();
         setInfoCompanyName(holder, customerKey);
@@ -104,7 +110,7 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 Product product = snapshot.getValue(Product.class);
-                holder.textView_cardView_SoldProduct_productName.setText(product.getProductName());
+                holder.textView_cardView_SoldProduct_productName.setText("Ürün Adı : " + product.getProductName());
 
                 String typeProduct = product.getTypeProduct();
                 setProductSoldQuantity(holder, soldProduct.getSoldQuantity(), typeProduct);
@@ -133,7 +139,7 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
 
                 String companyName = snapshot.getValue().toString();
 
-                holder.textView_cardView_SoldProduct_companyName.setText(companyName);
+                holder.textView_cardView_SoldProduct_companyName.setText("Şirket Adı : " + companyName);
 
             }
 
@@ -184,9 +190,7 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
 
         holder.textView_cardView_SoldProduct_soldQuantity.setText("Satış Miktarı : " + soldQuantity + " " + type);
 
-
-
-
     }
+
 
 }
