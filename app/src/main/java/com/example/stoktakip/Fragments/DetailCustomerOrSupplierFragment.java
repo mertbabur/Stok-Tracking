@@ -16,28 +16,50 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Adapters.SoldProductAdapter;
 import com.example.stoktakip.Models.CustomerOrSupplier;
+import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailCustomerOrSupplierFragment extends Fragment {
 
     private ImageView imageView_fragmentDetailCustomer_customerCall, imageView_fragmentDetailCustomer_sendMessage, imageView_fragmentDetailCustomer_customerPP
                       , imageView_fragmentDetailCustomer_deleteCustomer, imageView_fragmentDetailCustomer_edit;
     private TextView textView_fragmentDetailCustomer_companyName, textView_fragmentDetailCustomer_customerName, textView_fragmentDetailCustomer_customerSurname
-                     , textView_fragmentDetailCustomer_customerNum, textView_fragmentDetailCustomer_customerAddress;
+                     , textView_fragmentDetailCustomer_customerNum, textView_fragmentDetailCustomer_customerAddress, textView_fragmentDetailCustomer_totalDebt;
+    private RecyclerView recyclerViewfragmentDetailCustomer;
 
     private String CUSTOMER_OR_SUPPLIER_KEY;
     private String WHICH_BUTTON;
+    private String USER_UID;
+
+    private SoldProductAdapter adapter;
+    private List<SoldProduct> soldProductList;
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    private FirebaseAuth mAuth;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,13 +67,16 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail_customer_design, container, false);
 
         defineAttributes(rootView);
-
-        if (WHICH_BUTTON.equals("customerButton"))
-            setCustomerInfo("Customers");
-        else
-            setCustomerInfo("Suppliers");
-
         actionAttributes();
+
+        if (WHICH_BUTTON.equals("customerButton")) {
+            setCustomerInfo("Customers");
+            getSoldProductFromDB();
+        }
+        else {
+            setCustomerInfo("Suppliers");
+        }
+
 
         return rootView;
     }
@@ -71,9 +96,20 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         textView_fragmentDetailCustomer_customerAddress = rootView.findViewById(R.id.textView_fragmentDetailCustomer_customerAddress);
         imageView_fragmentDetailCustomer_deleteCustomer = rootView.findViewById(R.id.imageView_fragmentDetailCustomer_deleteCustomer);
         imageView_fragmentDetailCustomer_edit = rootView.findViewById(R.id.imageView_fragmentDetailCustomer_edit);
+        recyclerViewfragmentDetailCustomer = rootView.findViewById(R.id.recyclerViewfragmentDetailCustomer);
+        textView_fragmentDetailCustomer_totalDebt = rootView.findViewById(R.id.textView_fragmentDetailCustomer_totalDebt);
 
         CUSTOMER_OR_SUPPLIER_KEY = getArguments().getString("customerOrSupplierKey", "bos customer or supplier key");
         WHICH_BUTTON = getArguments().getString("whichButton", "bos button ");
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+
+        mAuth = FirebaseAuth.getInstance();
+
+        soldProductList = new ArrayList();
+
+        USER_UID = mAuth.getUid();
 
     }
 
@@ -143,6 +179,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
                 textView_fragmentDetailCustomer_customerSurname.setText(customerOrSupplier.getSurname());
                 textView_fragmentDetailCustomer_customerNum.setText(customerOrSupplier.getNum());
                 textView_fragmentDetailCustomer_customerAddress.setText(customerOrSupplier.getAddress());
+                textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
 
 
                 String photoKey = customerOrSupplier.getPhoto();
@@ -210,5 +247,62 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         getActivity().startActivity(smsIntent);
 
     }
+
+
+    /**
+     * RecyclerView tanimla .
+     */
+    public void defineRecyclerView(){
+
+        recyclerViewfragmentDetailCustomer.setHasFixedSize(true);
+        recyclerViewfragmentDetailCustomer.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new SoldProductAdapter(getActivity(), soldProductList, USER_UID);
+
+        recyclerViewfragmentDetailCustomer.setAdapter(adapter);
+
+    }
+
+
+    /**
+     * DB den satilan urunleri alip
+     */
+    public void getSoldProductFromDB(){
+
+        myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                SoldProduct soldProduct = snapshot.getValue(SoldProduct.class);
+                Log.e("urun:", soldProduct.getProductKey());
+                soldProductList.add(soldProduct);
+                defineRecyclerView();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 
 }
