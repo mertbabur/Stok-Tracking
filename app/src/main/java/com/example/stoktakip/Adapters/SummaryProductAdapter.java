@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -28,14 +32,13 @@ public class SummaryProductAdapter extends RecyclerView.Adapter<SummaryProductAd
 
     public class CardHolder extends RecyclerView.ViewHolder{
 
-        TextView textView_cardView_summaryProduct_productName, textView_cardView_summaryProduct_companyName, textView_cardView_summaryProduct_debt
-                , textView_cardView_summaryProduct_purchasedQuantity, textView_cardView_summaryProduct_purchasedPrice, textView_cardView_summaryProduct_sellingPrice;
+        TextView textView_cardView_summaryProduct_productName, textView_cardView_summaryProduct_debt, textView_cardView_summaryProduct_purchasedQuantity
+                , textView_cardView_summaryProduct_purchasedPrice, textView_cardView_summaryProduct_sellingPrice;
 
         public CardHolder(@NonNull View itemView) {
             super(itemView);
 
             textView_cardView_summaryProduct_productName = itemView.findViewById(R.id.textView_cardView_summaryProduct_productName);
-            textView_cardView_summaryProduct_companyName = itemView.findViewById(R.id.textView_cardView_summaryProduct_companyName);
             textView_cardView_summaryProduct_debt = itemView.findViewById(R.id.textView_cardView_summaryProduct_debt);
             textView_cardView_summaryProduct_purchasedQuantity = itemView.findViewById(R.id.textView_cardView_summaryProduct_purchasedQuantity);
             textView_cardView_summaryProduct_purchasedPrice = itemView.findViewById(R.id.textView_cardView_summaryProduct_purchasedPrice);
@@ -58,6 +61,8 @@ public class SummaryProductAdapter extends RecyclerView.Adapter<SummaryProductAd
 
         Product product = productList.get(position);
 
+        setProductInfo(holder, product);
+
     }
 
     @Override
@@ -66,6 +71,37 @@ public class SummaryProductAdapter extends RecyclerView.Adapter<SummaryProductAd
     }
 
 
+    /**
+     * 
+     * @param holder
+     * @param product
+     */
+    public void setProductInfo(CardHolder holder, Product product){
+
+        holder.textView_cardView_summaryProduct_productName.setText("Ürün Adı : " + product.getProductName());
+        holder.textView_cardView_summaryProduct_purchasedPrice.setText("Alınan Fiyat : " + product.getPurchasePrice());
+        holder.textView_cardView_summaryProduct_sellingPrice.setText("Satış Fiyatı : " + product.getSellingPrice());
+
+        String type = product.getTypeProduct();
+        String productQuantity = product.getHowManyUnit();
+        setProductQuantity(holder, type, productQuantity);
+
+    }
+
+
+    public void setProductQuantity(CardHolder holder, String typeProduct, String productQuantity){
+
+        String type;
+        if (typeProduct.equals("Adet"))
+            type = "Tane";
+        else if(typeProduct.equals("Ağırlık"))
+            type = "Kilo";
+        else // Hacim
+            type = "Litre";
+
+        holder.textView_cardView_summaryProduct_purchasedQuantity.setText(productQuantity + " " + type);
+
+    }
 
 
 }

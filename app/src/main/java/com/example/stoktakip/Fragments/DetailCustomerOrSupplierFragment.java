@@ -46,7 +46,8 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
     private ImageView imageView_fragmentDetailCustomer_customerCall, imageView_fragmentDetailCustomer_sendMessage, imageView_fragmentDetailCustomer_customerPP
                       , imageView_fragmentDetailCustomer_deleteCustomer, imageView_fragmentDetailCustomer_edit;
     private TextView textView_fragmentDetailCustomer_companyName, textView_fragmentDetailCustomer_customerName, textView_fragmentDetailCustomer_customerSurname
-                     , textView_fragmentDetailCustomer_customerNum, textView_fragmentDetailCustomer_customerAddress, textView_fragmentDetailCustomer_totalDebt;
+                     , textView_fragmentDetailCustomer_customerNum, textView_fragmentDetailCustomer_customerAddress, textView_fragmentDetailCustomer_totalDebt
+                     , textView_fragmentDetailCustomer_title;
     private RecyclerView recyclerViewfragmentDetailCustomer;
 
     private String CUSTOMER_OR_SUPPLIER_KEY;
@@ -79,6 +80,8 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             getSoldProductFromDB();
         }
         else {
+
+            textView_fragmentDetailCustomer_title.setText("SATIN ALINAN ÜRÜNLER");
             setCustomerInfo("Suppliers");
             getProductFromDB();
         }
@@ -104,6 +107,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         imageView_fragmentDetailCustomer_edit = rootView.findViewById(R.id.imageView_fragmentDetailCustomer_edit);
         recyclerViewfragmentDetailCustomer = rootView.findViewById(R.id.recyclerViewfragmentDetailCustomer);
         textView_fragmentDetailCustomer_totalDebt = rootView.findViewById(R.id.textView_fragmentDetailCustomer_totalDebt);
+        textView_fragmentDetailCustomer_title = rootView.findViewById(R.id.textView_fragmentDetailCustomer_title);
 
         CUSTOMER_OR_SUPPLIER_KEY = getArguments().getString("customerOrSupplierKey", "bos customer or supplier key");
         WHICH_BUTTON = getArguments().getString("whichButton", "bos button ");
@@ -186,8 +190,11 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
                 textView_fragmentDetailCustomer_customerSurname.setText(customerOrSupplier.getSurname());
                 textView_fragmentDetailCustomer_customerNum.setText(customerOrSupplier.getNum());
                 textView_fragmentDetailCustomer_customerAddress.setText(customerOrSupplier.getAddress());
-                textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
 
+                if (WHICH_BUTTON.equals("customerButton"))
+                    textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
+                else
+                    textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM ÖDENECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
 
                 String photoKey = customerOrSupplier.getPhoto();
                 if (photoKey != "null") {
