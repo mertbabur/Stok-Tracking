@@ -40,36 +40,45 @@
 
             <TextView
                 android:id="@+id/textView_cardView_debtCustomer_companyName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:text="Şirket Adı"
+                app:layout_constraintEnd_toStartOf="@+id/textView_cardView_debtCustomer_getPaid"
                 app:layout_constraintStart_toEndOf="@+id/imageView_cardView_debtCustomer_customerPP"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView_cardView_debtCustomer_customerName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:text="Ad Soyad"
+                app:layout_constraintEnd_toStartOf="@+id/textView_cardView_debtCustomer_getPaid"
                 app:layout_constraintStart_toEndOf="@+id/imageView_cardView_debtCustomer_customerPP"
                 app:layout_constraintTop_toBottomOf="@+id/textView_cardView_debtCustomer_companyName" />
 
             <TextView
                 android:id="@+id/textView_cardView_debtCustomer_totalDebt"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:text="Alınacak Tutar"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView_cardView_debtCustomer_getPaid"
                 app:layout_constraintStart_toEndOf="@+id/imageView_cardView_debtCustomer_customerPP"
                 app:layout_constraintTop_toBottomOf="@+id/textView_cardView_debtCustomer_customerName" />
 
@@ -83,6 +92,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/empty_circle_icon" />
+
+            <TextView
+                android:id="@+id/textView_cardView_debtCustomer_getPaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:text="ÖDEME AL"
+                android:textColor="#B71C1C"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_cardView_debtCustomer_isPaid"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
