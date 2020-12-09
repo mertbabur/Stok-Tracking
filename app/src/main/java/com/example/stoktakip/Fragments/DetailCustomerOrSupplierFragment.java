@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,6 +86,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         }
         else {
 
+            textView_fragmentDetailCustomer_getPaid.setText("ÖDEME YAP");
             textView_fragmentDetailCustomer_title.setText("SATIN ALINAN ÜRÜNLER");
             setCustomerInfo("Suppliers");
             getProductFromDB();
@@ -178,7 +180,17 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                createAlertViewForGetPaid();
+                if (WHICH_BUTTON.equals("customerButton")) {
+                    StockUtils.createAlertViewForGetPaid(getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_fragmentDetailCustomer_getPaid, textView_fragmentDetailCustomer_totalDebt, USER_UID, CUSTOMER_OR_SUPPLIER_KEY );
+                }
+                else{
+
+                    /**
+                     * BURADAN DEVAM ... Supplier icin odeme yapma kismi ...
+                     */
+
+                }
+
 
             }
         });
@@ -218,6 +230,10 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
                     else
                         setCustomerPP(photoKey, userUID, "SuppliersPictures");
                 }
+
+                if (customerOrSupplier.getTotalDebt().equals("0.0")) // eger 0 ise yazi ve rengi degisir .
+                    StockUtils.controlTotalDebt(textView_fragmentDetailCustomer_getPaid);
+
             }
 
             @Override
@@ -377,80 +393,6 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         });
 
     }
-
-
-    /**
-     * AlertView olusturur .
-     * getPaidFromCustomer metodunu cagirir . ---> odeme alir .
-     */
-    public void createAlertViewForGetPaid(){
-
-        View desing = getLayoutInflater().inflate(R.layout.alertview_get_paid_design, null);
-
-        textInputEditText_alertView_getPaid_paidQuantity = desing.findViewById(R.id.textInputEditText_alertView_getPaid_paidQuantity);
-
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
-
-        alertDialogbuilder.setTitle("ÖDEME AL");
-        alertDialogbuilder.setMessage("Lütfen alınacak miktarı geçmeyecek şekilde tutarı giriniz ." );
-        alertDialogbuilder.setIcon(R.drawable.get_paid_icon);
-
-        alertDialogbuilder.setView(desing);
-
-        alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                getPaidFromCustomer();
-
-            }
-        });
-
-        alertDialogbuilder.setNegativeButton("HAYIR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-
-            }
-        });
-
-
-        alertDialogbuilder.create().show();
-
-    }
-
-
-    /**
-     * Musteriden odeme alir.
-     * Customers DB sindeki totalDebt i duzenler.
-     */
-    public void getPaidFromCustomer(){
-
-        final Float paidQuantity = Float.valueOf(textInputEditText_alertView_getPaid_paidQuantity.getText().toString());
-
-        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                Float totalDebt = Float.valueOf(snapshot.getValue().toString());
-                if (totalDebt >= paidQuantity) {
-                    totalDebt -= paidQuantity;
-
-                    myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").setValue(String.valueOf(totalDebt));
-
-                }
-                else
-                    Toast.makeText(getActivity(), "Alınacak miktardan büyük değer girilemez .", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
 
 
 }

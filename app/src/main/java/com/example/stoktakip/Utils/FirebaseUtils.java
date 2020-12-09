@@ -1,17 +1,23 @@
 package com.example.stoktakip.Utils;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.Models.User;
+import com.example.stoktakip.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -285,6 +291,47 @@ public class FirebaseUtils {
     }
 
 
+    /**
+     ** Musteriden odeme alir.
+     * * Customers DB sindeki totalDebt i duzenler.
+     * @param activity
+     * @param paidQuantityText  --> odeme miktari alma kismi .
+     * @param getPaidClick --> odeme al tusu .
+     * @param USER_UID
+     * @param CUSTOMER_OR_SUPPLIER_KEY
+     */
+    public static void getPaidFromCustomer(final FragmentActivity activity, TextInputEditText paidQuantityText, final TextView getPaidClick, final TextView kalanBorcText, final String USER_UID, final String CUSTOMER_OR_SUPPLIER_KEY){
+
+        final Float paidQuantity = Float.valueOf(paidQuantityText.getText().toString());
+
+        defineFirebaseDatabase();
+        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Float totalDebt = Float.valueOf(snapshot.getValue().toString());
+                if (totalDebt >= paidQuantity) {
+                    totalDebt -= paidQuantity;
+
+                    myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").setValue(String.valueOf(totalDebt));
+
+                    kalanBorcText.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + totalDebt + " TL");
+
+                    if (totalDebt == 0.0)
+                        StockUtils.controlTotalDebt(getPaidClick);
+
+                }
+                else
+                    Toast.makeText(activity, "Alınacak miktardan büyük değer girilemez .", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 }

@@ -278,6 +278,11 @@ public class DebtCustomerAdapter extends RecyclerView.Adapter<DebtCustomerAdapte
 
     }
 
+
+    /**
+     * totalDebt 0 ise tik yapar, yazi rengi yesil olur ve odeme al butonu not enabled olur .
+     * @param holder
+     */
     public void changeColorImageAndSetEnabledFalseText(CardHolder holder){
 
         holder.imageView_cardView_debtCustomer_isPaid.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tik_icon));
