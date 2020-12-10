@@ -303,6 +303,8 @@ public class SellProductFragment extends Fragment {
 
                     decreaseProduct(product, productQuantity);
                     sellProduct(product, productQuantity);
+                    updateTotalSelligProductPrice(product, productQuantity);
+
 
                 }
                 else{
@@ -402,6 +404,35 @@ public class SellProductFragment extends Fragment {
 
     }
 
+
+    /**
+     * Urunun miktarina gore fiyatini hesaplar ve CashDesk DB sindeki totalSellingProductPrice a ekler .
+     * @param product --> product object .
+     * @param productQuantity --> urun miktari .
+     */
+    public void updateTotalSelligProductPrice(Product product, String productQuantity){
+
+        Float sellingPrice = Float.valueOf(product.getSellingPrice());
+        final Float price = sellingPrice * Float.valueOf(productQuantity); // o urunun miktarina gore satis fiyati .
+
+
+        myRef.child("CashDesk").child(USER_UID).child("totalSellingProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Float totalPrice = Float.valueOf(snapshot.getValue().toString());
+                totalPrice += price;
+                myRef.child("CashDesk").child(USER_UID).child("totalSellingProductPrice").setValue(String.valueOf(totalPrice));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 
