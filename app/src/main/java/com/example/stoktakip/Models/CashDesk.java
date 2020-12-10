@@ -2,17 +2,17 @@ package com.example.stoktakip.Models;
 
 public class CashDesk {
 
-    String totalSellingProductPrice, totalPurchasedProductPrice, totalCollectedProductPrice, totalPaidProductPrice, totatExpense;
+    String totalSellingProductPrice, totalPurchasedProductPrice, totalCollectedProductPrice, totalPaidProductPrice, totalExpense;
 
     public CashDesk() {
     }
 
-    public CashDesk(String totalSellingProductPrice, String totalPurchasedProductPrice, String totalCollectedProductPrice, String totalPaidProductPrice, String totatExpense) {
+    public CashDesk(String totalSellingProductPrice, String totalPurchasedProductPrice, String totalCollectedProductPrice, String totalPaidProductPrice, String totalExpense) {
         this.totalSellingProductPrice = totalSellingProductPrice;
         this.totalPurchasedProductPrice = totalPurchasedProductPrice;
         this.totalCollectedProductPrice = totalCollectedProductPrice;
         this.totalPaidProductPrice = totalPaidProductPrice;
-        this.totatExpense = totatExpense;
+        this.totalExpense = totalExpense;
     }
 
     public String getTotalSellingProductPrice() {
@@ -47,11 +47,11 @@ public class CashDesk {
         this.totalPaidProductPrice = totalPaidProductPrice;
     }
 
-    public String getTotatExpense() {
-        return totatExpense;
+    public String getTotalExpense() {
+        return totalExpense;
     }
 
-    public void setTotatExpense(String totatExpense) {
-        this.totatExpense = totatExpense;
+    public void setTotalExpense(String totalExpense) {
+        this.totalExpense = totalExpense;
     }
 }

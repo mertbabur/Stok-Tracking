@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Models.CashDesk;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.CaptureAct;
@@ -546,7 +547,7 @@ public class AddProductFragment extends Fragment {
 
 
     /**
-     * Supplierdan urun alindiktan sonra CashDesk DB sindeki totalPurchasedProductPrice i gunceller .
+     * Supplierdan urun alindiktan sonra CashDesk DB sindeki totalPurchasedProductPrice ve totalExpense i gunceller .
      */
     public void updateTotalPurchasedProductPrice(){
 
@@ -554,14 +555,19 @@ public class AddProductFragment extends Fragment {
         Float quantity = Float.valueOf(editText_fragmentAddProduct_howManyUnit.getText().toString());
         final Float totalPriceForProduct = purchasedPrice * quantity;
 
-        myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("CashDesk").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                Float totalPurchasedProductPrice = Float.valueOf(snapshot.getValue().toString());
-                totalPurchasedProductPrice += totalPriceForProduct;
-                myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").setValue(String.valueOf(totalPurchasedProductPrice));
+                CashDesk cashDesk = snapshot.getValue(CashDesk.class);
+                Float totalExpense = Float.valueOf(cashDesk.getTotalExpense());
 
+                Float totalPurchasedProductPrice = Float.valueOf(cashDesk.getTotalPurchasedProductPrice());
+                totalPurchasedProductPrice += totalPriceForProduct;
+                totalExpense += totalPriceForProduct;
+
+                myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").setValue(String.valueOf(totalPurchasedProductPrice));
+                myRef.child("CashDesk").child(USER_UID).child("totalExpense").setValue(String.valueOf(totalExpense));
             }
 
             @Override
