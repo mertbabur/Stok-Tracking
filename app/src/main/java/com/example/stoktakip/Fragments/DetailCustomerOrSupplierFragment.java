@@ -182,13 +182,18 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             public void onClick(View v) {
 
                 if (WHICH_BUTTON.equals("customerButton")) {
-                    StockUtils.createAlertViewForGetPaid(getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_fragmentDetailCustomer_getPaid, textView_fragmentDetailCustomer_totalDebt, USER_UID, CUSTOMER_OR_SUPPLIER_KEY );
+
+                    String alertTitle = "ÖDEME AL";
+                    String alertMessage = "Lütfen alınacak miktarı geçmeyecek şekilde tutarı giriniz .";
+
+                    StockUtils.createAlertViewForGetPaid(WHICH_BUTTON, alertTitle, alertMessage,getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_fragmentDetailCustomer_getPaid, textView_fragmentDetailCustomer_totalDebt, USER_UID, CUSTOMER_OR_SUPPLIER_KEY );
                 }
                 else{
 
-                    /**
-                     * BURADAN DEVAM ... Supplier icin odeme yapma kismi ...
-                     */
+                    String alertTitle = "ÖDEME YAP";
+                    String alertMessage = "Lütfen ödenecek miktarı geçmeyecek şekilde giriniz .";
+
+                    StockUtils.createAlertViewForGetPaid(WHICH_BUTTON, alertTitle, alertMessage,getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_fragmentDetailCustomer_getPaid, textView_fragmentDetailCustomer_totalDebt, USER_UID, CUSTOMER_OR_SUPPLIER_KEY );
 
                 }
 

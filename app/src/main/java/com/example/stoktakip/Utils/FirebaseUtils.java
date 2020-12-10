@@ -308,20 +308,21 @@ public class FirebaseUtils {
 
 
     /**
-     ** Musteriden odeme alir.
+     ** Musteriden odeme alir veya supplier a odeme yapar .
      * * Customers DB sindeki totalDebt i duzenler.
+     * @param whichDB --> Customers mi Suppliers mi .
      * @param activity
      * @param paidQuantityText  --> odeme miktari alma kismi .
      * @param getPaidClick --> odeme al tusu .
      * @param USER_UID
      * @param CUSTOMER_OR_SUPPLIER_KEY
      */
-    public static void getPaidFromCustomer(final FragmentActivity activity, TextInputEditText paidQuantityText, final TextView getPaidClick, final TextView kalanBorcText, final String USER_UID, final String CUSTOMER_OR_SUPPLIER_KEY){
+    public static void getPaidFromCustomerOrSupplier(final String whichDB, final FragmentActivity activity, TextInputEditText paidQuantityText, final TextView getPaidClick, final TextView kalanBorcText, final String USER_UID, final String CUSTOMER_OR_SUPPLIER_KEY){
 
         final Float paidQuantity = Float.valueOf(paidQuantityText.getText().toString());
 
         defineFirebaseDatabase();
-        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(whichDB).child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -329,9 +330,12 @@ public class FirebaseUtils {
                 if (totalDebt >= paidQuantity) {
                     totalDebt -= paidQuantity;
 
-                    myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").setValue(String.valueOf(totalDebt));
+                    myRef.child(whichDB).child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("totalDebt").setValue(String.valueOf(totalDebt));
 
-                    kalanBorcText.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + totalDebt + " TL");
+                    if (whichDB.equals("Customers"))
+                        kalanBorcText.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + totalDebt + " TL");
+                    else // Suppliers DB si ise ...
+                        kalanBorcText.setText("TOPLAM ÖDENECEK TUTAR : " + totalDebt + " TL");
 
                     if (totalDebt == 0.0)
                         StockUtils.controlTotalDebt(getPaidClick);
@@ -367,6 +371,35 @@ public class FirebaseUtils {
                 totalCollected += paidQuantity;
 
                 myRef.child("CashDesk").child(USER_UID).child("totalCollectedProductPrice").setValue(String.valueOf(totalCollected));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Supplier a odeme yaptikca CashDesk DB sindeki totalPaid i gunceller .
+     * @param paidQuantityText
+     * @param USER_UID
+     */
+    public static void updateTotalPaidProductPrice(TextInputEditText paidQuantityText, final String USER_UID){
+
+        final Float paidQuantity = Float.valueOf(paidQuantityText.getText().toString());
+
+        myRef.child("CashDesk").child(USER_UID).child("totalPaidProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Float totalPaid = Float.valueOf(snapshot.getValue().toString());
+                totalPaid += paidQuantity;
+
+                myRef.child("CashDesk").child(USER_UID).child("totalPaidProductPrice").setValue(String.valueOf(totalPaid));
 
             }
 

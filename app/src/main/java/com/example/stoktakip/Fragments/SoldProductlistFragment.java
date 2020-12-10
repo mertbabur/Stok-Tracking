@@ -115,7 +115,10 @@ public class SoldProductlistFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                StockUtils.createAlertViewForGetPaid(getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_soldProductFragment_getPaid, textView_soldProductFragment_paidQuantity, USER_UID, DEBT_CUSTOMER_KEY);
+                String alertTitle = "ÖDEME AL";
+                String alertMessage = "Lütfen alınacak miktarı geçmeyecek şekilde tutarı giriniz .";
+                // burada customerButton denmesi o butondan gidildigi icin degil. Sadece customer icin yapildigini belirtir .
+                StockUtils.createAlertViewForGetPaid("customerButton", alertTitle, alertMessage, getActivity(), textInputEditText_alertView_getPaid_paidQuantity, textView_soldProductFragment_getPaid, textView_soldProductFragment_paidQuantity, USER_UID, DEBT_CUSTOMER_KEY);
 
             }
         });
