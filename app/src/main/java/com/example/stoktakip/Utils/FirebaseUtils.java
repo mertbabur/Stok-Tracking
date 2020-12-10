@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.stoktakip.Models.CashDesk;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.Models.User;
 import com.example.stoktakip.R;
@@ -113,6 +114,21 @@ public class FirebaseUtils {
         defineFirebaseDatabase();
 
         myRef.child("Users").child(userUID).setValue(user);
+
+    }
+
+
+    /**
+     * yeni kayit olan kisi icin DB ye kasa ekler . --> CashDesk DB si .
+     * @param auth
+     */
+    public static void saveUserToCashDeskDB(FirebaseAuth auth){
+
+        String userUID = auth.getUid();
+        defineFirebaseDatabase();
+
+        CashDesk cashDesk = new CashDesk("0.0", "0.0", "0.0", "0.0", "0.0");
+        myRef.child("CashDesk").child(userUID).setValue(cashDesk);
 
     }
 

@@ -184,6 +184,8 @@ public class SignFragment extends Fragment {
                 if (task.isSuccessful()){
 
                     FirebaseUtils.saveUserFirebaseDB(auth, email, companyName, name, "null");
+                    FirebaseUtils.saveUserToCashDeskDB(auth); /** Buraya dikkat denenmedi hata olabilir .  */
+
                     if (getPhotoFromGalleryURI != null)
                         FirebaseUtils.saveUserPhotoFirebaseStorage(auth, getPhotoFromGalleryURI);
 
