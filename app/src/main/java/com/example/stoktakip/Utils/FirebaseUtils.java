@@ -350,4 +350,33 @@ public class FirebaseUtils {
     }
 
 
+    /**
+     * Musteriden odeme aldikca CashDesk DB sindeki totalCollection u gunceller .
+     * @param paidQuantityText
+     * @param USER_UID
+     */
+    public static void updateTotalCollectedProductPrice(TextInputEditText paidQuantityText, final String USER_UID){
+
+        final Float paidQuantity = Float.valueOf(paidQuantityText.getText().toString());
+
+        myRef.child("CashDesk").child(USER_UID).child("totalCollectedProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Float totalCollected = Float.valueOf(snapshot.getValue().toString());
+                totalCollected += paidQuantity;
+
+                myRef.child("CashDesk").child(USER_UID).child("totalCollectedProductPrice").setValue(String.valueOf(totalCollected));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 }

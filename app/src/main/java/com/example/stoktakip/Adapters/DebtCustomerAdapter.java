@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stoktakip.Fragments.SoldProductlistFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -222,6 +223,7 @@ public class DebtCustomerAdapter extends RecyclerView.Adapter<DebtCustomerAdapte
             public void onClick(DialogInterface dialog, int which) {
 
                 getPaidFromCustomer(holder, customerId);
+                FirebaseUtils.updateTotalCollectedProductPrice(holder.textInputEditText_alertView_getPaid_paidQuantity, userUID);
 
             }
         });

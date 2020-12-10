@@ -99,6 +99,7 @@ public class StockUtils {
     /**
      * AlertView olusturur .
      * getPaidFromCustomer metodunu cagirir . ---> odeme alir .
+     * updateTotalCollectedProductPrice metoudunu cagirir . --> totalCollection u gunceller .
      * @param activity
      * @param paidQuantity --> odeme miktari girme yeri .
      * @param getPaidClick --> odeme al tusu .
@@ -124,6 +125,8 @@ public class StockUtils {
             public void onClick(DialogInterface dialog, int which) {
 
                 FirebaseUtils.getPaidFromCustomer(activity, finalPaidQuantity, getPaidClick, kalanBorcText, USER_UID, CUSTOMER_OR_SUPPLIER_KEY );
+                FirebaseUtils.updateTotalCollectedProductPrice(finalPaidQuantity, USER_UID);
+
 
             }
         });
