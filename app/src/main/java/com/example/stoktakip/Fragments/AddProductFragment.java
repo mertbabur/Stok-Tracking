@@ -309,7 +309,6 @@ public class AddProductFragment extends Fragment {
     public void setSelected_who(){
 
         int selectId = radioGroup_who.getCheckedRadioButtonId();
-        Log.e("se", selectId+"");
         switch (selectId){
             case R.id.radioButton_who_me:
                 isSelectedWho = radioButton_who_me.getText().toString();

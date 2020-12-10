@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_expense">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputEditText_expenseAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="EK GİDER NEDİR" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputEditText_expenseQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="EK GİDER MİKTARI"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup_expense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButton_fuelExpense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yakıt"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton_rentExpense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kira"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton_employeeCost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Çalışan Masrafı"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton_taxExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vergi"
+            android:textSize="12sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Diğer"
+            android:textSize="12sp" />
+    </RadioGroup>
+</androidx.constraintlayout.widget.ConstraintLayout>

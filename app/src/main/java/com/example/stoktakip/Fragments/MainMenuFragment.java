@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainMenuFragment extends Fragment {
 
     private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
-                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk;
+                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense;
 
     @Nullable
     @Override
@@ -44,6 +44,7 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
         cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
         cardView_fragmentMainMenu_cashDesk = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDesk);
+        cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense);
 
     }
 
@@ -104,6 +105,17 @@ public class MainMenuFragment extends Fragment {
                 CashDeskFragment cashDeskFragment = new CashDeskFragment();
                 StockUtils.gotoFragment(getActivity(), cashDeskFragment, R.id.frameLayoutEntryActivity_holder,1);
 
+
+            }
+        });
+
+        // ek gider ekleme kısmı ...
+        cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AdditionalExpenseFragment additionalExpenseFragment = new AdditionalExpenseFragment();
+                StockUtils.gotoFragment(getActivity(), additionalExpenseFragment, R.id.frameLayoutEntryActivity_holder, 1);
 
             }
         });
