@@ -289,6 +289,9 @@ public class SellProductFragment extends Fragment {
 
     /**
      * Depoda yeterli miktarda urun var mi ?
+     * updateTotalSelligProductPrice --> cagirir .
+     * sellProduct --> cagirir .
+     * decreaseProduct --> cagirir .
      * @param productQuantity --> satilmak istenen urun miktari .
      */
     public void isEnoughQuantityForSellProduct(final String productQuantity){

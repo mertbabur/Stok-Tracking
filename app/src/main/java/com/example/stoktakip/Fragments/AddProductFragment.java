@@ -139,6 +139,7 @@ public class AddProductFragment extends Fragment {
 
                     if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
                         saveProductDB();
+                        updateTotalPurchasedProductPrice();
 
                     Toast.makeText(getActivity(), "Ürün başaralı bir şekilde eklendi .", Toast.LENGTH_SHORT).show();
 
@@ -543,6 +544,33 @@ public class AddProductFragment extends Fragment {
 
     }
 
+
+    /**
+     * Supplierdan urun alindiktan sonra CashDesk DB sindeki totalPurchasedProductPrice i gunceller .
+     */
+    public void updateTotalPurchasedProductPrice(){
+
+        Float purchasedPrice = Float.valueOf(editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString());
+        Float quantity = Float.valueOf(editText_fragmentAddProduct_howManyUnit.getText().toString());
+        final Float totalPriceForProduct = purchasedPrice * quantity;
+
+        myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Float totalPurchasedProductPrice = Float.valueOf(snapshot.getValue().toString());
+                totalPurchasedProductPrice += totalPriceForProduct;
+                myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").setValue(String.valueOf(totalPurchasedProductPrice));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 
