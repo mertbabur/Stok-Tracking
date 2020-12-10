@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainMenuFragment extends Fragment {
 
     private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
-                    , cardView_fragmentMainMenu_soldClick;
+                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk;
 
     @Nullable
     @Override
@@ -43,6 +43,7 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_supplier = rootView.findViewById(R.id.cardView_fragmentMainMenu_supplier);
         cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
         cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
+        cardView_fragmentMainMenu_cashDesk = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDesk);
 
     }
 
@@ -94,6 +95,20 @@ public class MainMenuFragment extends Fragment {
 
             }
         });
+
+        // kasaya giris kismi ...
+        cardView_fragmentMainMenu_cashDesk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CashDeskFragment cashDeskFragment = new CashDeskFragment();
+                StockUtils.gotoFragment(getActivity(), cashDeskFragment, R.id.frameLayoutEntryActivity_holder,1);
+
+
+            }
+        });
+
+
 
     }
 
