@@ -88,6 +88,13 @@ public class CashDeskFragment extends Fragment {
                 textView_cashDeskFragment_totalSellingProductPrice.setText(cashDesk.getTotalSellingProductPrice() + " TL");
                 textView_cashDeskFragment_totalCollectedProductPrice.setText(cashDesk.getTotalCollectedProductPrice() + " TL");
                 textView_cashDeskFragment_totalPaidProductPrice.setText(cashDesk.getTotalPaidProductPrice() + " TL");
+                textView_cashDeskFragment_totalAdditionalExpense.setText(cashDesk.getTotalAdditionalExpense() + " TL");
+                textView_cashDeskFragment_totalCollectedProductPrice_taxExpense.setText("VERGİ : " + cashDesk.getTotalTaxExpense() + " TL");
+                textView_cashDeskFragment_totalCollectedProductPrice_rentExpense.setText("KİRA : " + cashDesk.getTotalRentExpense() + " TL");
+                textView_cashDeskFragment_totalCollectedProductPrice_other.setText("DİĞER : " + cashDesk.getTotalOtherExpense() + " TL");
+                textView_cashDeskFragment_totalCollectedProductPrice_fuelExpense.setText("YAKIT : " + cashDesk.getTotalFuelExpense() + " TL");
+                textView_cashDeskFragment_totalCollectedProductPrice_employeeCost.setText("ÇALIŞAN MA. : " + cashDesk.getTotalEmployeeCost() + " TL");
+
 
             }
 
