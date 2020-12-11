@@ -26,6 +26,7 @@ import com.example.stoktakip.Utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -137,10 +138,11 @@ public class AddProductFragment extends Fragment {
 
                     setSelected_typeProduct();
                     setSelected_who();
-
+/***/
                     if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
-                        saveProductDB();
-                        updateTotalPurchasedProductPrice();
+
+                        isEarlierAddedProductCode();
+
 
                     Toast.makeText(getActivity(), "Ürün başaralı bir şekilde eklendi .", Toast.LENGTH_SHORT).show();
 
@@ -567,6 +569,53 @@ public class AddProductFragment extends Fragment {
 
                 myRef.child("CashDesk").child(USER_UID).child("totalPurchasedProductPrice").setValue(String.valueOf(totalPurchasedProductPrice));
                 myRef.child("CashDesk").child(USER_UID).child("totalExpense").setValue(String.valueOf(totalExpense));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Ayni kodlu urun var mi ?
+     * Varsa o urunu eklemez.
+     * saveProductDB --> metodunu cagirir .
+     * updateTotalPurchasedProductPrice --> metodunu cagirir .
+     */
+    public void isEarlierAddedProductCode(){
+
+        final String code = editText_fragmentAddProduct_productCode.getText().toString().trim();
+
+        // Eger ilk urun varsa buradan devam eder .
+        myRef.child("Products").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                boolean control = false; // kod daha once kullanildi mi ?
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()){
+
+                    Product product = postSnapshot.getValue(Product.class);
+
+                    if (product.getProductCode().equals(code)){
+
+                        Toast.makeText(getActivity(), "Aynı koda sahip ürün eklenemez .", Toast.LENGTH_SHORT).show();
+                        control = true;
+                        break;
+
+                    }
+
+                }
+
+                if (!control) { // daha once kullanilmadi ise false doner ...
+                    saveProductDB();
+                    updateTotalPurchasedProductPrice();
+                }
+
             }
 
             @Override

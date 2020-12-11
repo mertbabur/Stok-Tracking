@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainMenuFragment extends Fragment {
 
     private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
-                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense;
+                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense
+                    , cardView_myStock;
+    private TextView cikis;
 
     @Nullable
     @Override
@@ -44,6 +47,8 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
         cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
         cardView_fragmentMainMenu_cashDesk = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDesk);
+        cardView_myStock = rootView.findViewById(R.id.cardView_myStock);
+        cikis = rootView.findViewById(R.id.cikis);
         cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense);
 
     }
@@ -120,6 +125,24 @@ public class MainMenuFragment extends Fragment {
             }
         });
 
+
+        // kendi stogumu acma ...
+        cardView_myStock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MyStockFragment myStockFragment = new MyStockFragment();
+                StockUtils.gotoFragment(getActivity(), myStockFragment, R.id.frameLayoutEntryActivity_holder, 1);
+
+            }
+        });
+
+        cikis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+            }
+        });
 
 
     }
