@@ -16,9 +16,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Adapters.DebtCustomerAdapter;
+import com.example.stoktakip.Adapters.ExpenseAdapter;
+import com.example.stoktakip.Adapters.ProductListAdapter;
 import com.example.stoktakip.Models.AdditionalExpense;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
@@ -28,12 +31,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AdditionalExpenseFragment extends Fragment {
@@ -53,6 +59,10 @@ public class AdditionalExpenseFragment extends Fragment {
 
     private String USER_UID;
 
+    private ExpenseAdapter adapter;
+
+    private List<AdditionalExpense> expenseList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class AdditionalExpenseFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        getExpenseFromDB();
 
         return rootView;
 
@@ -83,6 +94,8 @@ public class AdditionalExpenseFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         USER_UID = mAuth.getUid();
+
+        expenseList = new ArrayList<>();
 
     }
 
@@ -258,6 +271,60 @@ public class AdditionalExpenseFragment extends Fragment {
         return false;
 
     }
+
+
+    /**
+     * RecyclerView tanimlar .
+     */
+    public void defineRecyclerView(){
+
+        recyclerView_additionalExpense.setHasFixedSize(true);
+        recyclerView_additionalExpense.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ExpenseAdapter(getActivity(), expenseList, USER_UID);
+        recyclerView_additionalExpense.setAdapter(adapter);
+
+    }
+
+
+    /**
+     * UserExpenses DB sinden giderleri expensesListe atar ve defineRecyclerView cagirir .
+     */
+    public void getExpenseFromDB(){
+
+        myRef.child("UserExpenses").child(USER_UID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                AdditionalExpense additionalExpense = snapshot.getValue(AdditionalExpense.class);
+                expenseList.add(additionalExpense);
+                defineRecyclerView();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 
 
 
