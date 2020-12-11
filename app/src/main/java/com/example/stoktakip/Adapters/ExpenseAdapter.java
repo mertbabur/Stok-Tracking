@@ -63,7 +63,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CardHold
 
     @Override
     public int getItemCount() {
-        return 3;
+        return expenseList.size();
     }
 
 

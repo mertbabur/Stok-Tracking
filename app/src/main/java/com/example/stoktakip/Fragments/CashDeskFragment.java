@@ -23,7 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 public class CashDeskFragment extends Fragment {
 
     private TextView textView_cashDeskFragment_totalExpense, textView_cashDeskFragment_totalPurchasedProductPrice, textView_cashDeskFragment_totalSellingProductPrice
-                  , textView_cashDeskFragment_totalCollectedProductPrice, textView_cashDeskFragment_totalPaidProductPrice;
+                  , textView_cashDeskFragment_totalCollectedProductPrice, textView_cashDeskFragment_totalPaidProductPrice, textView_cashDeskFragment_totalAdditionalExpense
+                  , textView_cashDeskFragment_totalCollectedProductPrice_taxExpense, textView_cashDeskFragment_totalCollectedProductPrice_rentExpense, textView_cashDeskFragment_totalCollectedProductPrice_employeeCost
+                  , textView_cashDeskFragment_totalCollectedProductPrice_other, textView_cashDeskFragment_totalCollectedProductPrice_fuelExpense;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -57,6 +59,12 @@ public class CashDeskFragment extends Fragment {
         textView_cashDeskFragment_totalSellingProductPrice = rootView.findViewById(R.id.textView_cashDeskFragment_totalSellingProductPrice);
         textView_cashDeskFragment_totalCollectedProductPrice = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice);
         textView_cashDeskFragment_totalPaidProductPrice = rootView.findViewById(R.id.textView_cashDeskFragment_totalPaidProductPrice);
+        textView_cashDeskFragment_totalAdditionalExpense = rootView.findViewById(R.id.textView_cashDeskFragment_totalAdditionalExpense);
+        textView_cashDeskFragment_totalCollectedProductPrice_taxExpense = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice_taxExpense);
+        textView_cashDeskFragment_totalCollectedProductPrice_rentExpense = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice_rentExpense);
+        textView_cashDeskFragment_totalCollectedProductPrice_employeeCost = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice_employeeCost);
+        textView_cashDeskFragment_totalCollectedProductPrice_other = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice_other);
+        textView_cashDeskFragment_totalCollectedProductPrice_fuelExpense = rootView.findViewById(R.id.textView_cashDeskFragment_totalCollectedProductPrice_fuelExpense);
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();

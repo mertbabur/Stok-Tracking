@@ -127,7 +127,7 @@ public class FirebaseUtils {
         String userUID = auth.getUid();
         defineFirebaseDatabase();
 
-        CashDesk cashDesk = new CashDesk("0.0", "0.0", "0.0", "0.0", "0.0");
+        CashDesk cashDesk = new CashDesk("0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "0.0");
         myRef.child("CashDesk").child(userUID).setValue(cashDesk);
 
     }

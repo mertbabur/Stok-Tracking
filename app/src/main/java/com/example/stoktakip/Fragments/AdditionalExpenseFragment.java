@@ -208,7 +208,7 @@ public class AdditionalExpenseFragment extends Fragment {
         final String expenseQuantity = textInputEditText_expenseQuantity.getText().toString();
         String date = TimeClass.getDate();
         String clock = TimeClass.getClock();
-        String expenseType = setSelected_typeExpense();
+        final String expenseType = setSelected_typeExpense();
 
         if (expenseType == null) { // Eger expense type secilmedi ise . devam etme ...
             Toast.makeText(getActivity(), "Lütfen ek gider türünü seçiniz .", Toast.LENGTH_SHORT).show();
@@ -217,14 +217,17 @@ public class AdditionalExpenseFragment extends Fragment {
 
         AdditionalExpense additionalExpense = new AdditionalExpense(expenseKey, expenseType, expenseAbout, expenseQuantity, date + "/" + clock);
 
+
+
         myRef.child("UserExpenses"). child(USER_UID).child(expenseKey).setValue(additionalExpense).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
 
                     Toast.makeText(getActivity(), "Ek Gider Başarıyla Eklendi .", Toast.LENGTH_SHORT).show();
-                    updateTotalExpense(Float.valueOf(expenseQuantity));
-
+                    updateTotalExpense("totalExpense", Float.valueOf(expenseQuantity));
+                    updateTotalExpense("totalAdditionalExpense", Float.valueOf(expenseQuantity));
+                    updateExpenseTypeQuantityToDB(expenseType, Float.valueOf(expenseQuantity));
                 }
 
             }
@@ -234,19 +237,45 @@ public class AdditionalExpenseFragment extends Fragment {
 
 
     /**
-     * Yeni ek girildikten sonra CashDesk DB sindeki totalExpense guncellenir .
+     * Gider turune gore toplam gider i guncller .
+     * updateTotalExpense metodunu cagirir . --> guncelleme isini yapar .
+     * @param expenseType
      * @param expenseQuantity
      */
-    public void updateTotalExpense(final Float expenseQuantity){
+    public void updateExpenseTypeQuantityToDB(String expenseType, Float expenseQuantity ){
 
-        myRef.child("CashDesk").child(USER_UID).child("totalExpense").addListenerForSingleValueEvent(new ValueEventListener() {
+        String whichAtt;
+        if (expenseType.equals("taxExpense"))
+            whichAtt = "totalTaxExpense";
+        else if (expenseType.equals("other"))
+            whichAtt = "totalOtherExpense";
+        else if (expenseType.equals("rentExpense"))
+            whichAtt = "totalRentExpense";
+        else if (expenseType.equals("employeeCost"))
+            whichAtt = "totalEmployeeCost";
+        else
+            whichAtt = "totalFuelExpense";
+
+        updateTotalExpense(whichAtt, expenseQuantity);
+
+    }
+
+
+    /**
+     * Yeni ek girildikten sonra CashDesk DB sindeki totalExpense guncellenir .
+     * @param whichAttribute
+     * @param expenseQuantity
+     */
+    public void updateTotalExpense(final String whichAttribute, final Float expenseQuantity){
+
+        myRef.child("CashDesk").child(USER_UID).child(whichAttribute).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 Float totalExpense = Float.valueOf(snapshot.getValue().toString());
                 totalExpense += expenseQuantity;
 
-                myRef.child("CashDesk").child(USER_UID).child("totalExpense").setValue(String.valueOf(totalExpense));
+                myRef.child("CashDesk").child(USER_UID).child(whichAttribute).setValue(String.valueOf(totalExpense));
 
             }
 
