@@ -10,8 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Adapters.SoldProductAdapter;
+import com.example.stoktakip.Adapters.SoldProductHistoryAdapter;
 import com.example.stoktakip.Models.Product;
+import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
@@ -22,12 +27,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductDetailFragment extends Fragment {
 
     private TextView textView_detailProductFragment_name, textView_detailProductFragment_code, textView_detailProductFragment_purchase
                     ,textView_detailProductFragment_selling, textView_detailProductFragment_quantity, textView_detailProductFragment_supplier;
 
     private ImageView imageView_detailProductFragment_delete ,imageView_detailProductFragment_modify;
+    private RecyclerView recyclerView_detailProductFragment;
 
     private String PRODUCT_KEY;
     private String USER_UID;
@@ -36,6 +45,10 @@ public class ProductDetailFragment extends Fragment {
     private DatabaseReference myRef;
 
     private FirebaseAuth mAuth;
+
+    private List<SoldProduct> soldProductList;
+
+    private SoldProductHistoryAdapter adapter;
 
     @Nullable
     @Override
@@ -46,6 +59,7 @@ public class ProductDetailFragment extends Fragment {
         defineAttributes(rootView);
         getProductsFromDB();
         actionAttributes();
+        defineRecyclerView();
 
         return rootView;
     }
@@ -64,6 +78,7 @@ public class ProductDetailFragment extends Fragment {
         textView_detailProductFragment_supplier = rootView.findViewById(R.id.textView_detailProductFragment_supplier);
         imageView_detailProductFragment_delete = rootView.findViewById(R.id.imageView_detailProductFragment_delete);
         imageView_detailProductFragment_modify = rootView.findViewById(R.id.imageView_detailProductFragment_modify);
+        recyclerView_detailProductFragment = rootView.findViewById(R.id.recyclerView_detailProductFragment);
 
         PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
 
@@ -72,6 +87,8 @@ public class ProductDetailFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         USER_UID = mAuth.getUid();
+
+        soldProductList = new ArrayList<>();
 
     }
 
@@ -101,6 +118,20 @@ public class ProductDetailFragment extends Fragment {
             }
         });
 
+
+    }
+
+    /**
+     * RecyclerView tanimla .
+     */
+    public void defineRecyclerView(){
+
+        recyclerView_detailProductFragment.setHasFixedSize(true);
+        recyclerView_detailProductFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        adapter = new SoldProductHistoryAdapter(getActivity(), soldProductList);
+
+        recyclerView_detailProductFragment.setAdapter(adapter);
 
     }
 
