@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +26,17 @@ public class SoldProductHistoryAdapter extends RecyclerView.Adapter<SoldProductH
 
     public class CardHolder extends RecyclerView.ViewHolder{
 
+        TextView textView_cardViewsoldProductHistory_date, textView_cardViewsoldProductHistory_companyName
+                , textView_cardViewsoldProductHistory_quantity, textView_cardViewsoldProductHistory_totalSellingPrice;
+
         public CardHolder(@NonNull View itemView) {
             super(itemView);
+
+            textView_cardViewsoldProductHistory_date = itemView.findViewById(R.id.textView_cardViewsoldProductHistory_date);
+            textView_cardViewsoldProductHistory_companyName = itemView.findViewById(R.id.textView_cardViewsoldProductHistory_companyName);
+            textView_cardViewsoldProductHistory_quantity = itemView.findViewById(R.id.textView_cardViewsoldProductHistory_quantity);
+            textView_cardViewsoldProductHistory_totalSellingPrice = itemView.findViewById(R.id.textView_cardViewsoldProductHistory_totalSellingPrice);
+
         }
     }
 
