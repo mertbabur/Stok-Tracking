@@ -23,6 +23,7 @@ import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.CaptureAct;
 import com.example.stoktakip.Utils.FirebaseUtils;
+import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,9 @@ public class AddProductFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
+    private String oldProductPurchasedPrice = "";
+    private String oldProdutQuantity = "";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,6 +82,10 @@ public class AddProductFragment extends Fragment {
             setSupplierIfCameSupplierListFragment();
         else if ((WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("productDetailFragment")))
             setSupplierIfCameProdcutDetailFragment();
+
+        Toast.makeText(getActivity(), oldProductPurchasedPrice, Toast.LENGTH_SHORT).show();
+
+
 
         actionAttributes();
 
@@ -138,7 +146,7 @@ public class AddProductFragment extends Fragment {
 
                     setSelected_typeProduct();
                     setSelected_who();
-/***/
+
                     if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
 
                         isEarlierAddedProductCode();
@@ -150,6 +158,10 @@ public class AddProductFragment extends Fragment {
                 else{
                     setSelected_typeProduct();
                     updateProduct();
+
+                    ProductDetailFragment productDetailFragment =new ProductDetailFragment();
+                    StockUtils.gotoFragment(getActivity(), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, 0);
+
 
                     Toast.makeText(getActivity(), "Ürün başaralı bir şekilde güncellendi .", Toast.LENGTH_SHORT).show();
 
@@ -215,6 +227,9 @@ public class AddProductFragment extends Fragment {
                     editText_fragmentAddProduct_unitSellingPrice.setText(product.getSellingPrice());
                     editText_fragmentAddProduct_howManyUnit.setText(product.getHowManyUnit());
                     editText_fragmentAddProduct_productCode.setText(product.getProductCode());
+
+                    oldProductPurchasedPrice = product.getPurchasePrice();
+                    oldProdutQuantity = product.getHowManyUnit();
 
                     //Hangi birim secili ise ...
                     if (product.getTypeProduct().equals("Adet"))
@@ -512,7 +527,10 @@ public class AddProductFragment extends Fragment {
     }
 
 
-
+    /**
+     * Urunu gunceller .
+     * updateCash metodunu cagirir . --> kasayi gunceller .
+     */
     public void updateProduct(){
 
         String name = editText_fragmentAddProduct_productName.getText().toString().trim();
@@ -530,6 +548,8 @@ public class AddProductFragment extends Fragment {
         map.put("typeProduct", isSelectedTypeProduct);
 
         myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).updateChildren(map);
+
+        updateCash(Float.valueOf(purchasePrice), Float.valueOf(howManyUnit), Float.valueOf(oldProductPurchasedPrice), Float.valueOf(oldProdutQuantity));
 
         updateProductForSupplierDB(map);
 
@@ -625,6 +645,43 @@ public class AddProductFragment extends Fragment {
         });
 
     }
+
+
+    /**
+     * CashDesk teki totalPurchased ve totalExpense guncellenir .
+     * @param purchasedPrice
+     * @param quantity
+     */
+   public void updateCash(Float newPurchased, Float newQuantity, Float purchasedPrice, Float quantity){
+
+        final Float newPrice = (newPurchased * newQuantity) - (purchasedPrice * quantity);
+
+        myRef.child("CashDesk").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                CashDesk cashDesk = snapshot.getValue(CashDesk.class);
+                Float totalExpense = Float.valueOf(cashDesk.getTotalExpense());
+                Float totalPurchased = Float.valueOf(cashDesk.getTotalPurchasedProductPrice());
+
+                totalExpense += newPrice;
+                totalPurchased += newPrice;
+
+                Map map = new HashMap();
+                map.put("totalExpense", String.valueOf(totalExpense));
+                map.put("totalPurchasedProductPrice", String.valueOf(totalPurchased));
+
+                myRef.child("CashDesk").child(USER_UID).updateChildren(map);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+   }
 
 
 
