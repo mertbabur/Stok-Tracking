@@ -261,7 +261,7 @@ public class SellProductFragment extends Fragment {
         AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
 
         alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
-        alertDialogbuilder.setMessage("Şirket Adı : " + companyName + "\n" + " " + productName + "\n" + "Ürün Miktarı : " + productQuantity);
+        alertDialogbuilder.setMessage("Evete tıklandıktan sonra değişiklik yapılamaz. Bilgileri kontrol ediniz. \n\n" + "Şirket Adı : " + companyName + "\n" + " " + productName + "\n" + "Ürün Miktarı : " + productQuantity);
         alertDialogbuilder.setIcon(R.drawable.warning_icon);
 
         alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
@@ -269,6 +269,7 @@ public class SellProductFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
 
                 isEnoughQuantityForSellProduct(productQuantity);
+                Toast.makeText(getActivity(), "Ürün başarılı bir şekilde satıldı .", Toast.LENGTH_SHORT).show();
 
             }
         });
