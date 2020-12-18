@@ -62,10 +62,10 @@ public class ProductDetailFragment extends Fragment {
         defineAttributes(rootView);
         getProductsFromDB();
         actionAttributes();
-
-
         getSupplier(); // urun coduna sahip ayni urunleri bulmak icin .
+
         return rootView;
+
     }
 
 
@@ -134,7 +134,7 @@ public class ProductDetailFragment extends Fragment {
         recyclerView_detailProductFragment.setHasFixedSize(true);
         recyclerView_detailProductFragment.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new SoldProductHistoryAdapter(getActivity(), soldProductList);
+        adapter = new SoldProductHistoryAdapter(getActivity(), soldProductList, USER_UID);
 
         recyclerView_detailProductFragment.setAdapter(adapter);
 
@@ -185,7 +185,7 @@ public class ProductDetailFragment extends Fragment {
      * getSoldProduct metodunu cagirir . --> satilan urunleri bulur .
      */
     public void getSupplier(){
-Log.e("code : " , PRODUCT_CODE);
+
         myRef.child("SoldProducts").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -194,8 +194,6 @@ Log.e("code : " , PRODUCT_CODE);
                     String supplierKey = postSnapshot.getKey();
                     getSoldProduct(supplierKey);
                 }
-
-
 
             }
 
@@ -242,8 +240,6 @@ Log.e("code : " , PRODUCT_CODE);
         });
 
     }
-
-
 
 
 }
