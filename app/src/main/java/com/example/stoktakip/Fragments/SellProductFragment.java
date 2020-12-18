@@ -364,6 +364,7 @@ public class SellProductFragment extends Fragment {
      */
     public void sellProduct(Product product, String productQuantity){
 
+        String productCode = product.getProductCode();
         String sellingPrice = product.getSellingPrice();
         String date = TimeClass.getDate();
         String clock = TimeClass.getClock();
@@ -372,7 +373,7 @@ public class SellProductFragment extends Fragment {
 
         String sellKey = UUID.randomUUID().toString();
 
-        SoldProduct soldProduct = new SoldProduct(sellKey, CUSTOMER_KEY, PRODUCT_KEY, productQuantity, String.valueOf(totalSoldPrice), "false", date + "-" + clock);
+        SoldProduct soldProduct = new SoldProduct(sellKey, CUSTOMER_KEY, PRODUCT_KEY, productCode, productQuantity, String.valueOf(totalSoldPrice), "false", date + "-" + clock);
 
         myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_KEY).child(sellKey).setValue(soldProduct);
 

@@ -81,9 +81,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 public void onClick(View v) {
 
                     String productKey = product.getProductKey();
+                    String productCode = product.getProductCode();
 
                     ProductDetailFragment productDetailFragment = new ProductDetailFragment();
-                    StockUtils.gotoFragment(((AppCompatActivity) mContext), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", productKey, 1);
+                    StockUtils.gotoFragment(((AppCompatActivity) mContext), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", productKey, "productCode", productCode, 1);
 
                 }
             });

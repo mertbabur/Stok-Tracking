@@ -1,6 +1,7 @@
 package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +41,7 @@ public class ProductDetailFragment extends Fragment {
     private RecyclerView recyclerView_detailProductFragment;
 
     private String PRODUCT_KEY;
+    private String PRODUCT_CODE;
     private String USER_UID;
 
     private FirebaseDatabase database;
@@ -59,8 +62,9 @@ public class ProductDetailFragment extends Fragment {
         defineAttributes(rootView);
         getProductsFromDB();
         actionAttributes();
-        defineRecyclerView();
 
+
+        getSupplier(); // urun coduna sahip ayni urunleri bulmak icin .
         return rootView;
     }
 
@@ -81,6 +85,7 @@ public class ProductDetailFragment extends Fragment {
         recyclerView_detailProductFragment = rootView.findViewById(R.id.recyclerView_detailProductFragment);
 
         PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
+        PRODUCT_CODE = getArguments().getString("productCode", "bos product code");
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -173,6 +178,72 @@ public class ProductDetailFragment extends Fragment {
         });
 
     }
+
+
+    /**
+     * DB deki tum supplierlari getirir .
+     * getSoldProduct metodunu cagirir . --> satilan urunleri bulur .
+     */
+    public void getSupplier(){
+Log.e("code : " , PRODUCT_CODE);
+        myRef.child("SoldProducts").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    String supplierKey = postSnapshot.getKey();
+                    getSoldProduct(supplierKey);
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Belli urun koduna uyan urunleri liste atar .
+     * @param supplierKey
+     */
+    public void getSoldProduct(String supplierKey){
+
+        myRef.child("SoldProducts").child(USER_UID).child(supplierKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()){
+
+                    SoldProduct soldProduct = postSnapshot.getValue(SoldProduct.class);
+                    Log.e("kontrol", soldProduct.getProductKey());
+
+
+                    if (PRODUCT_CODE.trim().equals(soldProduct.getProductCode().trim()))
+                        soldProductList.add(soldProduct);
+
+                }
+
+                defineRecyclerView();
+                Log.e("sdfsdfsdfsd", String.valueOf(soldProductList.size()));
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 
 
 }

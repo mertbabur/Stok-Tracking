@@ -159,8 +159,9 @@ public class AddProductFragment extends Fragment {
                     setSelected_typeProduct();
                     updateProduct();
 
+                    String productCode = editText_fragmentAddProduct_productCode.getText().toString();
                     ProductDetailFragment productDetailFragment =new ProductDetailFragment();
-                    StockUtils.gotoFragment(getActivity(), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, 0);
+                    StockUtils.gotoFragment(getActivity(), productDetailFragment, R.id.frameLayoutEntryActivity_holder, "productKey", PRODUCT_KEY, "productCode", productCode, 0);
 
 
                     Toast.makeText(getActivity(), "Ürün başaralı bir şekilde güncellendi .", Toast.LENGTH_SHORT).show();
