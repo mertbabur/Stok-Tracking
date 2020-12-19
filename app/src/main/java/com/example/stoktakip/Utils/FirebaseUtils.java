@@ -578,7 +578,7 @@ Log.e("dfsfsdfdsf", price + " " + quantity + " " + userUID);
                 totalPurchased -= decreasePrice;
                 Map map = new HashMap();
                 map.put("totalExpense", String.valueOf(totalExpense));
-                map.put("totalPurchasedProductPrice", totalPurchased);
+                map.put("totalPurchasedProductPrice", String.valueOf(totalPurchased));
                 myRef.child("CashDesk").child(userUID).updateChildren(map);
             }
             @Override

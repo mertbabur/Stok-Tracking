@@ -80,7 +80,7 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
 
         SoldProduct soldProduct = soldProductList.get(position);
 
-        setInfoSoldProductName(holder, soldProduct);
+        holder.textView_cardView_SoldProduct_productName.setText("Ürün Adı : " + soldProduct.getProductName());
 
         holder.textView_cardView_SoldProduct_productDate.setText("Tarih : " + soldProduct.getSoldDate());
 
@@ -94,35 +94,6 @@ public class SoldProductAdapter extends RecyclerView.Adapter<SoldProductAdapter.
     @Override
     public int getItemCount() {
         return soldProductList.size();
-    }
-
-
-    /**
-     * products DB sine giderek gorsel nesneye urun adini yerelestirir .
-     * setProductSoldQuantity metodunu cagirir .
-     * @param holder
-     * @param soldProduct --> urun bilgileri bu nesne icinde .
-     */
-    public void setInfoSoldProductName(final CardHolder holder, final SoldProduct soldProduct){
-
-        myRef.child("Products").child(userUID).child(soldProduct.getProductKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                Product product = snapshot.getValue(Product.class);
-                holder.textView_cardView_SoldProduct_productName.setText("Ürün Adı : " + product.getProductName());
-
-                String typeProduct = product.getTypeProduct();
-                setProductSoldQuantity(holder, soldProduct.getSoldQuantity(), typeProduct);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
     }
 
 

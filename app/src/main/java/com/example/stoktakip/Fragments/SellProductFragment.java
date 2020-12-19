@@ -231,13 +231,18 @@ public class SellProductFragment extends Fragment {
 
                 Product product = snapshot.getValue(Product.class);
 
-                textView_sellProductFragment_productCode.setText("Ürün Kodu : " + product.getProductCode());
-                textView_sellProductFragment_productName.setText("Ürün Adı : " + product.getProductName());
-                textView_sellProductFragment_purchasePrice.setText(product.getPurchasePrice());
-                textView_sellProductFragment_sellingPrice.setText(product.getSellingPrice());
-                textView_sellProductFragment_howManyQuantity.setText(product.getHowManyUnit());
-                editText_sellProductFragment_productName.setText(product.getProductName());
-
+                // Urun Silindigi zaman burasi exception fırlatir .
+                try {
+                    textView_sellProductFragment_productCode.setText("Ürün Kodu : " + product.getProductCode());
+                    textView_sellProductFragment_productName.setText("Ürün Adı : " + product.getProductName());
+                    textView_sellProductFragment_purchasePrice.setText(product.getPurchasePrice());
+                    textView_sellProductFragment_sellingPrice.setText(product.getSellingPrice());
+                    textView_sellProductFragment_howManyQuantity.setText(product.getHowManyUnit());
+                    editText_sellProductFragment_productName.setText(product.getProductName());
+                }
+                catch (Exception e){
+                    Log.e("setProInfo", e.getMessage());
+                }
             }
 
             @Override
@@ -373,7 +378,7 @@ public class SellProductFragment extends Fragment {
 
         String sellKey = UUID.randomUUID().toString();
 
-        SoldProduct soldProduct = new SoldProduct(sellKey, CUSTOMER_KEY, PRODUCT_KEY, productCode, productQuantity, String.valueOf(totalSoldPrice), "false", date + "-" + clock);
+        SoldProduct soldProduct = new SoldProduct(sellKey, CUSTOMER_KEY, PRODUCT_KEY, productCode, productQuantity, String.valueOf(totalSoldPrice), "false", date + "-" + clock, product.getProductName());
 
         myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_KEY).child(sellKey).setValue(soldProduct);
 

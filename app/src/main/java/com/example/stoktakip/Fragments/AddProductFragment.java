@@ -602,8 +602,8 @@ public class AddProductFragment extends Fragment {
      */
     public void updateTotalPurchasedProductPrice(){
 
-        Float purchasedPrice = Float.valueOf(editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString());
-        Float quantity = Float.valueOf(editText_fragmentAddProduct_howManyUnit.getText().toString());
+        Float purchasedPrice = Float.valueOf(editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString().trim());
+        Float quantity = Float.valueOf(editText_fragmentAddProduct_howManyUnit.getText().toString().trim());
         final Float totalPriceForProduct = purchasedPrice * quantity;
 
         myRef.child("CashDesk").child(USER_UID).addListenerForSingleValueEvent(new ValueEventListener() {
