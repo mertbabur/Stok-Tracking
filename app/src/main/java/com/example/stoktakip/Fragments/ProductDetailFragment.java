@@ -1,5 +1,6 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -115,9 +117,7 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FirebaseUtils.deleteProduct(getActivity(), null, USER_UID, PRODUCT_KEY);
-
-                imageView_detailProductFragment_delete.setVisibility(View.INVISIBLE);
+                alertViewForDeleteProduct();
 
             }
         });
@@ -136,6 +136,38 @@ public class ProductDetailFragment extends Fragment {
 
 
     }
+
+
+    /**
+     * Urun silinmesi icin onay istenir .
+     * deleteProduct metodunu cagirir .
+     */
+    public void alertViewForDeleteProduct(){
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+
+        alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
+        alertDialogbuilder.setMessage("Bu ürünü silmek istediğinize emin misiniz ?");
+        alertDialogbuilder.setIcon(R.drawable.warning_icon);
+
+        alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseUtils.deleteProduct(getActivity(), null, USER_UID, PRODUCT_KEY);
+                imageView_detailProductFragment_delete.setVisibility(View.INVISIBLE);
+                imageView_detailProductFragment_modify.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        alertDialogbuilder.setNegativeButton("HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialogbuilder.create().show();
+
+    }
+
 
     /**
      * RecyclerView tanimla .

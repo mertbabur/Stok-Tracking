@@ -566,7 +566,7 @@ public class FirebaseUtils {
      * @param quantity --> alinan urun miktari .
      */
     public static void updateCashDesk(final String userUID, Float price, Float quantity){
-Log.e("dfsfsdfdsf", price + " " + quantity + " " + userUID);
+
         final Float decreasePrice = price * quantity;
         myRef.child("CashDesk").child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
