@@ -117,9 +117,7 @@ public class ProductDetailFragment extends Fragment {
 
                 FirebaseUtils.deleteProduct(getActivity(), null, USER_UID, PRODUCT_KEY);
 
-                //ProductsFragments productsFragments = new ProductsFragments();
-                //StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder,"whichFragment", "addProduct", 0);
-
+                imageView_detailProductFragment_delete.setVisibility(View.INVISIBLE);
 
             }
         });

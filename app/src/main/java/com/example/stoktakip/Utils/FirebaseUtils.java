@@ -32,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class FirebaseUtils {
@@ -418,6 +420,7 @@ public class FirebaseUtils {
      * Products DB sinden istenen product i siler .
      * deleteProductFromUsersDB metodunu cagirir . --> Users DB sinden siler . ( duruma gore cagirir . )
      * deleteProductFromSuppliersDB metodunu cagirir . --> Suppliers DB sinden siler . ( duruma gore cagirir . )
+     * updateCashDesk metodunu cagirir . --> CashDesk guncellenir .
      * @param activity
      * @param context
      * @param userUID
@@ -433,10 +436,16 @@ public class FirebaseUtils {
 
                 Product product = snapshot.getValue(Product.class);
 
+                updateCashDesk(userUID,Float.valueOf(product.getPurchasePrice()), Float.valueOf(product.getHowManyUnit()));
+
                 if (product.getFrom().equals("Kendim Ekle")) // kendi ekledi ise .
                     deleteProductFromUsersDB(activity, context, userUID, productKey);
                 else // Supplier dan ekledi ise .
                     deleteProductFromSuppliersDB(activity, context, product.getFromKey(), userUID, productKey);
+
+
+
+
             }
 
             @Override
@@ -520,7 +529,7 @@ public class FirebaseUtils {
      * @param userUID
      * @param productKey
      */
-    public static void deleteProductFromProductsDB(final FragmentActivity activity, final Context context, String userUID, String productKey){
+    public static void deleteProductFromProductsDB(final FragmentActivity activity, final Context context, final String userUID, final String productKey){
 
         myRef.child("Products").child(userUID).child(productKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -547,7 +556,35 @@ public class FirebaseUtils {
             }
         });
 
+    }
 
+
+    /**
+     * Urun silindikten sonra CashDesk de duzenlenmeli .
+     * @param userUID
+     * @param price --> birim satin alma miktari .
+     * @param quantity --> alinan urun miktari .
+     */
+    public static void updateCashDesk(final String userUID, Float price, Float quantity){
+Log.e("dfsfsdfdsf", price + " " + quantity + " " + userUID);
+        final Float decreasePrice = price * quantity;
+        myRef.child("CashDesk").child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CashDesk cashDesk = snapshot.getValue(CashDesk.class);
+                Float totalExpense = Float.valueOf(cashDesk.getTotalExpense());
+                Float totalPurchased = Float.valueOf(cashDesk.getTotalPurchasedProductPrice());
+                totalExpense -= decreasePrice;
+                totalPurchased -= decreasePrice;
+                Map map = new HashMap();
+                map.put("totalExpense", String.valueOf(totalExpense));
+                map.put("totalPurchasedProductPrice", totalPurchased);
+                myRef.child("CashDesk").child(userUID).updateChildren(map);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
 }

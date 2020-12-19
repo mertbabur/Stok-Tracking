@@ -112,7 +112,6 @@ public class ProductsFragments extends Fragment {
 
                 Product product = snapshot.getValue(Product.class);
                 productList.add(product);
-
                 defineRecyclerView();
 
             }
