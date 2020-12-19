@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,10 +61,16 @@ public class ProductDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail_product_design, container, false);
 
         defineAttributes(rootView);
-        getProductsFromDB();
-        actionAttributes();
-        getSupplier(); // urun coduna sahip ayni urunleri bulmak icin .
 
+        try {
+            getProductsFromDB();
+        }
+        catch (Exception e){
+            Log.e("getProfroDB", e.getMessage());
+
+        }
+        getSupplier(); // urun coduna sahip ayni urunleri bulmak icin .
+        actionAttributes();
         return rootView;
 
     }
@@ -107,6 +114,12 @@ public class ProductDetailFragment extends Fragment {
         imageView_detailProductFragment_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                FirebaseUtils.deleteProduct(getActivity(), null, USER_UID, PRODUCT_KEY);
+
+                //ProductsFragments productsFragments = new ProductsFragments();
+                //StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder,"whichFragment", "addProduct", 0);
+
 
             }
         });
@@ -153,22 +166,28 @@ public class ProductDetailFragment extends Fragment {
 
                 Product product = snapshot.getValue(Product.class);
 
-                textView_detailProductFragment_name.setText(product.getProductName());
-                textView_detailProductFragment_purchase.setText(product.getPurchasePrice());
-                textView_detailProductFragment_selling.setText(product.getSellingPrice());
-                textView_detailProductFragment_code.setText(product.getProductCode());
+                try { // silme isleminden sonra burada exception atar .
+                    textView_detailProductFragment_name.setText(product.getProductName());
+                    textView_detailProductFragment_purchase.setText(product.getPurchasePrice());
+                    textView_detailProductFragment_selling.setText(product.getSellingPrice());
+                    textView_detailProductFragment_code.setText(product.getProductCode());
 
-                if (product.getTypeProduct().equals("Ağırlık"))
-                    textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Kilo");
-                else if (product.getTypeProduct().equals("Adet"))
-                    textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Adet");
-                else
-                    textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Litre");
+                    if (product.getTypeProduct().equals("Ağırlık"))
+                        textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Kilo");
+                    else if (product.getTypeProduct().equals("Adet"))
+                        textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Adet");
+                    else
+                        textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Litre");
 
-                if (product.getFrom().equals("Tedarikçiden Ekle")) // eger tedarikciden ise .
-                    FirebaseUtils.setCompanyName(product.getFromKey(), textView_detailProductFragment_supplier);
-                else // user ekledi ise .
-                    textView_detailProductFragment_supplier.setText("Kendi Stoğum");
+                    if (product.getFrom().equals("Tedarikçiden Ekle")) // eger tedarikciden ise .
+                        FirebaseUtils.setCompanyName(product.getFromKey(), textView_detailProductFragment_supplier);
+                    else // user ekledi ise .
+                        textView_detailProductFragment_supplier.setText("Kendi Stoğum");
+
+                }
+                catch (Exception e){
+                    Log.e("getProFroDB", e.getMessage());
+                }
             }
 
             @Override
@@ -240,6 +259,10 @@ public class ProductDetailFragment extends Fragment {
         });
 
     }
+
+
+
+
 
 
 }

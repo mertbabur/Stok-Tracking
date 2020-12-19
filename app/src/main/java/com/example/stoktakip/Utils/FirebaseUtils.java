@@ -1,5 +1,6 @@
 package com.example.stoktakip.Utils;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.stoktakip.Models.CashDesk;
 import com.example.stoktakip.Models.CustomerOrSupplier;
+import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.Models.User;
 import com.example.stoktakip.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -411,5 +413,141 @@ public class FirebaseUtils {
 
     }
 
+
+    /**
+     * Products DB sinden istenen product i siler .
+     * deleteProductFromUsersDB metodunu cagirir . --> Users DB sinden siler . ( duruma gore cagirir . )
+     * deleteProductFromSuppliersDB metodunu cagirir . --> Suppliers DB sinden siler . ( duruma gore cagirir . )
+     * @param activity
+     * @param context
+     * @param userUID
+     * @param productKey
+     */
+    public static void deleteProduct(final FragmentActivity activity, final Context context, final String userUID, final String productKey){
+
+        defineFirebaseDatabase();
+
+        myRef.child("Products").child(userUID).child(productKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Product product = snapshot.getValue(Product.class);
+
+                if (product.getFrom().equals("Kendim Ekle")) // kendi ekledi ise .
+                    deleteProductFromUsersDB(activity, context, userUID, productKey);
+                else // Supplier dan ekledi ise .
+                    deleteProductFromSuppliersDB(activity, context, product.getFromKey(), userUID, productKey);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+    }
+
+
+    /**
+     * Users DB sinden istenen product i siler .
+     * @param userUID -->
+     * @param productKey -->
+     */
+    public static void deleteProductFromUsersDB(final FragmentActivity activity, final Context context, final String userUID, final String productKey){
+
+        defineFirebaseDatabase();
+
+        myRef.child("Users").child(userUID).child("ProductsKey").child(productKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    deleteProductFromProductsDB(activity, context, userUID, productKey);
+                }
+                else {
+
+                    if (activity != null)
+                        Toast.makeText(activity, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+
+                    Log.e("deleteProduct", task.getException().toString());
+
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * Suppliers DB sinden istenen product i siler .
+     * @param fromKey --> supplierKey
+     * @param userUID -->
+     * @param productKey -->
+     */
+    public static void deleteProductFromSuppliersDB(final FragmentActivity activity, final Context context, String fromKey, final String userUID, final String productKey){
+
+        defineFirebaseDatabase();
+
+        myRef.child("Suppliers").child(userUID).child(fromKey).child("ProductsKey").child(productKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    deleteProductFromProductsDB(activity, context, userUID, productKey);
+                }
+                else {
+
+                    if (activity != null)
+                        Toast.makeText(activity, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+
+                    Log.e("deleteProduct", task.getException().toString());
+
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * Products DB den urunu siler .
+     * @param activity
+     * @param context
+     * @param userUID
+     * @param productKey
+     */
+    public static void deleteProductFromProductsDB(final FragmentActivity activity, final Context context, String userUID, String productKey){
+
+        myRef.child("Products").child(userUID).child(productKey).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+
+                    if (activity != null)
+                        Toast.makeText(activity, "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+
+                    if (activity != null)
+                        Toast.makeText(activity, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, "Silme işlemi sırasında bir sorun oluştu .", Toast.LENGTH_SHORT).show();
+
+                    Log.e("deleteProduct", task.getException().toString());
+
+                }
+
+            }
+        });
+
+
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,6 +72,7 @@ public class AddProductFragment extends Fragment {
     private String oldProductPurchasedPrice = "";
     private String oldProdutQuantity = "";
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,13 +81,13 @@ public class AddProductFragment extends Fragment {
 
         defineAttributes(rootView);
 
-        if (WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("supplierListFragment"))
+        if (WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("supplierListFragment")) {
+
+            getSupplierKeyFromComeFragment();
             setSupplierIfCameSupplierListFragment();
+        }
         else if ((WHICH_FRAGMENT != null && WHICH_FRAGMENT.equals("productDetailFragment")))
             setSupplierIfCameProdcutDetailFragment();
-
-        Toast.makeText(getActivity(), oldProductPurchasedPrice, Toast.LENGTH_SHORT).show();
-
 
 
         actionAttributes();
@@ -141,19 +144,29 @@ public class AddProductFragment extends Fragment {
         button_fragmentAddProduct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.e("Act Bas", SUPPLIER_KEY + " sdfsdf");
                 if(PRODUCT_KEY == null) {
 
                     setSelected_typeProduct();
                     setSelected_who();
 
-                    if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) // gerekli bilgiler eksiksiz dolduruldu mu ? ...
+                    if (!isSelectedTypeProduct.equals("notSelected") && !isSelectedWho.equals("notSelected") && isFilled()) { // gerekli bilgiler eksiksiz dolduruldu mu ? ...
 
-                        isEarlierAddedProductCode();
+                        //isEarlierAddedProductCode();
 
+                        SUPPLIER_KEY = getActivity().getSharedPreferences("tedarikciKey", Context.MODE_PRIVATE).getString("supplierKey", "bos key");
 
-                    Toast.makeText(getActivity(), "Ürün başaralı bir şekilde eklendi .", Toast.LENGTH_SHORT).show();
+                        saveProductDB();
+                        updateTotalPurchasedProductPrice();
 
+                        Toast.makeText(getActivity(), "Ürün başaralı bir şekilde eklendi .", Toast.LENGTH_SHORT).show();
+
+                        ProductsFragments productsFragments = new ProductsFragments();
+                        StockUtils.gotoFragment(getActivity(), productsFragments, R.id.frameLayoutEntryActivity_holder, "whichFragment", "addProduct", 0);
+
+                    }
+                    else
+                        Toast.makeText(getActivity(), "Lütfen bilgileri eksiksiz giriniz .", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     setSelected_typeProduct();
@@ -203,6 +216,21 @@ public class AddProductFragment extends Fragment {
 
             }
         });
+
+    }
+
+
+    /**
+     * Action olunca getArguments yapınca supplierKey null oluyor.
+     * Bu yüzden hafızaya kaydedildi .
+     */
+    public void getSupplierKeyFromComeFragment(){
+
+        SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
+        SharedPreferences mSharedPrefs = getActivity().getSharedPreferences("tedarikciKey", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSharedPrefs.edit();
+        editor.putString("supplierKey", SUPPLIER_KEY);
+        editor.commit();
 
     }
 
@@ -268,10 +296,10 @@ public class AddProductFragment extends Fragment {
      */
     public void setSupplierIfCameSupplierListFragment(){
 
-            SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
+            //SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
             COMPANY_NAME = getArguments().getString("companyNameFromAdapter", "bos company name");
             editText_fragmentAddProduct_supplierName.setText(COMPANY_NAME);
-
+        Toast.makeText(getActivity(), SUPPLIER_KEY + " " + COMPANY_NAME, Toast.LENGTH_SHORT).show();
             String name = getArguments().getString("name", "bos");
             String purchasePrice = getArguments().getString("purchasePrice", "bos");
             String sellingPrice = getArguments().getString("sellingPrice", "bos");
@@ -463,6 +491,7 @@ public class AddProductFragment extends Fragment {
      */
     public void saveProductDB(){
 
+        Log.e("saveP", "save prdoct db ici " + SUPPLIER_KEY);
         String name = editText_fragmentAddProduct_productName.getText().toString().trim();
         String purchasePrice = editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString().trim();
         String sellingPrice = editText_fragmentAddProduct_unitSellingPrice.getText().toString().trim();
@@ -470,7 +499,7 @@ public class AddProductFragment extends Fragment {
         String productCode = editText_fragmentAddProduct_productCode.getText().toString().trim();
         String productType = isSelectedTypeProduct;
         String from = isSelectedWho;
-        String fromKey;
+        String fromKey = "";
         if (isSelectedWho.equals("Kendim Ekle"))
             fromKey = FirebaseAuth.getInstance().getUid();
         else
@@ -497,7 +526,7 @@ public class AddProductFragment extends Fragment {
      * @param product
      */
     public void saveProductKeyDB(Product product){
-
+    Log.e("savePKey", "sdsd" + SUPPLIER_KEY);
         if (isSelectedWho.equals("Kendim Ekle")){ // eger kendi eklerse ...
             myRef.child("Users").child(USER_UID).child("ProductsKey").child(product.getProductKey()).setValue(product);
         }
