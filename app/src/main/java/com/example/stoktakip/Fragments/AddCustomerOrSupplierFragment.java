@@ -234,22 +234,25 @@ public class AddCustomerOrSupplierFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
+                try {// customer silince null atıyor .
+                    editText_fragmentAddCustomer__customerName.setText(customerOrSupplier.getName());
+                    editText_fragmentAddCustomer_customerSurname.setText(customerOrSupplier.getSurname());
+                    editTextText_fragmentAddCustomer_companyName.setText(customerOrSupplier.getCompanyName());
+                    editTextText_fragmentAddCustomer_customerNum.setText(customerOrSupplier.getNum());
+                    editText_fragmentAddCustomer_customerAddress.setText(customerOrSupplier.getAddress());
 
-                editText_fragmentAddCustomer__customerName.setText(customerOrSupplier.getName());
-                editText_fragmentAddCustomer_customerSurname.setText(customerOrSupplier.getSurname());
-                editTextText_fragmentAddCustomer_companyName.setText(customerOrSupplier.getCompanyName());
-                editTextText_fragmentAddCustomer_customerNum.setText(customerOrSupplier.getNum());
-                editText_fragmentAddCustomer_customerAddress.setText(customerOrSupplier.getAddress());
+                    PHOTO_KEY = customerOrSupplier.getPhoto();
+                    if (PHOTO_KEY != null) {
+                        if (WHICH_BUTTON.equals("editCustomerButton"))
+                            setCustomerOrSupplierPP("CustomersPictures", PHOTO_KEY);
+                        else
+                            setCustomerOrSupplierPP("SuppliersPictures", PHOTO_KEY);
 
-                PHOTO_KEY = customerOrSupplier.getPhoto();
-                if (PHOTO_KEY != null){
-                    if (WHICH_BUTTON.equals("editCustomerButton"))
-                        setCustomerOrSupplierPP("CustomersPictures", PHOTO_KEY);
-                    else
-                        setCustomerOrSupplierPP("SuppliersPictures", PHOTO_KEY);
-
+                    }
                 }
-
+                catch (Exception e){
+                    Log.e("SetInfoCusOrSup", e.getMessage());
+                }
             }
 
             @Override

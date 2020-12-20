@@ -31,7 +31,9 @@ import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -159,6 +161,8 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                alertViewForDeleteCustomer();
+
             }
         });
 
@@ -218,27 +222,32 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
                 CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
 
-                textView_fragmentDetailCustomer_companyName.setText(customerOrSupplier.getCompanyName());
-                textView_fragmentDetailCustomer_customerName.setText(customerOrSupplier.getName());
-                textView_fragmentDetailCustomer_customerSurname.setText(customerOrSupplier.getSurname());
-                textView_fragmentDetailCustomer_customerNum.setText(customerOrSupplier.getNum());
-                textView_fragmentDetailCustomer_customerAddress.setText(customerOrSupplier.getAddress());
+                try {// customer sildikten sonr burası null atar .
+                    textView_fragmentDetailCustomer_companyName.setText(customerOrSupplier.getCompanyName());
+                    textView_fragmentDetailCustomer_customerName.setText(customerOrSupplier.getName());
+                    textView_fragmentDetailCustomer_customerSurname.setText(customerOrSupplier.getSurname());
+                    textView_fragmentDetailCustomer_customerNum.setText(customerOrSupplier.getNum());
+                    textView_fragmentDetailCustomer_customerAddress.setText(customerOrSupplier.getAddress());
 
-                if (WHICH_BUTTON.equals("customerButton"))
-                    textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
-                else
-                    textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM ÖDENECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
-
-                String photoKey = customerOrSupplier.getPhoto();
-                if (photoKey != "null") {
                     if (WHICH_BUTTON.equals("customerButton"))
-                        setCustomerPP(photoKey, userUID, "CustomersPictures");
+                        textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM TAHSİL EDİLECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
                     else
-                        setCustomerPP(photoKey, userUID, "SuppliersPictures");
-                }
+                        textView_fragmentDetailCustomer_totalDebt.setText("TOPLAM ÖDENECEK TUTAR : " + customerOrSupplier.getTotalDebt() + " TL");
 
-                if (customerOrSupplier.getTotalDebt().equals("0.0")) // eger 0 ise yazi ve rengi degisir .
-                    StockUtils.controlTotalDebt(textView_fragmentDetailCustomer_getPaid);
+                    String photoKey = customerOrSupplier.getPhoto();
+                    if (photoKey != "null") {
+                        if (WHICH_BUTTON.equals("customerButton"))
+                            setCustomerPP(photoKey, userUID, "CustomersPictures");
+                        else
+                            setCustomerPP(photoKey, userUID, "SuppliersPictures");
+                    }
+
+                    if (customerOrSupplier.getTotalDebt().equals("0.0")) // eger 0 ise yazi ve rengi degisir .
+                        StockUtils.controlTotalDebt(textView_fragmentDetailCustomer_getPaid);
+                }
+                catch (Exception e){
+                    Log.e("setCusInfo", e.getMessage());
+                }
 
             }
 
@@ -397,6 +406,101 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
             }
         });
+
+    }
+
+
+    public void deleteCustomerFromCustomerDB(){
+
+        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful())
+                    deleteCustomerFromSoldProductsDB();
+                else {
+                    Toast.makeText(getActivity(), "Silme işlevi başarısız oldu .", Toast.LENGTH_SHORT).show();
+                    Log.e("deleteCusFroCusDB", task.getException().toString());
+                }
+
+
+            }
+        });
+
+    }
+
+    public void deleteCustomerFromSoldProductsDB(){
+
+        myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()){
+                    Toast.makeText(getActivity(), "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(getActivity(), "Silme işlemi başarısız .", Toast.LENGTH_SHORT).show();
+                    Log.e("deleteCusFroSoldDB", task.getException().toString());
+                }
+
+            }
+        });
+
+
+    }
+
+
+    public void deleteCustomerPPFromStorage(){
+
+        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String key = snapshot.getValue().toString();
+                FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(USER_UID).child(key).delete();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+    /**
+     * Customer silinmesi icin onay istenir .
+     * deleteProduct metodunu cagirir .
+     */
+    public void alertViewForDeleteCustomer(){
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+
+        alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
+        alertDialogbuilder.setMessage("Müşterinizi silmek istediğinize emin misiniz ?");
+        alertDialogbuilder.setIcon(R.drawable.warning_icon);
+
+        alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                deleteCustomerPPFromStorage();
+                deleteCustomerFromCustomerDB();
+                imageView_fragmentDetailCustomer_customerCall.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_sendMessage.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_deleteCustomer.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_edit.setVisibility(View.INVISIBLE);
+                textView_fragmentDetailCustomer_getPaid.setVisibility(View.INVISIBLE);
+
+            }
+        });
+
+        alertDialogbuilder.setNegativeButton("HAYIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialogbuilder.create().show();
 
     }
 

@@ -169,16 +169,20 @@ public class SellProductFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
+                try {// Customer sildikten sonra burası null atar .
+                    CustomerOrSupplier customerOrSupplier = snapshot.getValue(CustomerOrSupplier.class);
 
-                imageView_sellProductFragment_companyName.setText(customerOrSupplier.getCompanyName());
-                imageView_sellProductFragment_customerName.setText(customerOrSupplier.getName() + customerOrSupplier.getSurname());
+                    imageView_sellProductFragment_companyName.setText(customerOrSupplier.getCompanyName());
+                    imageView_sellProductFragment_customerName.setText(customerOrSupplier.getName() + customerOrSupplier.getSurname());
 
-                String photoKey = customerOrSupplier.getPhoto();
-                if (photoKey != "null"){
-                    setCustomerPP(photoKey);
+                    String photoKey = customerOrSupplier.getPhoto();
+                    if (photoKey != "null") {
+                        setCustomerPP(photoKey);
+                    }
                 }
-
+                catch (Exception e){
+                    Log.e("setCusınfo", e.getMessage());
+                }
             }
 
             @Override
