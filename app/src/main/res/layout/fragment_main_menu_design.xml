@@ -286,7 +286,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="STOK"
+                android:text="AYARLAR"
                 android:textColor="@color/backgroundcolor"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

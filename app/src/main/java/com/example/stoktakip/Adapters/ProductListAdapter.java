@@ -37,7 +37,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public class CardHolder extends RecyclerView.ViewHolder{
 
         private TextView textView_cardViewProduct_productCode, textView_cardViewProduct_productName, textView_cardViewProduct_purchasePrice
-                       , textView_cardViewProduct_sellingPrice, textView_cardViewProduct_howManyUnit, textView_cardViewProduct_whichUnit;
+                       , textView_cardViewProduct_sellingPrice, textView_cardViewProduct_howManyUnit;
 
         private CardView cardView_Product;
 
@@ -49,7 +49,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             textView_cardViewProduct_purchasePrice = itemView.findViewById(R.id.textView_cardViewProduct_purchasePrice);
             textView_cardViewProduct_sellingPrice = itemView.findViewById(R.id.textView_cardViewProduct_sellingPrice);
             textView_cardViewProduct_howManyUnit = itemView.findViewById(R.id.textView_cardViewProduct_howManyUnit);
-            textView_cardViewProduct_whichUnit = itemView.findViewById(R.id.textView_cardViewProduct_whichUnit);
             cardView_Product = itemView.findViewById(R.id.cardView_Product);
 
 
@@ -115,11 +114,20 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void setProductInfo(CardHolder holder, Product product){
 
         holder.textView_cardViewProduct_productCode.setText("Ürün Kodu : " + product.getProductCode());
-        holder.textView_cardViewProduct_productName.setText(product.getProductName());
-        holder.textView_cardViewProduct_purchasePrice.setText(product.getPurchasePrice());
-        holder.textView_cardViewProduct_sellingPrice.setText(product.getSellingPrice());
-        holder.textView_cardViewProduct_howManyUnit.setText(product.getHowManyUnit());
-        holder.textView_cardViewProduct_whichUnit.setText(product.getTypeProduct());
+        holder.textView_cardViewProduct_productName.setText("Ürün Adı : " + product.getProductName());
+        holder.textView_cardViewProduct_purchasePrice.setText("Birim Alış Fiyatı : " + product.getPurchasePrice() + " TL");
+        holder.textView_cardViewProduct_sellingPrice.setText("Birim Satış Fiyatı : " + product.getSellingPrice() + " TL");
+
+        String productType = product.getTypeProduct();
+        String type;
+        if (productType.equals("Adet"))
+            type = "Adet";
+        else if (productType.equals("Ağırlık"))
+            type = "Kilo";
+        else
+            type = "Litre";
+
+        holder.textView_cardViewProduct_howManyUnit.setText("Stok Miktarı : " + product.getHowManyUnit() + " " + type);
 
     }
 

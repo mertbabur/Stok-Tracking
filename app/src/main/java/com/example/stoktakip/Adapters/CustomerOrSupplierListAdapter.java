@@ -45,7 +45,7 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
     public class CardHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView_cardViewCustomer_customerPP, imageView_cardViewCustomer_phoneCall, imageView_cardViewCustomer_sendMessage
-                  , imageView_cardViewCustomer_deleteCustomer, imageView_cardViewCustomer_sellProduct;
+                  , imageView_cardViewCustomer_sellProduct;
         TextView textView_cardViewCustomer_customerName, textView_cardViewCustomer_companyName;
         CardView cardView_cardViewCustomer;
 
@@ -58,7 +58,6 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             textView_cardViewCustomer_customerName = itemView.findViewById(R.id.textView_cardViewCustomer_customerName);
             cardView_cardViewCustomer = itemView.findViewById(R.id.cardView_cardViewCustomer);
             textView_cardViewCustomer_companyName = itemView.findViewById(R.id.textView_cardViewCustomer_companyName);
-            imageView_cardViewCustomer_deleteCustomer = itemView.findViewById(R.id.imageView_cardViewCustomer_deleteCustomer);
             imageView_cardViewCustomer_sellProduct = itemView.findViewById(R.id.imageView_cardViewCustomer_sellProduct);
 
         }
@@ -124,14 +123,6 @@ public class CustomerOrSupplierListAdapter extends RecyclerView.Adapter<Customer
             public void onClick(View v) {
 
                 openSMS(customerOrSupplier.getNum());
-
-            }
-        });
-
-        // customer silme kismi ...
-        holder.imageView_cardViewCustomer_deleteCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
             }
         });
