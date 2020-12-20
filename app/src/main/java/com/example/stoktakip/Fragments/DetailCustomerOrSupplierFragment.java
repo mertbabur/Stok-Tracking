@@ -161,7 +161,12 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                alertViewForDeleteCustomer();
+
+                if (WHICH_BUTTON.equals("customerButton"))
+                    alertViewForDeleteCustomer("Müşterinizi");
+                //else
+
+
 
             }
         });
@@ -472,25 +477,30 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
      * Customer silinmesi icin onay istenir .
      * deleteProduct metodunu cagirir .
      */
-    public void alertViewForDeleteCustomer(){
+    public void alertViewForDeleteCustomer(String who){
 
         AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
 
         alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
-        alertDialogbuilder.setMessage("Müşterinizi silmek istediğinize emin misiniz ?");
+        alertDialogbuilder.setMessage(who + " silmek istediğinize emin misiniz ?");
         alertDialogbuilder.setIcon(R.drawable.warning_icon);
 
         alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if (WHICH_BUTTON.equals("customerButton")){
 
-                deleteCustomerPPFromStorage();
-                deleteCustomerFromCustomerDB();
-                imageView_fragmentDetailCustomer_customerCall.setVisibility(View.INVISIBLE);
-                imageView_fragmentDetailCustomer_sendMessage.setVisibility(View.INVISIBLE);
-                imageView_fragmentDetailCustomer_deleteCustomer.setVisibility(View.INVISIBLE);
-                imageView_fragmentDetailCustomer_edit.setVisibility(View.INVISIBLE);
-                textView_fragmentDetailCustomer_getPaid.setVisibility(View.INVISIBLE);
+                    deleteCustomerPPFromStorage();
+                    deleteCustomerFromCustomerDB();
+                    imageView_fragmentDetailCustomer_customerCall.setVisibility(View.INVISIBLE);
+                    imageView_fragmentDetailCustomer_sendMessage.setVisibility(View.INVISIBLE);
+                    imageView_fragmentDetailCustomer_deleteCustomer.setVisibility(View.INVISIBLE);
+                    imageView_fragmentDetailCustomer_edit.setVisibility(View.INVISIBLE);
+                    textView_fragmentDetailCustomer_getPaid.setVisibility(View.INVISIBLE);
+
+                }
+                //else
+
 
             }
         });
