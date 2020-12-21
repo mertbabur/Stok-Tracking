@@ -210,7 +210,7 @@ public class ProductDetailFragment extends Fragment {
                         textView_detailProductFragment_quantity.setText(product.getHowManyUnit() + " Litre");
 
                     if (product.getFrom().equals("Tedarikçiden Ekle")) // eger tedarikciden ise .
-                        FirebaseUtils.setCompanyName(product.getFromKey(), textView_detailProductFragment_supplier);
+                        textView_detailProductFragment_supplier.setText(product.getCompanyName());
                     else // user ekledi ise .
                         textView_detailProductFragment_supplier.setText("Kendi Stoğum");
 

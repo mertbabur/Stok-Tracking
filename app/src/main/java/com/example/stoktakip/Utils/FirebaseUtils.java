@@ -286,7 +286,7 @@ public class FirebaseUtils {
      * Supplier key ile supplier bilgilerine ulasir .
      * Company name i gerkli gorsel nesneye yerlestirir .
      * @param supplierKey
-     */
+     *//*
     public static void setCompanyName(String supplierKey, final TextView textView) {
 
         defineFirebaseDatabase();
@@ -308,7 +308,7 @@ public class FirebaseUtils {
             }
         });
 
-    }
+    }*/
 
 
     /**

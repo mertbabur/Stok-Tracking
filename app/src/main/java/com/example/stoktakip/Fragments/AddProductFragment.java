@@ -144,7 +144,7 @@ public class AddProductFragment extends Fragment {
         button_fragmentAddProduct_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Act Bas", SUPPLIER_KEY + " sdfsdf");
+
                 if(PRODUCT_KEY == null) {
 
                     setSelected_typeProduct();
@@ -155,6 +155,8 @@ public class AddProductFragment extends Fragment {
                         //isEarlierAddedProductCode();
 
                         SUPPLIER_KEY = getActivity().getSharedPreferences("tedarikciKey", Context.MODE_PRIVATE).getString("supplierKey", "bos key");
+                        COMPANY_NAME = getActivity().getSharedPreferences("tedarikciKey", Context.MODE_PRIVATE).getString("companyName", "bos key");
+
 
                         saveProductDB();
                         updateTotalPurchasedProductPrice();
@@ -227,9 +229,12 @@ public class AddProductFragment extends Fragment {
     public void getSupplierKeyFromComeFragment(){
 
         SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
+        COMPANY_NAME = getArguments().getString("companyNameFromAdapter", "bos company name");
+
         SharedPreferences mSharedPrefs = getActivity().getSharedPreferences("tedarikciKey", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPrefs.edit();
         editor.putString("supplierKey", SUPPLIER_KEY);
+        editor.putString("companyName", COMPANY_NAME);
         editor.commit();
 
     }
@@ -270,7 +275,7 @@ public class AddProductFragment extends Fragment {
 
                     if (PRODUCT_WHO.equals("Tedarikçiden Ekle")) {
                         radioGroup_who.check(R.id.radioButton_who_supplier);
-                        FirebaseUtils.setCompanyName(product.getFromKey(), editText_fragmentAddProduct_supplierName);
+                        editText_fragmentAddProduct_supplierName.setText(product.getCompanyName());
                     }
                     else
                         editText_fragmentAddProduct_supplierName.setText("Kendi Stoğum");
@@ -296,32 +301,27 @@ public class AddProductFragment extends Fragment {
      */
     public void setSupplierIfCameSupplierListFragment(){
 
-            //SUPPLIER_KEY = getArguments().getString("supplierKeyFromAdapter", "bos supplier key");
-            COMPANY_NAME = getArguments().getString("companyNameFromAdapter", "bos company name");
-            editText_fragmentAddProduct_supplierName.setText(COMPANY_NAME);
-        Toast.makeText(getActivity(), SUPPLIER_KEY + " " + COMPANY_NAME, Toast.LENGTH_SHORT).show();
-            String name = getArguments().getString("name", "bos");
-            String purchasePrice = getArguments().getString("purchasePrice", "bos");
-            String sellingPrice = getArguments().getString("sellingPrice", "bos");
-            String howManyUnit = getArguments().getString("howManyUnit", "bos");
-            String productCode = getArguments().getString("productCode", "bos");
-            String productType = getArguments().getString("productType", "bos");
+        editText_fragmentAddProduct_supplierName.setText(COMPANY_NAME);
 
-            editText_fragmentAddProduct_productName.setText(name);
-            editText_fragmentAddProduct_unitSellingPrice.setText(purchasePrice);
-            editText_fragmentAddProduct_unitPurchasePriceProduct.setText(sellingPrice);
-            editText_fragmentAddProduct_howManyUnit.setText(howManyUnit);
-            editText_fragmentAddProduct_productCode.setText(productCode);
-
-            //Hangi birim secili ise ...
-            if (productType.equals("Adet"))
-                radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typeProduct_unit);
-            else if(productType.equals("Ağırlık"))
-                radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_weight);
-            else
-                radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_volume);
-
-            radioGroup_who.check(R.id.radioButton_who_supplier);
+        String name = getArguments().getString("name", "bos");
+        String purchasePrice = getArguments().getString("purchasePrice", "bos");
+        String sellingPrice = getArguments().getString("sellingPrice", "bos");
+        String howManyUnit = getArguments().getString("howManyUnit", "bos");
+        String productCode = getArguments().getString("productCode", "bos");
+        String productType = getArguments().getString("productType", "bos");
+        editText_fragmentAddProduct_productName.setText(name);
+        editText_fragmentAddProduct_unitSellingPrice.setText(purchasePrice);
+        editText_fragmentAddProduct_unitPurchasePriceProduct.setText(sellingPrice);
+        editText_fragmentAddProduct_howManyUnit.setText(howManyUnit);
+        editText_fragmentAddProduct_productCode.setText(productCode);
+        //Hangi birim secili ise ...
+        if (productType.equals("Adet"))
+            radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typeProduct_unit);
+        else if(productType.equals("Ağırlık"))
+            radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_weight);
+        else
+            radioGroup_fragmentAddProduct_typeProduct.check(R.id.radioButton_typePorduct_volume);
+        radioGroup_who.check(R.id.radioButton_who_supplier);
 
     }
 
@@ -491,7 +491,6 @@ public class AddProductFragment extends Fragment {
      */
     public void saveProductDB(){
 
-        Log.e("saveP", "save prdoct db ici " + SUPPLIER_KEY);
         String name = editText_fragmentAddProduct_productName.getText().toString().trim();
         String purchasePrice = editText_fragmentAddProduct_unitPurchasePriceProduct.getText().toString().trim();
         String sellingPrice = editText_fragmentAddProduct_unitSellingPrice.getText().toString().trim();
@@ -500,14 +499,19 @@ public class AddProductFragment extends Fragment {
         String productType = isSelectedTypeProduct;
         String from = isSelectedWho;
         String fromKey = "";
-        if (isSelectedWho.equals("Kendim Ekle"))
+        String companyName = "";
+        if (isSelectedWho.equals("Kendim Ekle")) {
             fromKey = FirebaseAuth.getInstance().getUid();
-        else
+            companyName = "Kendi Stoğum";
+        }
+        else {
             fromKey = SUPPLIER_KEY; // daha sonra tedarikci keyini bul ve ekle .
+            companyName = COMPANY_NAME;
+        }
 
         final String productKey = UUID.randomUUID().toString();
 
-        final Product product = new Product(productKey, name, productCode, purchasePrice, sellingPrice, howManyUnit, productType, from, fromKey);
+        final Product product = new Product(productKey, name, productCode, purchasePrice, sellingPrice, howManyUnit, productType, from, fromKey, companyName);
 
         myRef.child("Products").child(USER_UID).child(productKey).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -526,7 +530,7 @@ public class AddProductFragment extends Fragment {
      * @param product
      */
     public void saveProductKeyDB(Product product){
-    Log.e("savePKey", "sdsd" + SUPPLIER_KEY);
+
         if (isSelectedWho.equals("Kendim Ekle")){ // eger kendi eklerse ...
             myRef.child("Users").child(USER_UID).child("ProductsKey").child(product.getProductKey()).setValue(product);
         }
@@ -577,6 +581,7 @@ public class AddProductFragment extends Fragment {
         map.put("productCode", productCode);
         map.put("typeProduct", isSelectedTypeProduct);
 
+
         myRef.child("Products").child(USER_UID).child(PRODUCT_KEY).updateChildren(map);
 
         updateCash(Float.valueOf(purchasePrice), Float.valueOf(howManyUnit), Float.valueOf(oldProductPurchasedPrice), Float.valueOf(oldProdutQuantity));
@@ -587,12 +592,25 @@ public class AddProductFragment extends Fragment {
     }
 
 
+    /**
+     * Supplier DB deki supplier a ait product guncellenir .
+     * Eger supplier i silinen bir urun guncellenecekse burasi if in icinde null atar .
+     * @param map
+     */
     public void updateProductForSupplierDB(Map map){
 
-        if (PRODUCT_WHO.equals("Tedarikçiden Ekle"))
-            myRef.child("Suppliers").child(USER_UID).child(SUPPLIER_KEY_FOR_MODIFY_PRODUCT).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
-        else
-            myRef.child("Users").child(USER_UID).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
+        try {// supplier silindikten sonra bura calistiginda null atar .
+
+            if (PRODUCT_WHO.equals("Tedarikçiden Ekle"))
+                myRef.child("Suppliers").child(USER_UID).child(SUPPLIER_KEY_FOR_MODIFY_PRODUCT).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
+            else
+                myRef.child("Users").child(USER_UID).child("ProductsKey").child(PRODUCT_KEY).updateChildren(map);
+
+        }
+        catch (Exception e){
+            Log.e("updateProduct", e.getMessage());
+        }
+
 
     }
 
