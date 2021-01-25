@@ -365,6 +365,8 @@ public class FirebaseUtils {
      */
     public static void updateTotalCollectedProductPrice(TextInputEditText paidQuantityText, final String USER_UID){
 
+        defineFirebaseDatabase();
+
         final Float paidQuantity = Float.valueOf(paidQuantityText.getText().toString());
 
         myRef.child("CashDesk").child(USER_UID).child("totalCollectedProductPrice").addListenerForSingleValueEvent(new ValueEventListener() {

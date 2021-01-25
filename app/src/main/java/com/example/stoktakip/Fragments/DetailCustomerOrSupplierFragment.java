@@ -164,8 +164,8 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
                 if (WHICH_BUTTON.equals("customerButton"))
                     alertViewForDeleteCustomer("Müşterinizi");
-                //else
-
+                else
+                    alertViewForDeleteCustomer("Tedarikçinizi");
 
 
             }
@@ -455,13 +455,15 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
     }
 
 
-    public void deleteCustomerPPFromStorage(){
+    public void deleteCustomerOrSupplierPPFromStorage(String whichDB, final String whichStorage){
 
-        myRef.child("Customers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(whichDB).child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String key = snapshot.getValue().toString();
-                FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(USER_UID).child(key).delete();
+
+                if (!key.equals("null"))
+                    FirebaseStorage.getInstance().getReference().child(whichStorage).child(USER_UID).child(key).delete();
             }
 
             @Override
@@ -488,19 +490,25 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         alertDialogbuilder.setPositiveButton("EVET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (WHICH_BUTTON.equals("customerButton")){
+                if (WHICH_BUTTON.equals("customerButton")){ // Customer silme kismi .
 
-                    deleteCustomerPPFromStorage();
+                    deleteCustomerOrSupplierPPFromStorage("Customers", "CustomersPictures");
                     deleteCustomerFromCustomerDB();
-                    imageView_fragmentDetailCustomer_customerCall.setVisibility(View.INVISIBLE);
-                    imageView_fragmentDetailCustomer_sendMessage.setVisibility(View.INVISIBLE);
-                    imageView_fragmentDetailCustomer_deleteCustomer.setVisibility(View.INVISIBLE);
-                    imageView_fragmentDetailCustomer_edit.setVisibility(View.INVISIBLE);
-                    textView_fragmentDetailCustomer_getPaid.setVisibility(View.INVISIBLE);
+
 
                 }
-                //else
+                else{ // Supplier silme kismi .
 
+                    deleteCustomerOrSupplierPPFromStorage("Suppliers", "SuppliersPictures");
+                    deleteSupplierFromSuppDB();
+
+                }
+
+                imageView_fragmentDetailCustomer_customerCall.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_sendMessage.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_deleteCustomer.setVisibility(View.INVISIBLE);
+                imageView_fragmentDetailCustomer_edit.setVisibility(View.INVISIBLE);
+                textView_fragmentDetailCustomer_getPaid.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -510,9 +518,24 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
+
         alertDialogbuilder.create().show();
 
     }
+
+    public void deleteSupplierFromSuppDB(){
+
+        myRef.child("Suppliers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                    Toast.makeText(getActivity(), "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
 
 
 }
