@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class MainMenuFragment extends Fragment {
     private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
                     , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense
                     , cardView_myStock;
-    private TextView cikis;
+    private ImageView imageView_mainMenuCikis;
 
     @Nullable
     @Override
@@ -48,7 +49,7 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
         cardView_fragmentMainMenu_cashDesk = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDesk);
         cardView_myStock = rootView.findViewById(R.id.cardView_myStock);
-        cikis = rootView.findViewById(R.id.cikis);
+        imageView_mainMenuCikis = rootView.findViewById(R.id.imageView_mainMenuCikis);
         cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense);
 
     }
@@ -137,7 +138,7 @@ public class MainMenuFragment extends Fragment {
             }
         });
 
-        cikis.setOnClickListener(new View.OnClickListener() {
+        imageView_mainMenuCikis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
