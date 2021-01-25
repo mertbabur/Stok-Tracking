@@ -434,6 +434,9 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
     }
 
+    /**
+     * Customerlara satış yapılan urunleri siler .
+     */
     public void deleteCustomerFromSoldProductsDB(){
 
         myRef.child("SoldProducts").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -454,7 +457,11 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
     }
 
-
+    /**
+     * Customer veya Supplier in profil resimlerini Storage dan siler .
+     * @param whichDB
+     * @param whichStorage
+     */
     public void deleteCustomerOrSupplierPPFromStorage(String whichDB, final String whichStorage){
 
         myRef.child(whichDB).child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -523,6 +530,10 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
     }
 
+
+    /**
+     * Supplier i DB den siler .
+     */
     public void deleteSupplierFromSuppDB(){
 
         myRef.child("Suppliers").child(USER_UID).child(CUSTOMER_OR_SUPPLIER_KEY).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
