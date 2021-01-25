@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class AdditionalExpenseFragment extends Fragment {
     private RadioButton radioButton_fuelExpense, radioButton_rentExpense, radioButton_employeeCost
                         , radioButton_taxExpense, radioButton_other;
 
+
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
@@ -87,6 +89,7 @@ public class AdditionalExpenseFragment extends Fragment {
         toolbar_additionalExpense = rootView.findViewById(R.id.toolbar_additionalExpense);
         recyclerView_additionalExpense = rootView.findViewById(R.id.recyclerView_additionalExpense);
         floatingActionButton_additionalExpense = rootView.findViewById(R.id.floatingActionButton_additionalExpense);
+
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -352,11 +355,6 @@ public class AdditionalExpenseFragment extends Fragment {
         });
 
     }
-
-
-
-
-
 
 
 }
