@@ -66,7 +66,7 @@ public class SettingsFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
-        //setInfoToAttributes();
+        setInfoToAttributes();
 
         return rootView;
 
@@ -126,7 +126,7 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_deleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteAccount();
+                deletePPForDeleteAccount();
             }
         });
 
@@ -134,11 +134,10 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.signOut();
 
                 LoginFragment loginFragment = new LoginFragment();
-                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, 0);
-
+                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "exitButton", 0);
+                mAuth.signOut();
             }
         });
 
@@ -420,6 +419,10 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    /**
+     * Kullanici silmeden once pp sini storage dan kaldirir.
+     * deleteAccount metodunu cagirir .
+     */
     public void deletePPForDeleteAccount(){
         myRef.child("Users").child(USER_UID).child("photo").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -453,19 +456,85 @@ public class SettingsFragment extends Fragment {
 
         // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
         try {
-            myRef.child("Users").child(USER_UID).removeValue();
-            myRef.child("Suppliers").child(USER_UID).removeValue();
-            myRef.child("SoldProducts").child(USER_UID).removeValue();
-            myRef.child("Products").child(USER_UID).removeValue();
-            myRef.child("Customers").child(USER_UID).removeValue();
-            myRef.child("CashDesk").child(USER_UID).removeValue();
-
-            stRef.child("SuppliersPictures").child(USER_UID).delete();
-            stRef.child("CustomersPictures").child(USER_UID).delete();
-
+            myRef.child("UserExpenses").child(USER_UID).removeValue();
         }catch (Exception e){
             Log.e("deleteAcc", e.getMessage());
         }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("CashDesk").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Customers").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Products").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("SoldProducts").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Suppliers").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Users").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Users").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            myRef.child("Users").child(USER_UID).removeValue();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        /**
+         * Bu code blogunda kullanicinin musteri ve supplier larinin resimlerini silmede sıkıntı var daha sonra bak ...
+         */
+/*
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            FirebaseStorage.getInstance().getReference().child("SuppliersPictures").child(USER_UID).delete();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+
+        // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
+        try {
+            FirebaseStorage.getInstance().getReference().child("CustomersPictures").child(USER_UID).delete();
+        }catch (Exception e){
+            Log.e("deleteAcc", e.getMessage());
+        }
+*/
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -475,7 +544,7 @@ public class SettingsFragment extends Fragment {
                             Toast.makeText(getActivity(), "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
 
                             LoginFragment loginFragment = new LoginFragment();
-                            StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, 0);
+                            StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "deleteButton", 0);
                         }
                     }
                 });

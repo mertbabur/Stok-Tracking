@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -141,7 +142,11 @@ public class MainMenuFragment extends Fragment {
         imageView_mainMenuCikis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                LoginFragment loginFragment = new LoginFragment();
+                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "exitButton", 0);
                 FirebaseAuth.getInstance().signOut();
+
             }
         });
 
