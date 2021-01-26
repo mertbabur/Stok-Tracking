@@ -1,5 +1,6 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Activities.EntryActivity;
+import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
@@ -143,8 +147,8 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                LoginFragment loginFragment = new LoginFragment();
-                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "exitButton", 0);
+                startActivity(new Intent(getActivity(), MainActivity.class));
+                getActivity().finish();
                 FirebaseAuth.getInstance().signOut();
 
             }

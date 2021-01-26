@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.Models.User;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
@@ -135,8 +136,8 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                LoginFragment loginFragment = new LoginFragment();
-                StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "exitButton", 0);
+                startActivity(new Intent(getActivity(), MainActivity.class));
+                getActivity().finish();
                 mAuth.signOut();
             }
         });
@@ -191,6 +192,7 @@ public class SettingsFragment extends Fragment {
                 User user = snapshot.getValue(User.class);
                 textView_settingsFragment_companyName.setText("ŞİRKET ADI : " + user.getCompanyName());
                 textView_settingsFragment_userName.setText("İSİM : " + user.getName());
+                textView_settingsFragment_mail.setText("E-MAİL : " + user.getEmail());
 
                 String photoKey = user.getPhoto();
                 if (!photoKey.equals("null")) {
@@ -441,6 +443,9 @@ public class SettingsFragment extends Fragment {
                         }
                     });
                 }
+                else{
+                    deleteAccount();
+                }
             }
 
             @Override
@@ -543,8 +548,8 @@ public class SettingsFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Silme işlemi başarılı .", Toast.LENGTH_SHORT).show();
 
-                            LoginFragment loginFragment = new LoginFragment();
-                            StockUtils.gotoFragment(getActivity(), loginFragment, R.id.frameLayoutEntryActivity_holder, "whichButton", "deleteButton", 0);
+                            startActivity(new Intent(getActivity(), MainActivity.class));
+                            getActivity().finish();
                         }
                     }
                 });
