@@ -98,7 +98,7 @@ public class ProductsFragments extends Fragment {
             public void onClick(View v) {
 
                 AddProductFragment addProductFragment = new AddProductFragment();
-                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, 1);
+                StockUtils.gotoFragment(getActivity(), addProductFragment, R.id.frameLayoutEntryActivity_holder, 0);
 
             }
         });
