@@ -49,7 +49,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CardHold
 
         TextView textView_cardview_expense_expenseType, textView_cardview_expense_expenseDate, textView_cardview_expense_expenseQuantity
                 , textView_cardview_expense_expenseAbout;
-        private ImageView imageView_cardView_Expense_deleteExpense, imageView_cardView_Expense_updateExpense;
+        private ImageView imageView_cardView_Expense_deleteExpense;
 
         public CardHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,7 +59,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CardHold
             textView_cardview_expense_expenseQuantity = itemView.findViewById(R.id.textView_cardview_expense_expenseQuantity);
             textView_cardview_expense_expenseAbout = itemView.findViewById(R.id.textView_cardview_expense_expenseAbout);
             imageView_cardView_Expense_deleteExpense = itemView.findViewById(R.id.imageView_cardView_Expense_deleteExpense);
-            imageView_cardView_Expense_updateExpense = itemView.findViewById(R.id.imageView_cardView_Expense_updateExpense);
 
         }
     }
@@ -89,15 +88,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.CardHold
 
             }
         });
-
-        // ek gider guncelleme .
-        holder.imageView_cardView_Expense_updateExpense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
 
     }
 

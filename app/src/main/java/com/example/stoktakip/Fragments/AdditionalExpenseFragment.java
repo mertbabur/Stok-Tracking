@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -20,12 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.Adapters.DebtCustomerAdapter;
 import com.example.stoktakip.Adapters.ExpenseAdapter;
-import com.example.stoktakip.Adapters.ProductListAdapter;
 import com.example.stoktakip.Models.AdditionalExpense;
 import com.example.stoktakip.R;
-import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.TimeClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,7 +49,6 @@ public class AdditionalExpenseFragment extends Fragment {
     private RadioButton radioButton_fuelExpense, radioButton_rentExpense, radioButton_employeeCost
                         , radioButton_taxExpense, radioButton_other;
 
-
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
@@ -74,11 +69,11 @@ public class AdditionalExpenseFragment extends Fragment {
         defineAttributes(rootView);
         actionAttributes();
         getExpenseFromDB();
+        defineToolbar();
 
         return rootView;
 
     }
-
 
     /**
      * Gorsel nesneler burada baglanir .
@@ -117,6 +112,16 @@ public class AdditionalExpenseFragment extends Fragment {
 
             }
         });
+
+    }
+
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        toolbar_additionalExpense.setTitle("Ek Giderler");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_additionalExpense);
 
     }
 
@@ -170,7 +175,6 @@ public class AdditionalExpenseFragment extends Fragment {
 
 
         alertDialogbuilder.create().show();
-
     }
 
 
@@ -196,9 +200,7 @@ public class AdditionalExpenseFragment extends Fragment {
             default:
                 return null;
         }
-
     }
-
 
     /**
      * Ek gider i UserExpenses DB sine ekler .
@@ -220,8 +222,6 @@ public class AdditionalExpenseFragment extends Fragment {
 
         AdditionalExpense additionalExpense = new AdditionalExpense(expenseKey, expenseType, expenseAbout, expenseQuantity, date + "/" + clock);
 
-
-
         myRef.child("UserExpenses"). child(USER_UID).child(expenseKey).setValue(additionalExpense).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -237,7 +237,6 @@ public class AdditionalExpenseFragment extends Fragment {
         });
 
     }
-
 
     /**
      * Gider turune gore toplam gider i guncller .
@@ -262,7 +261,6 @@ public class AdditionalExpenseFragment extends Fragment {
         updateTotalExpense(whichAtt, expenseQuantity);
 
     }
-
 
     /**
      * Yeni ek girildikten sonra CashDesk DB sindeki totalExpense guncellenir .
@@ -290,7 +288,6 @@ public class AdditionalExpenseFragment extends Fragment {
 
     }
 
-
     /**
      * gerekli attributeler dolduruldu mu ?
      * @return --> Doldu ise --> True , Dolmadi ise --> False
@@ -301,9 +298,7 @@ public class AdditionalExpenseFragment extends Fragment {
             return true;
 
         return false;
-
     }
-
 
     /**
      * RecyclerView tanimlar .
@@ -316,7 +311,6 @@ public class AdditionalExpenseFragment extends Fragment {
         recyclerView_additionalExpense.setAdapter(adapter);
 
     }
-
 
     /**
      * UserExpenses DB sinden giderleri expensesListe atar ve defineRecyclerView cagirir .
@@ -353,8 +347,6 @@ public class AdditionalExpenseFragment extends Fragment {
 
             }
         });
-
     }
-
 
 }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -22,7 +23,6 @@ import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.Models.User;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.FirebaseUtils;
-import com.example.stoktakip.Utils.StockUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,12 +42,11 @@ import java.util.Map;
 
 public class SettingsFragment extends Fragment {
 
-    private Toolbar toolbar_myStock;
+    private Toolbar toolbar_settings;
     private ImageView imageView_settingsFragment_userPP;
     private TextView textView_settingsFragment_companyName, textView_settingsFragment_userName, textView_settingsFragment_mail
                    , textView_settingsFragment_updateInfo, textView_settingsFragment_updatePassword, textView_settingsFragment_deleteAccount
-                   , textView_settingsFragment_signOut, alertView_updatePassword_password, alertView_updatePassword_verificiationPassword
-                   , alertview_companyName, alertview_userName, textView_settingsFragment_chanceUserPP;
+                   , textView_settingsFragment_signOut, alertview_companyName, alertview_userName, textView_settingsFragment_chanceUserPP;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -67,12 +66,12 @@ public class SettingsFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        defineToolbar();
         setInfoToAttributes();
 
         return rootView;
 
     }
-
 
     /**
      * Gorsel nesneler burada baglanir .
@@ -88,7 +87,7 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_deleteAccount = rootView.findViewById(R.id.textView_settingsFragment_deleteAccount);
         textView_settingsFragment_signOut = rootView.findViewById(R.id.textView_settingsFragment_signOut);
         textView_settingsFragment_chanceUserPP = rootView.findViewById(R.id.textView_settingsFragment_chanceUserPP);
-
+        toolbar_settings = rootView.findViewById(R.id.toolbar_settings);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -100,7 +99,6 @@ public class SettingsFragment extends Fragment {
         USER_UID = FirebaseAuth.getInstance().getUid();
 
     }
-
 
     /**
      * Gorsel nesnelerin actionlari burada calistirilir .
@@ -153,6 +151,15 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+    }
+
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        toolbar_settings.setTitle("Ayarlar");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_settings);
 
     }
 
@@ -176,7 +183,6 @@ public class SettingsFragment extends Fragment {
             deleteUserPPFromStorage();
 
         }
-
 
     }
 
@@ -235,7 +241,6 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-
     /**
      * girilen alanlar dolu mu ? Ve uzunlugu 6ya esit veya buyuk mu ?
      * @param password
@@ -252,7 +257,6 @@ public class SettingsFragment extends Fragment {
 
     }
 
-
     /**
      * Girilen alanlar dolu mu ?
      * @param str1
@@ -267,7 +271,6 @@ public class SettingsFragment extends Fragment {
         return false;
 
     }
-
 
     /**UpdateInfo metodunu cagirir .
      * update
@@ -309,7 +312,6 @@ public class SettingsFragment extends Fragment {
         alertDialogbuilder.create().show();
 
     }
-
 
     /**
      * Hesap silme icin uyari mesaji cikarir .
@@ -438,7 +440,6 @@ public class SettingsFragment extends Fragment {
 
     }
 
-
     public void deleteAccount(){
 
         // Eger db de olmayan bir seyi silmeye kalkarsak exception firlatir .
@@ -538,7 +539,5 @@ public class SettingsFragment extends Fragment {
 
 
     }
-
-
 
 }

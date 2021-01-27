@@ -3,16 +3,12 @@ package com.example.stoktakip.Fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +24,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +40,7 @@ public class CustomersOrSuppliersFragment extends Fragment{
 
     private String WHICH_BUTTON;
 
-    String userUID;
+    private String userUID;
 
     @Nullable
     @Override
@@ -106,15 +101,19 @@ public class CustomersOrSuppliersFragment extends Fragment{
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
     public void defineToolbar(){
 
-        toolbar_fragmentCustomers.setTitle("sdf");
+        if (WHICH_BUTTON.equals("customerButton"))
+            toolbar_fragmentCustomers.setTitle("Müşteriler");
+        else
+            toolbar_fragmentCustomers.setTitle("Tedarikçiler");
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_fragmentCustomers);
 
     }
-
-
-
 
     /**
      * musterileri dbden alir ve recylerview tanimlar .
@@ -130,7 +129,6 @@ public class CustomersOrSuppliersFragment extends Fragment{
 
                 CustomerOrSupplier customer = snapshot.getValue(CustomerOrSupplier.class);
                 customerList.add(customer);
-                //defineRecyclerView();
 
                 adapter.notifyDataSetChanged();
             }
@@ -157,7 +155,6 @@ public class CustomersOrSuppliersFragment extends Fragment{
         });
 
     }
-
 
     /**
      * Customer icin recyclerView tanimlar .
@@ -173,95 +170,6 @@ public class CustomersOrSuppliersFragment extends Fragment{
             adapter = new CustomerOrSupplierListAdapter(getActivity(), customerList, "supplierButton");
 
         recyclerView_fragmentCustomers.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        inflater.inflate(R.menu.toolbar_menu_design,menu);
-
-        MenuItem item = menu.findItem(R.id.action_search);
-
-        SearchView searchView = (SearchView) item.getActionView();
-
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.e("kelime sdfsdfsdf: ", "122   " + customerList.size()+"");
-
-                if (WHICH_BUTTON.equals("customerButton"))
-                    getCustomerOrSupplierRespectToToolbarSearch("Customers", query);
-                else
-                    getCustomerOrSupplierRespectToToolbarSearch("Suppliers", query);
-                Log.e("kelime : ", query);
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Log.e("kelime sdfsdfsdfsdf: ", "242   " + customerList.size()+"");
-
-                if (WHICH_BUTTON.equals("customerButton"))
-                    getCustomerOrSupplierRespectToToolbarSearch("Customers", newText);
-                else
-                    getCustomerOrSupplierRespectToToolbarSearch("Suppliers", newText);
-                Log.e("harf harf : ", newText);
-
-                return false;
-            }
-        });
-
-    }
-
-    public void getCustomerOrSupplierRespectToToolbarSearch(String whichDB, final String query){
-
-        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                customerList.clear();
-
-                    CustomerOrSupplier customer = snapshot.getValue(CustomerOrSupplier.class);
-                    Log.e("sdfsdf: ", "girdiiiiii" + query + " " + customer.getCompanyName());
-                    if (customer.getCompanyName().contains(query)){
-                        customerList.add(customer);
-                    }
-                //defineRecyclerView();
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
 
     }
 

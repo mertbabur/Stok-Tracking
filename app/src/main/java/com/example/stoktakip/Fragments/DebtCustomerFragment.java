@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Adapters.DebtCustomerAdapter;
-import com.example.stoktakip.Adapters.SoldProductAdapter;
-import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -50,6 +49,7 @@ public class DebtCustomerFragment extends Fragment {
 
         defineAttributes(rootView);
         defineRecyclerView();
+        defineToolbar();
         getDebtCustomerFromDB();
 
         return rootView;
@@ -77,7 +77,6 @@ public class DebtCustomerFragment extends Fragment {
 
     }
 
-
     /**
      * RecyclerView tanimla .
      */
@@ -92,6 +91,15 @@ public class DebtCustomerFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        toolbar_debtCustomerFragment.setTitle("Satışlar");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_debtCustomerFragment);
+
+    }
 
     /**
      * DB den satis yapilan musterileri getirir ve debtCustomerList e atar .
@@ -130,9 +138,6 @@ public class DebtCustomerFragment extends Fragment {
             }
         });
 
-
     }
-
-
 
 }

@@ -4,17 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Adapters.ProductListAdapter;
-import com.example.stoktakip.Adapters.SupplierListAdapter;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
@@ -56,13 +55,12 @@ public class ProductsFragments extends Fragment {
         defineAttributes(rootView);
         closeFloatingButton();
         actionAttributes();
-
+        defineToolbar();
         getProductsFromDB();
 
         return rootView;
 
     }
-
 
     /**
      * Gorsel nesneler tanimlandi ve baglandi .
@@ -84,7 +82,6 @@ public class ProductsFragments extends Fragment {
 
     }
 
-
     /**
      * Gorsel nesnelerin action u tetiklenir .
      */
@@ -103,7 +100,20 @@ public class ProductsFragments extends Fragment {
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
 
+        toolbar_fragmentProducts.setTitle("Ürünler");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_fragmentProducts);
+
+    }
+
+    /**
+     * Urunleri DB den alarak productList e yerlestirir.
+     * defineRecyclerView metodunu cagirir .
+     */
     public void getProductsFromDB(){
 
         myRef.child("Products").child(USER_UID).orderByChild("productName").addChildEventListener(new ChildEventListener() {
@@ -139,7 +149,9 @@ public class ProductsFragments extends Fragment {
 
     }
 
-
+    /**
+     * RecyclerView i tanimlar .
+     */
     public void defineRecyclerView(){
 
         recyclerView_fragmentProducts.setHasFixedSize(true);
@@ -148,7 +160,6 @@ public class ProductsFragments extends Fragment {
         recyclerView_fragmentProducts.setAdapter(adapter);
 
     }
-
 
     /**
      * Sell product butonuna basilarak gelindi ise butonu gosterme ...

@@ -1,7 +1,6 @@
 package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,7 +36,7 @@ public class SoldProductlistFragment extends Fragment {
     private Toolbar toolbar_soldProductFragment;
     private RecyclerView recyclerView_soldProductFragment;
     private TextView textView_soldProductFragment_paidQuantity, textView_soldProductFragment_getPaid;
-    private TextInputEditText textInputEditText_alertView_getPaid_paidQuantity;
+    private TextInputEditText textInputEditText_alertView_getPaid_paidQuantity; // tanımlaması StockUtils.createAlertViewForGetPaid metodu icinde yapılıyor .
 
     private SoldProductAdapter adapter;
     private List<SoldProduct> soldProductList;
@@ -49,7 +49,6 @@ public class SoldProductlistFragment extends Fragment {
     private String USER_UID;
     private String DEBT_CUSTOMER_KEY;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,12 +57,12 @@ public class SoldProductlistFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        defineToolbar();
         getSoldProductFromDB();
         setTotalDebt();
         return rootView;
 
     }
-
 
     /**
      * Gorsel nesneleri tanimla ...
@@ -104,7 +103,6 @@ public class SoldProductlistFragment extends Fragment {
 
     }
 
-
     /**
      * Gorsel nesnelerin action lari burada tetiklenir .
      */
@@ -125,6 +123,15 @@ public class SoldProductlistFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        toolbar_soldProductFragment.setTitle("Satışlar");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_soldProductFragment);
+
+    }
 
     /**
      * DB den satilan urunleri alip
@@ -161,10 +168,7 @@ public class SoldProductlistFragment extends Fragment {
 
             }
         });
-
-
     }
-
 
     /**
      * Customer in totalDebt i textView_soldProductFragment_paidQuantity e yerlestirir .
@@ -191,6 +195,5 @@ public class SoldProductlistFragment extends Fragment {
         });
 
     }
-
 
 }
