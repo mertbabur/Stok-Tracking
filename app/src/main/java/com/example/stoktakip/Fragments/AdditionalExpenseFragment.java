@@ -323,7 +323,7 @@ public class AdditionalExpenseFragment extends Fragment {
      */
     public void getExpenseFromDB(){
 
-        myRef.child("UserExpenses").child(USER_UID).addChildEventListener(new ChildEventListener() {
+        myRef.child("UserExpenses").child(USER_UID).orderByChild("expenseDate").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 

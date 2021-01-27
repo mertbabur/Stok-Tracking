@@ -131,7 +131,7 @@ public class SoldProductlistFragment extends Fragment {
      */
     public void getSoldProductFromDB(){
 
-        myRef.child("SoldProducts").child(USER_UID).child(DEBT_CUSTOMER_KEY).addChildEventListener(new ChildEventListener() {
+        myRef.child("SoldProducts").child(USER_UID).child(DEBT_CUSTOMER_KEY).orderByChild("soldDate").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 

@@ -106,7 +106,7 @@ public class ProductsFragments extends Fragment {
 
     public void getProductsFromDB(){
 
-        myRef.child("Products").child(USER_UID).addChildEventListener(new ChildEventListener() {
+        myRef.child("Products").child(USER_UID).orderByChild("productName").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 

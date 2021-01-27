@@ -1,12 +1,18 @@
 package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +28,12 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomersOrSuppliersFragment extends Fragment {
+public class CustomersOrSuppliersFragment extends Fragment{
 
     private RecyclerView recyclerView_fragmentCustomers;
     private FloatingActionButton floatingActionButton_fragmentCustomers_add;
@@ -38,6 +45,8 @@ public class CustomersOrSuppliersFragment extends Fragment {
 
     private String WHICH_BUTTON;
 
+    String userUID;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +54,7 @@ public class CustomersOrSuppliersFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_customers_design, container, false);
 
         defineAttributes(rootView);
+        defineToolbar();
         actionAttributes();
 
         if (WHICH_BUTTON.equals("customerButton"))
@@ -52,6 +62,7 @@ public class CustomersOrSuppliersFragment extends Fragment {
         else
             getCustomerOrSupplierFromDBandDefineRecyclerView("Suppliers");
 
+        defineRecyclerView();
 
         return rootView;
     }
@@ -70,6 +81,7 @@ public class CustomersOrSuppliersFragment extends Fragment {
 
         WHICH_BUTTON = getArguments().getString("whichButton", "bos button");
 
+        userUID = FirebaseAuth.getInstance().getUid();
 
     }
 
@@ -94,23 +106,33 @@ public class CustomersOrSuppliersFragment extends Fragment {
 
     }
 
+    public void defineToolbar(){
+
+        toolbar_fragmentCustomers.setTitle("sdf");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_fragmentCustomers);
+
+    }
+
+
+
 
     /**
      * musterileri dbden alir ve recylerview tanimlar .
      */
     public void getCustomerOrSupplierFromDBandDefineRecyclerView(final String whichDB){
 
-        String userUID = FirebaseAuth.getInstance().getUid();
 
-        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).addChildEventListener(new ChildEventListener() {
+
+        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).orderByChild("companyName").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
+
                 CustomerOrSupplier customer = snapshot.getValue(CustomerOrSupplier.class);
                 customerList.add(customer);
-                defineRecyclerView();
+                //defineRecyclerView();
 
-                //adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -154,8 +176,93 @@ public class CustomersOrSuppliersFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.toolbar_menu_design,menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) item.getActionView();
 
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.e("kelime sdfsdfsdf: ", "122   " + customerList.size()+"");
 
+                if (WHICH_BUTTON.equals("customerButton"))
+                    getCustomerOrSupplierRespectToToolbarSearch("Customers", query);
+                else
+                    getCustomerOrSupplierRespectToToolbarSearch("Suppliers", query);
+                Log.e("kelime : ", query);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Log.e("kelime sdfsdfsdfsdf: ", "242   " + customerList.size()+"");
+
+                if (WHICH_BUTTON.equals("customerButton"))
+                    getCustomerOrSupplierRespectToToolbarSearch("Customers", newText);
+                else
+                    getCustomerOrSupplierRespectToToolbarSearch("Suppliers", newText);
+                Log.e("harf harf : ", newText);
+
+                return false;
+            }
+        });
+
+    }
+
+    public void getCustomerOrSupplierRespectToToolbarSearch(String whichDB, final String query){
+
+        FirebaseDatabase.getInstance().getReference().child(whichDB).child(userUID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                customerList.clear();
+
+                    CustomerOrSupplier customer = snapshot.getValue(CustomerOrSupplier.class);
+                    Log.e("sdfsdf: ", "girdiiiiii" + query + " " + customer.getCompanyName());
+                    if (customer.getCompanyName().contains(query)){
+                        customerList.add(customer);
+                    }
+                //defineRecyclerView();
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 
 }

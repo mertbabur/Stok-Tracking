@@ -119,7 +119,7 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_updatePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertViewForUpdatePassword();
+                updatePassword();
             }
         });
 
@@ -127,7 +127,7 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_deleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deletePPForDeleteAccount();
+                alertViewForDelete();
             }
         });
 
@@ -213,74 +213,26 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
     }
 
     /**
-     * Kullanicinin sifresini degistirir .
-     * @param password
+     * Kullaniciya sifirlama maili gonderir .
      */
-    public void updatePassword(String password){
+    public void updatePassword(){
 
-        user.updatePassword(password).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
-                            Toast.makeText(getActivity(), "Şifre değiştirildi .", Toast.LENGTH_SHORT).show();
-                        else
-                            Toast.makeText(getActivity(), "Şifre değiştirme başarısız .", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-    }
-
-
-    /**
-     * updatePassword metodunu cagirir .
-     */
-    public void alertViewForUpdatePassword(){
-
-        View desing = getLayoutInflater().inflate(R.layout.alertview_updatepassword_design, null);
-
-        alertView_updatePassword_password = desing.findViewById(R.id.alertView_updatePassword_password);
-        alertView_updatePassword_verificiationPassword = desing.findViewById(R.id.alertView_updatePassword_verificiationPassword);
-
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
-
-        alertDialogbuilder.setTitle("Lütfen Yeni Şifrenizi Giriniz ?");
-        alertDialogbuilder.setIcon(R.drawable.password_icon);
-
-        alertDialogbuilder.setView(desing);
-
-        alertDialogbuilder.setPositiveButton("DEĞİŞTİR", new DialogInterface.OnClickListener() {
+        myRef.child("Users").child(USER_UID).child("email").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String password = alertView_updatePassword_password.getText().toString().trim();
-                String verificiationPassword = alertView_updatePassword_verificiationPassword.getText().toString().trim();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String email = snapshot.getValue().toString();
+                FirebaseUtils.sendResetPasswordMail(mAuth, email, getActivity());
+                Toast.makeText(getActivity(), "Sıfırlama maili e-posta hasabınıza gönderildi .", Toast.LENGTH_SHORT).show();
+            }
 
-                if (password.equals(verificiationPassword) && isEmptyForPassword(password, verificiationPassword)) {
-                    updatePassword(password);
-                }
-                else{
-                    Toast.makeText(getActivity(), "Şifreleri düzgün bir şekilde giriniz (uzunluk, eşleşmeme vs ...).", Toast.LENGTH_SHORT).show();
-                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
-        alertDialogbuilder.setNegativeButton("İPTAL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
-        alertDialogbuilder.create().show();
-
     }
 
 
@@ -358,6 +310,36 @@ public class SettingsFragment extends Fragment {
 
     }
 
+
+    /**
+     * Hesap silme icin uyari mesaji cikarir .
+     * deletePPForDeleteAccount metodunu cagirir .
+     */
+    public void alertViewForDelete(){
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+
+        alertDialogbuilder.setTitle("HESAP SİLME");
+        alertDialogbuilder.setMessage("Hesabınızı silmek istediğinize emin misiniz ? ");
+        alertDialogbuilder.setIcon(R.drawable.warning_icon);
+
+        alertDialogbuilder.setPositiveButton("SİL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deletePPForDeleteAccount();
+            }
+        });
+
+        alertDialogbuilder.setNegativeButton("İPTAL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        alertDialogbuilder.create().show();
+
+
+    }
 
     /**
      * Kullanici bilgilerini gunceller .
