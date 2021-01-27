@@ -3,30 +3,29 @@ package com.example.stoktakip.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.example.stoktakip.Activities.EntryActivity;
 import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.R;
-import com.example.stoktakip.Utils.FirebaseUtils;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuFragment extends Fragment {
 
     private CardView cardView_fragmentMainMenu_customerClick, cardView_fragmentMainMenu_supplier, cardView_fragmentMainMenu_addProduct
-                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense
-                    , cardView_myStock;
-    private ImageView imageView_mainMenuCikis;
+                    , cardView_fragmentMainMenu_soldClick, cardView_fragmentMainMenu_cashDesk, cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense;
+    private Toolbar toolbar_mainMenu;
 
     @Nullable
     @Override
@@ -36,11 +35,13 @@ public class MainMenuFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
-        Toast.makeText(getActivity(), FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
+        defineToolbar();
+
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
+
         return rootView;
 
     }
-
 
     /**
      * Gorsel nesneler tanimlanir ve baglanir .
@@ -52,12 +53,10 @@ public class MainMenuFragment extends Fragment {
         cardView_fragmentMainMenu_addProduct = rootView.findViewById(R.id.cardView_fragmentMainMenu_addProduct);
         cardView_fragmentMainMenu_soldClick = rootView.findViewById(R.id.cardView_fragmentMainMenu_soldClick);
         cardView_fragmentMainMenu_cashDesk = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDesk);
-        cardView_myStock = rootView.findViewById(R.id.cardView_myStock);
-        imageView_mainMenuCikis = rootView.findViewById(R.id.imageView_mainMenuCikis);
         cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense = rootView.findViewById(R.id.cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense);
+        toolbar_mainMenu = rootView.findViewById(R.id.toolbar_mainMenu);
 
     }
-
 
     /**
      * Gorsel nesnelerin action lari tetiklenir .
@@ -115,7 +114,6 @@ public class MainMenuFragment extends Fragment {
                 CashDeskFragment cashDeskFragment = new CashDeskFragment();
                 StockUtils.gotoFragment(getActivity(), cashDeskFragment, R.id.frameLayoutEntryActivity_holder,1);
 
-
             }
         });
 
@@ -130,31 +128,50 @@ public class MainMenuFragment extends Fragment {
             }
         });
 
+    }
 
-        // kendi stogumu acma ...
-        cardView_myStock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
 
-                SettingsFragment settingsFragment = new SettingsFragment();
-                StockUtils.gotoFragment(getActivity(), settingsFragment, R.id.frameLayoutEntryActivity_holder, 1);
+        toolbar_mainMenu.setTitle("Stok Takip Otomasyonu");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_mainMenu);
 
-            }
-        });
+    }
 
-        // hesaptan cikis kismi .
-        imageView_mainMenuCikis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_design, menu);
 
-                startActivity(new Intent(getActivity(), MainActivity.class));
-                getActivity().finish();
-                FirebaseAuth.getInstance().signOut();
+    }
 
-            }
-        });
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        if (item.getItemId() == R.id.action_settings){
+            SettingsFragment settingsFragment = new SettingsFragment();
+            StockUtils.gotoFragment(getActivity(), settingsFragment, R.id.frameLayoutEntryActivity_holder, 1);
+        }
 
+        if (item.getItemId() == R.id.action_signOut){
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+            FirebaseAuth.getInstance().signOut();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

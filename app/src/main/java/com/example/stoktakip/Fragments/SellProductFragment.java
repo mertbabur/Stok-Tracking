@@ -267,7 +267,7 @@ public class SellProductFragment extends Fragment {
         String productName = textView_sellProductFragment_productName.getText().toString();
         String companyName = imageView_sellProductFragment_companyName.getText().toString();
 
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
 
         alertDialogbuilder.setTitle("Bilgileri Onaylıyor Musunuz ?");
         alertDialogbuilder.setMessage("Evete tıklandıktan sonra değişiklik yapılamaz. Bilgileri kontrol ediniz. \n\n" + "Şirket Adı : " + companyName + "\n" + " " + productName + "\n" + "Ürün Miktarı : " + productQuantity);

@@ -112,7 +112,7 @@ public class StockUtils {
         View desing = activity.getLayoutInflater().inflate(R.layout.alertview_get_paid_design, null);
         paidQuantity = desing.findViewById(R.id.textInputEditText_alertView_getPaid_paidQuantity);
 
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(activity, R.style.AlertDialogTheme);
 
         alertDialogbuilder.setTitle(alertTitle);
         alertDialogbuilder.setMessage(alertMessage);
@@ -125,13 +125,17 @@ public class StockUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (whichButton.equals("customerButton")) {
-                    FirebaseUtils.getPaidFromCustomerOrSupplier("Customers", activity, finalPaidQuantity, getPaidClick, kalanBorcText, USER_UID, CUSTOMER_OR_SUPPLIER_KEY);
-                    FirebaseUtils.updateTotalCollectedProductPrice(finalPaidQuantity, USER_UID);
+                if (!finalPaidQuantity.getText().toString().trim().equals("")) {
+                    if (whichButton.equals("customerButton")) {
+                        FirebaseUtils.getPaidFromCustomerOrSupplier("Customers", activity, finalPaidQuantity, getPaidClick, kalanBorcText, USER_UID, CUSTOMER_OR_SUPPLIER_KEY);
+                        FirebaseUtils.updateTotalCollectedProductPrice(finalPaidQuantity, USER_UID);
+                    } else {
+                        FirebaseUtils.getPaidFromCustomerOrSupplier("Suppliers", activity, finalPaidQuantity, getPaidClick, kalanBorcText, USER_UID, CUSTOMER_OR_SUPPLIER_KEY);
+                        FirebaseUtils.updateTotalPaidProductPrice(finalPaidQuantity, USER_UID);
+                    }
                 }
                 else{
-                    FirebaseUtils.getPaidFromCustomerOrSupplier("Suppliers", activity, finalPaidQuantity, getPaidClick, kalanBorcText, USER_UID, CUSTOMER_OR_SUPPLIER_KEY);
-                    FirebaseUtils.updateTotalPaidProductPrice(finalPaidQuantity, USER_UID);
+                    Toast.makeText(activity, "Lütfen gerekli alanları doldurunuz .", Toast.LENGTH_SHORT).show();
                 }
 
             }

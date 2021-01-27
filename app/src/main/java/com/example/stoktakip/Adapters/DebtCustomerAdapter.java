@@ -210,7 +210,7 @@ public class DebtCustomerAdapter extends RecyclerView.Adapter<DebtCustomerAdapte
 
         holder.textInputEditText_alertView_getPaid_paidQuantity = desing.findViewById(R.id.textInputEditText_alertView_getPaid_paidQuantity);
 
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(mContext, R.style.AlertDialogTheme);
 
         alertDialogbuilder.setTitle("ÖDEME AL");
         alertDialogbuilder.setMessage("Lütfen alınacak miktarı geçmeyecek şekilde tutarı giriniz ." );
@@ -222,9 +222,13 @@ public class DebtCustomerAdapter extends RecyclerView.Adapter<DebtCustomerAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                getPaidFromCustomer(holder, customerId);
-                FirebaseUtils.updateTotalCollectedProductPrice(holder.textInputEditText_alertView_getPaid_paidQuantity, userUID);
-
+                if (!holder.textInputEditText_alertView_getPaid_paidQuantity.getText().toString().trim().equals("")){
+                    getPaidFromCustomer(holder, customerId);
+                    FirebaseUtils.updateTotalCollectedProductPrice(holder.textInputEditText_alertView_getPaid_paidQuantity, userUID);
+                }
+                else{
+                    Toast.makeText(mContext, "Lütfen gerekli alanları doldurunuz .", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

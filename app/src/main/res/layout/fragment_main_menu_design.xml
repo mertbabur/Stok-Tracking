@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_mainMenu">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:layout_marginRight="208dp"
                 android:layout_marginBottom="10dp"
                 android:text="Müşteriler"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -101,7 +101,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="Tedarikçiler"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -136,7 +136,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="ÜRÜNLER"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/profile_image3"
@@ -199,7 +200,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
                 android:text="Satışlar"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -244,7 +245,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="KASA"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -288,7 +289,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="EK GİDERLER"
-                android:textColor="@color/backgroundcolor"
+                android:textColor="#1A237E"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -297,60 +298,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_myStock"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_mainMenu"
         android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:background="#1A237E"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView_fragmentMainMenu_cashDeskcardView_fragmentMainMenu_addAdditionalExpense">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:text="AYARLAR"
-                android:textColor="@color/backgroundcolor"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/settings_icon" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView_mainMenuCikis"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/signout_icon"
-        app:civ_border_color="#FF000000"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

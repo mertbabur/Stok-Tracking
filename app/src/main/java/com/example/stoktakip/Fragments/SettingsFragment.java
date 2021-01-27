@@ -117,7 +117,7 @@ public class SettingsFragment extends Fragment {
         textView_settingsFragment_updatePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updatePassword();
+                alertViewForUpdatePassword();
             }
         });
 
@@ -282,7 +282,7 @@ public class SettingsFragment extends Fragment {
         alertview_companyName = desing.findViewById(R.id.alertview_companyName);
         alertview_userName = desing.findViewById(R.id.alertview_userName);
 
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
 
         alertDialogbuilder.setTitle("Lütfen Yeni Bilgilerinizi Giriniz ?");
         alertDialogbuilder.setIcon(R.drawable.info_icon);
@@ -319,7 +319,7 @@ public class SettingsFragment extends Fragment {
      */
     public void alertViewForDelete(){
 
-        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
 
         alertDialogbuilder.setTitle("HESAP SİLME");
         alertDialogbuilder.setMessage("Hesabınızı silmek istediğinize emin misiniz ? ");
@@ -329,6 +329,34 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deletePPForDeleteAccount();
+            }
+        });
+
+        alertDialogbuilder.setNegativeButton("İPTAL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        alertDialogbuilder.create().show();
+    }
+
+    /**
+     * Sifre sifirlamak icin uyari mesaji cikarir .
+     * deletePPForDeleteAccount metodunu cagirir .
+     */
+    public void alertViewForUpdatePassword(){
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+
+        alertDialogbuilder.setTitle("ŞİFRE SIFIRLAMA");
+        alertDialogbuilder.setMessage("Şifrenizi sıfırlamak istediğinize emin misiniz ? ");
+        alertDialogbuilder.setIcon(R.drawable.warning_icon);
+
+        alertDialogbuilder.setPositiveButton("SİL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updatePassword();
             }
         });
 

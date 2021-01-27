@@ -26,7 +26,7 @@
         android:id="@+id/toolbar_fragmentCustomers"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#1A237E"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,9 +41,9 @@
         android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"
         android:clickable="true"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="#1A237E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/add_icon" />
+        app:srcCompat="@drawable/add_fab_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
