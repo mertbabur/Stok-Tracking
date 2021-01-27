@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,6 +62,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
                      , textView_fragmentDetailCustomer_title, textView_fragmentDetailCustomer_getPaid;
     private RecyclerView recyclerViewfragmentDetailCustomer;
     private TextInputEditText textInputEditText_alertView_getPaid_paidQuantity;
+    private Toolbar toolbar_fragmentDetailCustomer;
 
     private String CUSTOMER_OR_SUPPLIER_KEY;
     private String WHICH_BUTTON;
@@ -82,6 +88,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
         defineAttributes(rootView);
         actionAttributes();
+        defineToolbar();
 
         if (WHICH_BUTTON.equals("customerButton")) {
             setCustomerInfo("Customers");
@@ -95,6 +102,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
             getProductFromDB();
         }
 
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
 
         return rootView;
     }
@@ -118,6 +126,7 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
         textView_fragmentDetailCustomer_totalDebt = rootView.findViewById(R.id.textView_fragmentDetailCustomer_totalDebt);
         textView_fragmentDetailCustomer_title = rootView.findViewById(R.id.textView_fragmentDetailCustomer_title);
         textView_fragmentDetailCustomer_getPaid = rootView.findViewById(R.id.textView_fragmentDetailCustomer_getPaid);
+        toolbar_fragmentDetailCustomer = rootView.findViewById(R.id.toolbar_fragmentDetailCustomer);
 
         CUSTOMER_OR_SUPPLIER_KEY = getArguments().getString("customerOrSupplierKey", "bos customer or supplier key");
         WHICH_BUTTON = getArguments().getString("whichButton", "bos button ");
@@ -212,6 +221,21 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        if (WHICH_BUTTON.equals("customerButton")) {
+            toolbar_fragmentDetailCustomer.setTitle("Müşteri");
+        }
+        else {
+            toolbar_fragmentDetailCustomer.setTitle("Tedarikçi");
+        }
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_fragmentDetailCustomer);
+
+    }
 
     /**
      * customerKey ile db den bilgileri getirir .
@@ -546,7 +570,51 @@ public class DetailCustomerOrSupplierFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_for_info_design, menu);
 
+    }
 
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_for_info_menu){
+
+            String infoText;
+            if (WHICH_BUTTON.equals("customerButton")) {
+                infoText = "\n- Bu kısımda müşteriniz ile ilgili bilgileri ve müşterinize sattığınız ürünleri görebilirsiniz .\n\n" +
+                           "- 'Ödeme Al' butonunu kullanarak ödeme yapabilirsiniz .\n\n" +
+                           "- 'Kalem' butonunu kullanarak müşteri bilgilerinizi güncelleyebilirsiniz .'\n\n" +
+                           "- 'Çöp kutusu' butonunu kullanarak müşterinizi silebilirsiniz .\n\n" +
+                           "- 'Telefon' butonunu kullanarak müşterinizi arayabilirsiniz .\n\n" +
+                           "- 'Mesaj' butonunu kullanarak müşterinize mesaj gönderebilirsiniz .\n\n";
+            }
+            else {
+                infoText = "\n- Bu kısımda tedarikçiniz ile ilgili bilgileri görebilirsiniz .\n\n" +
+                        "- 'Ödeme Yap' butonunu kullanarak ödeme ekleyebilirsiniz .\n\n" +
+                        "- 'Kalem' butonunu kullanarak tedarikçi bilgilerinizi güncelleyebilirsiniz .'\n\n" +
+                        "- 'Çöp kutusu' butonunu kullanarak tedarikçinizi silebilirsiniz .\n\n" +
+                        "- 'Telefon' butonunu kullanarak tedarikçinizi arayabilirsiniz .\n\n" +
+                        "- 'Mesaj' butonunu kullanarak tedarikçinize mesaj gönderebilirsiniz .\n\n";
+            }
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.stoktakip.Adapters.ExpenseAdapter;
 import com.example.stoktakip.Models.AdditionalExpense;
 import com.example.stoktakip.R;
+import com.example.stoktakip.Utils.StockUtils;
 import com.example.stoktakip.Utils.TimeClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,6 +74,8 @@ public class AdditionalExpenseFragment extends Fragment {
         actionAttributes();
         getExpenseFromDB();
         defineToolbar();
+
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
 
         return rootView;
 
@@ -347,6 +353,39 @@ public class AdditionalExpenseFragment extends Fragment {
 
             }
         });
+    }
+
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_for_info_design, menu);
+
+    }
+
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_for_info_menu){
+
+            String infoText = "\n- Bu kısımda ek giderlerinizi görebilirsiniz .\n\n" +
+                    "- (+) butonunu kullanarak ek gider ekleyebilirsiniz .\n\n" +
+                    "- 'Çöp kutusunu' kullanarak ek giderinizi silebilirsiniz .\n\n";
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

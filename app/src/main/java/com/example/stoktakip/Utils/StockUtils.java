@@ -166,5 +166,28 @@ public class StockUtils {
 
     }
 
+    /**
+     * Uygulama hakkında bilgi vermek icin alertViewOlusturur .
+     * @param text --> yazdıralacak info text i .
+     */
+    public static void alertViewForInfo(FragmentActivity activity, String text){
+
+        AlertDialog.Builder alertDialogbuilder = new AlertDialog.Builder(activity, R.style.AlertDialogTheme);
+
+        alertDialogbuilder.setTitle("YARDIM");
+        alertDialogbuilder.setMessage(text);
+        alertDialogbuilder.setIcon(R.drawable.info_icon);
+
+        alertDialogbuilder.setPositiveButton("ANLADIM", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alertDialogbuilder.create().show();
+
+    }
+
 
 }

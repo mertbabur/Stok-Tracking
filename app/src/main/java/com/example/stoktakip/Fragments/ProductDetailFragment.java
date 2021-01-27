@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +47,7 @@ public class ProductDetailFragment extends Fragment {
 
     private ImageView imageView_detailProductFragment_delete ,imageView_detailProductFragment_modify;
     private RecyclerView recyclerView_detailProductFragment;
+    private Toolbar toolbar_detailProductFragment;
 
     private String PRODUCT_KEY;
     private String PRODUCT_CODE;
@@ -73,6 +79,11 @@ public class ProductDetailFragment extends Fragment {
         }
         getSupplier(); // urun coduna sahip ayni urunleri bulmak icin .
         actionAttributes();
+
+        defineToolbar();
+
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
+
         return rootView;
 
     }
@@ -92,6 +103,7 @@ public class ProductDetailFragment extends Fragment {
         imageView_detailProductFragment_delete = rootView.findViewById(R.id.imageView_detailProductFragment_delete);
         imageView_detailProductFragment_modify = rootView.findViewById(R.id.imageView_detailProductFragment_modify);
         recyclerView_detailProductFragment = rootView.findViewById(R.id.recyclerView_detailProductFragment);
+        toolbar_detailProductFragment = rootView.findViewById(R.id.toolbar_detailProductFragment);
 
         PRODUCT_KEY = getArguments().getString("productKey", "bos product key");
         PRODUCT_CODE = getArguments().getString("productCode", "bos product code");
@@ -137,6 +149,15 @@ public class ProductDetailFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbari tanimlar .
+     */
+    public void defineToolbar(){
+
+        toolbar_detailProductFragment.setTitle("Ürün Detayları");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar_detailProductFragment);
+
+    }
 
     /**
      * Urun silinmesi icin onay istenir .
@@ -290,7 +311,38 @@ public class ProductDetailFragment extends Fragment {
 
     }
 
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_for_info_design, menu);
 
+    }
+
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_for_info_menu){
+
+            String infoText = "\n- Bu kısımda ürün detaylarını ve ürünün satılma geçmişini görebilirsiniz .\n\n" +
+                    "- 'Kalem' butonunu kullanarak ürün bilgilerini düzenleyebilirsiniz .\n\n" +
+                    "- 'Çöp kutusu' butonunu kullanarak ürünü silebilirsiniz .";
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 

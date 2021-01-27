@@ -1,8 +1,12 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.Adapters.CustomerOrSupplierListAdapter;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
@@ -58,6 +63,8 @@ public class CustomersOrSuppliersFragment extends Fragment{
             getCustomerOrSupplierFromDBandDefineRecyclerView("Suppliers");
 
         defineRecyclerView();
+
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
 
         return rootView;
     }
@@ -171,6 +178,44 @@ public class CustomersOrSuppliersFragment extends Fragment{
 
         recyclerView_fragmentCustomers.setAdapter(adapter);
 
+    }
+
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_for_info_design, menu);
+
+    }
+
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_for_info_menu){
+
+            String infoText;
+            if (WHICH_BUTTON.equals("customerButton"))
+                infoText = "\n- (+) butonuna basarak müşterinize satış yapabilirsiniz .\n\n" +
+                        "- Telefon butonuna basarak müşteriniz ile arama gerçekleştirebilirsiniz .\n\n" +
+                        "- Mesaj butonuna basarak müşterinize mesaj gönderme işlemi yapabilirsiniz .\n\n";
+            else
+                infoText = "- Telefon butonuna basarak tedarikçiniz ile arama gerçekleştirebilirsiniz .\n\n" +
+                           "- Mesaj butonuna basarak tedarikçinize mesaj gönderme işlemi yapabilirsiniz .\n\n";
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -2,6 +2,9 @@ package com.example.stoktakip.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +60,8 @@ public class ProductsFragments extends Fragment {
         actionAttributes();
         defineToolbar();
         getProductsFromDB();
+
+        setHasOptionsMenu(true); // toolbar a menu eklemem icin gerekli .
 
         return rootView;
 
@@ -171,5 +176,36 @@ public class ProductsFragments extends Fragment {
 
     }
 
+    /**
+     * Toolbar a menu eklemek icin .
+     * @param menu
+     * @param inflater
+     */
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.toolbar_menu_for_info_design, menu);
+
+    }
+
+    /**
+     * Toolbar daki itemlari yakalamak icin .
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_for_info_menu){
+
+            String infoText = "\n- Bu kısımda stoğunuzda bulunan ürünleri görebilirsiniz .\n\n" +
+                    "- (+) butonunu kullanarak stoğunuza yeni ürünler ekleyebilirsinniz .\n\n";
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }

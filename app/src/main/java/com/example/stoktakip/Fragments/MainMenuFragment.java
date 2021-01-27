@@ -1,16 +1,20 @@
 package com.example.stoktakip.Fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -171,7 +175,22 @@ public class MainMenuFragment extends Fragment {
             FirebaseAuth.getInstance().signOut();
         }
 
+        if(item.getItemId() == R.id.action_info){
+
+            String infoText = "\n- Müşteri eklemek için 'Müşteriler' kısmına girebilirsiniz.\n\n" +
+                              "- Tedarikçi eklemek için 'Tedarikçiler' kısmına girebilirsiniz.\n\n" +
+                              "- Stoğunuza ürün eklemek için 'Ürünler' kısmına girebilirsiniz.\n\n" +
+                              "- Ödeme yapması gereken müşterileri görmek için 'Satışlar' kısmına girebilirsiniz.\n\n" +
+                              "- Hesap işlemleri için 'Kasa' kısmına girebilirsiniz.\n\n" +
+                              "- Ek gider eklemek için 'Ek Giderler' kısmına girebilirsiniz.\n\n";
+
+            StockUtils.alertViewForInfo(getActivity(), infoText);
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }
