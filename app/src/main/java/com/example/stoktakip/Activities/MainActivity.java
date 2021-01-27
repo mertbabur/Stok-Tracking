@@ -4,13 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.FrameLayout;
 
+import com.example.stoktakip.Fragments.AppEntryFragment;
 import com.example.stoktakip.Fragments.LoginFragment;
 import com.example.stoktakip.R;
 import com.example.stoktakip.Utils.StockUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,17 +28,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainActivity_fragmentHolder = findViewById(R.id.mainActivity_fragmentHolder);
+
+        appEntry();
+
         if (isLoginUser()){
-            startActivity(new Intent(MainActivity.this, EntryActivity.class));
-            finish();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(MainActivity.this, EntryActivity.class));
+                    finish();
+                }
+            }, 1000);
         }
         else {
-            mainActivity_fragmentHolder = findViewById(R.id.mainActivity_fragmentHolder);
-            LoginFragment loginFragment = new LoginFragment();
-            StockUtils.gotoFragment(MainActivity.this, loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "noButton", 0);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LoginFragment loginFragment = new LoginFragment();
+                    StockUtils.gotoFragment(MainActivity.this, loginFragment, R.id.mainActivity_fragmentHolder, "whichButton", "noButton", 0);
+
+                }
+            }, 1000);
+
         }
-
-
 
     }
 
@@ -55,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Giriş ekranını .
+     */
+    public void appEntry(){
 
+        AppEntryFragment appEntryFragment = new AppEntryFragment();
+        StockUtils.gotoFragment(MainActivity.this, appEntryFragment, R.id.mainActivity_fragmentHolder,0);
+
+    }
 
 }
