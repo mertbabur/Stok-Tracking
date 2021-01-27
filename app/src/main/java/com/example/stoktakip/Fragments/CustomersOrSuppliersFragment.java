@@ -1,8 +1,6 @@
 package com.example.stoktakip.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.Activities.MainActivity;
 import com.example.stoktakip.Adapters.CustomerOrSupplierListAdapter;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;

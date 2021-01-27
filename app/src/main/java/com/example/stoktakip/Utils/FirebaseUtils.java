@@ -1,23 +1,18 @@
 package com.example.stoktakip.Utils;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.stoktakip.Models.CashDesk;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.Models.User;
-import com.example.stoktakip.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;

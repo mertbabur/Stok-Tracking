@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.stoktakip.Models.Product;
 import com.example.stoktakip.Models.SoldProduct;
 import com.example.stoktakip.R;
 import com.google.firebase.database.DataSnapshot;

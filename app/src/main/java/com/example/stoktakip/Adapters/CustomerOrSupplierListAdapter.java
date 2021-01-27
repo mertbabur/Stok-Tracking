@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stoktakip.Fragments.DetailCustomerOrSupplierFragment;
-import com.example.stoktakip.Fragments.ProductsFragments;
 import com.example.stoktakip.Fragments.SellProductFragment;
 import com.example.stoktakip.Models.CustomerOrSupplier;
 import com.example.stoktakip.R;
